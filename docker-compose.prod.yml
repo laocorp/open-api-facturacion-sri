@@ -1,40 +1,53 @@
 # =================================================
-# Docker Compose for Production Server
+# Docker Compose — Open API Facturación SRI
+# Despliegue TODO-EN-UNO (PostgreSQL + Redis + Carbone + API)
 # =================================================
-# This file goes on your SERVER - no source code needed!
-#
-# Recommended structure on server:
-#   /opt/
-#   ├── open-api-facturacion-sri/           ← Deploy folder
-#   │   ├── docker-compose.prod.yml
-#   │   └── .env.docker
-#   └── data/                  ← Data folder (OUTSIDE deploy)
-#       ├── templates/
-#       ├── pdfs/
-#       ├── certs/
-#       └── xmls/
-#
-# Usage:
-#   docker compose -f docker-compose.prod.yml up -d
+# Uso: docker compose -f docker-compose.prod.yml up -d
+# =================================================
 
 services:
-  # ─── Redis (BullMQ + Cache) ───
+  # ─── PostgreSQL 16 ───
+  postgres:
+    image: postgres:16-alpine
+    container_name: sri-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-db_sri}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD es obligatorio}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-db_sri}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  # ─── Redis 7 (BullMQ + Cache) ───
   redis:
     image: redis:7-alpine
-    container_name: carbone-redis
+    container_name: sri-redis
     restart: unless-stopped
     command: >
       redis-server
-      --requirepass ${REDIS_PASSWORD:-changeme_prod}
+      --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD es obligatorio}
       --maxmemory 512mb
       --maxmemory-policy allkeys-lru
       --appendonly yes
       --save 60 1000
     volumes:
       - redis_data:/data
-    # No exponer puertos al host en producción — solo acceso interno
     healthcheck:
-      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD:-changeme_prod}', 'ping']
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD}', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,55 +57,64 @@ services:
         max-size: '5m'
         max-file: '3'
 
-  # ─── Open API Facturación SRI ───
-  open-api-facturacion-sri:
-    # Pull from Docker Hub
-    image: ${DOCKER_IMAGE:-angelobarzola/open-api-facturacion-sri:latest}
-    container_name: open-api-facturacion-sri
+  # ─── Carbone.io (Generación de PDFs) ───
+  carbone:
+    image: carboneio/carbone:latest
+    container_name: sri-carbone
     restart: unless-stopped
-
-    # Load environment variables from file
-    env_file:
-      - .env.docker
-
     environment:
-      # Override Redis to use compose service name
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-changeme_prod}
-
-    # Port mapping (change left port if needed)
+      CARBONE_VERBOSE: 'false'
     ports:
-      - '${PORT:-3001}:3001'
-
-    # Data volumes - persistent storage
-    volumes:
-      - ${HOST_TEMPLATES_PATH:-../data/templates}:/data/templates
-      - ${HOST_PDFS_PATH:-../data/pdfs}:/data/pdfs
-      - ${HOST_CERTS_PATH:-../data/certs}:/data/certs
-      - ${HOST_XMLS_PATH:-../data/xmls}:/data/xmls
-
-    depends_on:
-      redis:
-        condition: service_healthy
-
-    # Health check
+      - '3002:3000'
     healthcheck:
-      test:
-        [
-          'CMD',
-          'wget',
-          '--no-verbose',
-          '--tries=1',
-          '--spider',
-          'http://localhost:3001/status',
-        ]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3000/version']
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 15s
+      start_period: 10s
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '5m'
+        max-file: '3'
 
-    # Logging configuration
+  # ─── API NestJS ───
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: open-api-facturacion-sri:latest
+    container_name: sri-api
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      CARBONE_API: http://carbone:3000
+    ports:
+      - '${PORT:-3001}:3001'
+    volumes:
+      - templates_data:/data/templates
+      - pdfs_data:/data/pdfs
+      - certs_data:/data/certs
+      - xmls_data:/data/xmls
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      carbone:
+        condition: service_started
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3001/status']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     logging:
       driver: 'json-file'
       options:
@@ -100,5 +122,15 @@ services:
         max-file: '5'
 
 volumes:
+  postgres_data:
+    driver: local
   redis_data:
+    driver: local
+  templates_data:
+    driver: local
+  pdfs_data:
+    driver: local
+  certs_data:
+    driver: local
+  xmls_data:
     driver: local

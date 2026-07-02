@@ -85,7 +85,7 @@
     "soap": "^1.9.1",
     "xadesjs": "^2.6.5",
     "xml2js": "^0.6.2",
-    "xmldom": "^0.6.0"
+    "@xmldom/xmldom": "^0.9.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
