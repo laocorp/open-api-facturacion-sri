@@ -227,107 +227,112 @@ curl -X POST https://api.tudominio.com/auth/login \
 
 ## 5. Variables de entorno
 
-Copia y pega TODAS estas variables en la sección **Environment** de Dokploy. Reemplaza los valores marcados con `<<...>>`.
+### Cómo copiar y pegar en Dokploy
 
-### Secrets (generar con node -e "crypto.randomBytes...")
+Abre la sección **Environment** de tu servicio en Dokploy y pega TODO esto de una sola vez.
+Solo cambia `<<TUS_SECRETOS>>` por los valores que generaste y `api.tudominio.com` por tu dominio real.
 
-| Variable | Requerido | Descripción | Cómo generarlo |
-|----------|-----------|-------------|----------------|
-| `ENCRYPTION_KEY` | ✅ Sí | Clave de cifrado (64 caracteres hex) | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
-| `ENCRYPTION_SALT` | ✅ Sí | Salt de cifrado (32 caracteres hex) | `node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"` |
-| `JWT_SECRET` | ✅ Sí | Secreto para tokens JWT (44+ chars base64) | `node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"` |
-| `DB_PASSWORD` | ✅ Sí | Password de PostgreSQL | `node -e "console.log(require('crypto').randomBytes(16).toString('base64'))"` |
-| `REDIS_PASSWORD` | ✅ Sí | Password de Redis | `node -e "console.log(require('crypto').randomBytes(16).toString('base64'))"` |
+```
+PORT=3005
+NODE_ENV=production
+PUBLIC_URL=https://api.tudominio.com
 
-### Configuración del servidor
+# Secrets GENERADOS (cambia estos)
+ENCRYPTION_KEY=<<PEGA_TU_ENCRYPTION_KEY>>
+ENCRYPTION_SALT=<<PEGA_TU_ENCRYPTION_SALT>>
+JWT_SECRET=<<PEGA_TU_JWT_SECRET>>
+DB_PASSWORD=<<PEGA_TU_DB_PASSWORD>>
+REDIS_PASSWORD=<<PEGA_TU_REDIS_PASSWORD>>
 
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `PORT` | ✅ Sí | `3005` |
-| `PUBLIC_URL` | ✅ Sí | `https://api.tudominio.com` |
-| `NODE_ENV` | ✅ Sí | `production` |
+# Carbone PDF
+CARBONE_API=http://carbone:4000
+CARBONE_DEBUG=false
+CARBONE_CONVERT_TO=pdf
 
-### Carbone (generación de PDFs)
+# Directorios (NO CAMBIAR)
+TEMPLATES_DIR=/data/templates
+PDFS_DIR=/data/pdfs
+CERTS_DIR=/data/certs
+XMLS_DIR=/data/xmls
 
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `CARBONE_API` | ✅ Sí | `http://carbone:3000` |
-| `CARBONE_DEBUG` | ❌ No | `false` |
-| `CARBONE_CONVERT_TO` | ❌ No | `pdf` |
+# PDF / Firma
+PDF_MAX_ATTEMPTS=2
+PDF_RETRY_DELAY=10
+SIGNATURE_QR_SIZE=50
+SIGNATURE_TOTAL_WIDTH=200
+SIGNATURE_DEFAULT_X=0
+SIGNATURE_DEFAULT_Y=0
+SIGNATURE_DEFAULT_PAGE=-1
 
-### Directorios (rutas DENTRO del contenedor — NO CAMBIAR)
+# SRI Ecuador (development=pruebas, production=produccion)
+SRI_ENVIRONMENT=development
+SRI_RECEPTION_WSDL=https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl
+SRI_AUTHORIZATION_WSDL=https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl
 
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `TEMPLATES_DIR` | ✅ Sí | `/data/templates` |
-| `PDFS_DIR` | ✅ Sí | `/data/pdfs` |
-| `CERTS_DIR` | ✅ Sí | `/data/certs` |
-| `XMLS_DIR` | ✅ Sí | `/data/xmls` |
+# PostgreSQL
+DB_HOST=postgres
+DB_PORT=5432
+DB_NAME=db_sri
+DB_USER=postgres
+DB_PASSWORD=<<PEGA_TU_DB_PASSWORD>>
+DB_SSL=false
+DB_POOL_MAX=20
 
-### PDF / Firma
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_PASSWORD=<<PEGA_TU_REDIS_PASSWORD>>
+REDIS_DB=0
 
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `PDF_MAX_ATTEMPTS` | ❌ No | `2` |
-| `PDF_RETRY_DELAY` | ❌ No | `10` |
-| `SIGNATURE_QR_SIZE` | ❌ No | `50` |
-| `SIGNATURE_TOTAL_WIDTH` | ❌ No | `200` |
-| `SIGNATURE_DEFAULT_X` | ❌ No | `0` |
-| `SIGNATURE_DEFAULT_Y` | ❌ No | `0` |
-| `SIGNATURE_DEFAULT_PAGE` | ❌ No | `-1` |
+# SRI Emisión
+SRI_EMISION_ASYNC=true
+SRI_REQUEST_DELAY_MS=150
+SRI_MAX_RETRIES=3
+SRI_RETRY_DELAY_MS=2000
 
-### SRI Ecuador
+# JWT
+JWT_SECRET=<<PEGA_TU_JWT_SECRET>>
+JWT_EXPIRATION=8h
 
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `SRI_ENVIRONMENT` | ✅ Sí | `development` (para pruebas) → `production` (cuando el SRI apruebe) |
-| `SRI_RECEPTION_WSDL` | ✅ Sí | `https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl` |
-| `SRI_AUTHORIZATION_WSDL` | ✅ Sí | `https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl` |
+# CORS
+ALLOWED_ORIGINS=https://api.tudominio.com
+THROTTLE_TTL=60000
+THROTTLE_LIMIT=100
+```
 
-### Base de Datos (PostgreSQL — corre dentro del compose)
+### Referencia rápida de cada variable
 
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `DB_HOST` | ✅ Sí | `postgres` |
-| `DB_PORT` | ✅ Sí | `5432` |
-| `DB_NAME` | ✅ Sí | `db_sri` |
-| `DB_USER` | ✅ Sí | `postgres` |
-| `DB_PASSWORD` | ✅ Sí | `<<el que generaste>>` |
-| `DB_SSL` | ❌ No | `false` |
-| `DB_POOL_MAX` | ❌ No | `20` |
-
-### Redis (colas + caché — corre dentro del compose)
-
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `REDIS_HOST` | ✅ Sí | `redis` |
-| `REDIS_PORT` | ✅ Sí | `6379` |
-| `REDIS_PASSWORD` | ✅ Sí | `<<el que generaste>>` |
-| `REDIS_DB` | ❌ No | `0` |
-
-### SRI Emisión (asincrónica)
-
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `SRI_EMISION_ASYNC` | ❌ No | `true` |
-| `SRI_REQUEST_DELAY_MS` | ❌ No | `150` |
-| `SRI_MAX_RETRIES` | ❌ No | `3` |
-| `SRI_RETRY_DELAY_MS` | ❌ No | `2000` |
-
-### JWT
-
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `JWT_SECRET` | ✅ Sí | `<<el que generaste>>` |
-| `JWT_EXPIRATION` | ❌ No | `8h` |
-
-### CORS y Rate Limiting
-
-| Variable | Requerido | Valor |
-|----------|-----------|-------|
-| `ALLOWED_ORIGINS` | ✅ Sí | `https://api.tudominio.com,https://admin.tudominio.com` |
-| `THROTTLE_TTL` | ❌ No | `60000` |
-| `THROTTLE_LIMIT` | ❌ No | `100` |
+| Variable | Requerido | Descripción |
+|----------|-----------|-------------|
+| `PORT` | ✅ | Puerto interno de la API (`3005`) |
+| `NODE_ENV` | ✅ | `production` |
+| `PUBLIC_URL` | ✅ | `https://api.tudominio.com` |
+| `ENCRYPTION_KEY` | ✅ | Clave de cifrado (64 hex) |
+| `ENCRYPTION_SALT` | ✅ | Salt de cifrado (32 hex) |
+| `JWT_SECRET` | ✅ | Secreto JWT (44+ base64) |
+| `DB_PASSWORD` | ✅ | Password PostgreSQL |
+| `REDIS_PASSWORD` | ✅ | Password Redis |
+| `CARBONE_API` | ✅ | `http://carbone:4000` |
+| `TEMPLATES_DIR` | ✅ | `/data/templates` |
+| `PDFS_DIR` | ✅ | `/data/pdfs` |
+| `CERTS_DIR` | ✅ | `/data/certs` |
+| `XMLS_DIR` | ✅ | `/data/xmls` |
+| `SRI_ENVIRONMENT` | ✅ | `development` o `production` |
+| `SRI_RECEPTION_WSDL` | ✅ | WSDL recepción SRI |
+| `SRI_AUTHORIZATION_WSDL` | ✅ | WSDL autorización SRI |
+| `DB_HOST` | ✅ | `postgres` |
+| `DB_PORT` | ✅ | `5432` |
+| `DB_NAME` | ✅ | `db_sri` |
+| `DB_USER` | ✅ | `postgres` |
+| `REDIS_HOST` | ✅ | `redis` |
+| `REDIS_PORT` | ✅ | `6379` |
+| `ALLOWED_ORIGINS` | ✅ | Dominios permitidos CORS |
+| `JWT_EXPIRATION` | ❌ | `8h` |
+| `DB_SSL` | ❌ | `false` |
+| `SRI_EMISION_ASYNC` | ❌ | `true` |
+| `CARBONE_DEBUG` | ❌ | `false` |
+| `THROTTLE_TTL` | ❌ | `60000` |
+| `THROTTLE_LIMIT` | ❌ | `100` |
 
 ---
 
