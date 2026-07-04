@@ -227,10 +227,14 @@ curl -X POST https://api.tudominio.com/auth/login \
 
 ## 5. Variables de entorno
 
+### ⚠️ Importante: No uses archivo .env
+
+Dokploy **NO necesita** un archivo `.env.production`. Las variables se pegan directamente en la sección **Environment** del servicio. Dokploy las inyecta automáticamente a todos los contenedores.
+
 ### Cómo copiar y pegar en Dokploy
 
 Abre la sección **Environment** de tu servicio en Dokploy y pega TODO esto de una sola vez.
-Solo cambia `<<TUS_SECRETOS>>` por los valores que generaste y `api.tudominio.com` por tu dominio real.
+Solo cambia los valores marcados con `<<...>>` y `tudominio.com` por tu dominio real.
 
 ```
 PORT=3005
