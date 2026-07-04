@@ -165,9 +165,11 @@ Dentro del proyecto:
 
 ### Paso 5: Configurar variables de entorno
 
-En la sección **"Environment"** de Dokploy, agrega todas las variables de la [sección 5](#5-variables-de-entorno). Usa los secrets que generaste en el Paso 1.
+En la sección **"Environment"** de Dokploy, pega **solo las variables de la tabla de obligatorias** de la [sección 5](#5-variables-de-entorno). Usa los secrets que generaste en el Paso 1.
 
-> ⚠️ **IMPORTANTE**: Reemplaza `sri.tudominio.com` con tu dominio real. No uses valores genéricos.
+> ✅ **No necesitas configurar** `DB_HOST`, `REDIS_HOST`, `PORT`, `CARBONE_API` ni las rutas de directorios — esas ya están hardcodeadas en el `docker-compose.prod.yml`.
+
+> ⚠️ **IMPORTANTE**: Reemplaza `api.tudominio.com` con tu dominio real en `PUBLIC_URL` y `ALLOWED_ORIGINS`.
 
 ### Paso 6: Configurar dominios
 
@@ -175,7 +177,9 @@ En la sección **"Domains"** del servicio `sri-api`:
 
 | Dominio                 | Puerto | SSL     |
 |-------------------------|--------|---------|
-| `api.tudominio.com`     | 3005   | ✅ Auto |
+| `api.tudominio.com`     | 3001   | ✅ Auto |
+
+> ℹ️ El puerto interno del contenedor es **3001**. El mapeo al host (`3005`) lo hace Docker Compose. Dokploy expone el puerto interno `3001`.
 
 (No necesitas crear servicios separados para PostgreSQL, Redis o Carbone — el Docker Compose los maneja internamente. Solo se expone el puerto de la API a través del dominio.)
 
@@ -227,118 +231,96 @@ curl -X POST https://api.tudominio.com/auth/login \
 
 ## 5. Variables de entorno
 
-### ⚠️ Importante: No uses archivo .env
+### ⚠️ Cómo funciona en esta arquitectura (Opción B)
 
-Dokploy **NO necesita** un archivo `.env.production`. Las variables se pegan directamente en la sección **Environment** del servicio. Dokploy las inyecta automáticamente a todos los contenedores.
+El `docker-compose.prod.yml` ya tiene **hardcodeados** todos los valores internos de red (puertos, hosts, rutas de directorio). Solo necesitas configurar en Dokploy las variables que son **secretos o específicas de tu dominio**.
 
-### Cómo copiar y pegar en Dokploy
+> **No necesitas** crear un archivo `.env.production` en el servidor. Todo se configura desde el panel **Environment** de Dokploy.
 
-Abre la sección **Environment** de tu servicio en Dokploy y pega TODO esto de una sola vez.
-Solo cambia los valores marcados con `<<...>>` y `tudominio.com` por tu dominio real.
+---
+
+### Variables que SÍ debes configurar en Dokploy
+
+Abre **Environment** del servicio y pega esto. Solo cambia los valores marcados con `<<...>>` y `tudominio.com`:
 
 ```
-PORT=3005
-NODE_ENV=production
+# ─── Servidor ───
 PUBLIC_URL=https://api.tudominio.com
 
-# Secrets GENERADOS (cambia estos)
-ENCRYPTION_KEY=<<PEGA_TU_ENCRYPTION_KEY>>
-ENCRYPTION_SALT=<<PEGA_TU_ENCRYPTION_SALT>>
-JWT_SECRET=<<PEGA_TU_JWT_SECRET>>
+# ─── Secrets (GENERADOS — ver Paso 1) ───
+ENCRYPTION_KEY=<<PEGA_TU_ENCRYPTION_KEY_64_HEX>>
+ENCRYPTION_SALT=<<PEGA_TU_ENCRYPTION_SALT_32_HEX>>
+JWT_SECRET=<<PEGA_TU_JWT_SECRET_BASE64>>
 DB_PASSWORD=<<PEGA_TU_DB_PASSWORD>>
 REDIS_PASSWORD=<<PEGA_TU_REDIS_PASSWORD>>
 
-# Carbone PDF
-CARBONE_API=http://carbone:4000
-CARBONE_DEBUG=false
-CARBONE_CONVERT_TO=pdf
+# ─── CORS ───
+ALLOWED_ORIGINS=https://api.tudominio.com
 
-# Directorios (NO CAMBIAR)
-TEMPLATES_DIR=/data/templates
-PDFS_DIR=/data/pdfs
-CERTS_DIR=/data/certs
-XMLS_DIR=/data/xmls
-
-# PDF / Firma
-PDF_MAX_ATTEMPTS=2
-PDF_RETRY_DELAY=10
-SIGNATURE_QR_SIZE=50
-SIGNATURE_TOTAL_WIDTH=200
-SIGNATURE_DEFAULT_X=0
-SIGNATURE_DEFAULT_Y=0
-SIGNATURE_DEFAULT_PAGE=-1
-
-# SRI Ecuador (development=pruebas, production=produccion)
+# ─── SRI Ecuador (development=pruebas, production=real) ───
 SRI_ENVIRONMENT=development
 SRI_RECEPTION_WSDL=https://celcer.sri.gob.ec/comprobantes-electronicos-ws/RecepcionComprobantesOffline?wsdl
 SRI_AUTHORIZATION_WSDL=https://celcer.sri.gob.ec/comprobantes-electronicos-ws/AutorizacionComprobantesOffline?wsdl
 
-# PostgreSQL
-DB_HOST=postgres
-DB_PORT=5432
+# ─── Base de datos (opcionales, ya tienen defaults en compose) ───
+DB_NAME=db_sri
+DB_USER=postgres
+```
+
+> 💡 **Nota:** Las variables `DB_HOST`, `REDIS_HOST`, `CARBONE_API`, `PORT`, `TEMPLATES_DIR`, etc. ya están definidas directamente en el `docker-compose.prod.yml`. No es necesario configurarlas en Dokploy.
+
+---
+
+### Variables para el servicio PostgreSQL
+
+Estas las necesita el contenedor de Postgres (se configuran en el mismo panel o en el compose):
+
+```
 DB_NAME=db_sri
 DB_USER=postgres
 DB_PASSWORD=<<PEGA_TU_DB_PASSWORD>>
-DB_SSL=false
-DB_POOL_MAX=20
-
-# Redis
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_PASSWORD=<<PEGA_TU_REDIS_PASSWORD>>
-REDIS_DB=0
-
-# SRI Emisión
-SRI_EMISION_ASYNC=true
-SRI_REQUEST_DELAY_MS=150
-SRI_MAX_RETRIES=3
-SRI_RETRY_DELAY_MS=2000
-
-# JWT
-JWT_SECRET=<<PEGA_TU_JWT_SECRET>>
-JWT_EXPIRATION=8h
-
-# CORS
-ALLOWED_ORIGINS=https://api.tudominio.com
-THROTTLE_TTL=60000
-THROTTLE_LIMIT=100
 ```
 
-### Referencia rápida de cada variable
+---
 
-| Variable | Requerido | Descripción |
-|----------|-----------|-------------|
-| `PORT` | ✅ | Puerto interno de la API (`3005`) |
-| `NODE_ENV` | ✅ | `production` |
-| `PUBLIC_URL` | ✅ | `https://api.tudominio.com` |
-| `ENCRYPTION_KEY` | ✅ | Clave de cifrado (64 hex) |
-| `ENCRYPTION_SALT` | ✅ | Salt de cifrado (32 hex) |
-| `JWT_SECRET` | ✅ | Secreto JWT (44+ base64) |
-| `DB_PASSWORD` | ✅ | Password PostgreSQL |
-| `REDIS_PASSWORD` | ✅ | Password Redis |
-| `CARBONE_API` | ✅ | `http://carbone:4000` |
-| `TEMPLATES_DIR` | ✅ | `/data/templates` |
-| `PDFS_DIR` | ✅ | `/data/pdfs` |
-| `CERTS_DIR` | ✅ | `/data/certs` |
-| `XMLS_DIR` | ✅ | `/data/xmls` |
-| `SRI_ENVIRONMENT` | ✅ | `development` o `production` |
-| `SRI_RECEPTION_WSDL` | ✅ | WSDL recepción SRI |
-| `SRI_AUTHORIZATION_WSDL` | ✅ | WSDL autorización SRI |
-| `DB_HOST` | ✅ | `postgres` |
-| `DB_PORT` | ✅ | `5432` |
-| `DB_NAME` | ✅ | `db_sri` |
-| `DB_USER` | ✅ | `postgres` |
-| `REDIS_HOST` | ✅ | `redis` |
-| `REDIS_PORT` | ✅ | `6379` |
-| `ALLOWED_ORIGINS` | ✅ | Dominios permitidos CORS |
-| `JWT_EXPIRATION` | ❌ | `8h` |
-| `DB_SSL` | ❌ | `false` |
-| `SRI_EMISION_ASYNC` | ❌ | `true` |
-| `CARBONE_DEBUG` | ❌ | `false` |
-| `THROTTLE_TTL` | ❌ | `60000` |
-| `THROTTLE_LIMIT` | ❌ | `100` |
+### Referencia completa de todas las variables
+
+| Variable | Origen | Requerido | Valor / Descripción |
+|----------|--------|-----------|---------------------|
+| `PORT` | compose (hardcoded) | — | `3001` (puerto interno del contenedor) |
+| `NODE_ENV` | compose (hardcoded) | — | `production` |
+| `PUBLIC_URL` | **Dokploy** | ✅ | `https://api.tudominio.com` |
+| `ENCRYPTION_KEY` | **Dokploy** | ✅ | 64 chars hex |
+| `ENCRYPTION_SALT` | **Dokploy** | ✅ | 32 chars hex |
+| `JWT_SECRET` | **Dokploy** | ✅ | 32+ chars base64 |
+| `DB_PASSWORD` | **Dokploy** | ✅ | Contraseña de PostgreSQL |
+| `REDIS_PASSWORD` | **Dokploy** | ✅ | Contraseña de Redis |
+| `ALLOWED_ORIGINS` | **Dokploy** | ✅ | Dominios CORS separados por coma |
+| `SRI_ENVIRONMENT` | **Dokploy** | ✅ | `development` o `production` |
+| `SRI_RECEPTION_WSDL` | **Dokploy** | ✅ | URL WSDL recepción SRI |
+| `SRI_AUTHORIZATION_WSDL` | **Dokploy** | ✅ | URL WSDL autorización SRI |
+| `DB_NAME` | Dokploy / default | ❌ | `db_sri` |
+| `DB_USER` | Dokploy / default | ❌ | `postgres` |
+| `DB_HOST` | compose (hardcoded) | — | `postgres` (red interna) |
+| `DB_PORT` | compose (hardcoded) | — | `5432` |
+| `DB_SSL` | compose / default | ❌ | `false` |
+| `REDIS_HOST` | compose (hardcoded) | — | `redis` (red interna) |
+| `REDIS_PORT` | compose (hardcoded) | — | `6379` |
+| `REDIS_DB` | compose / default | ❌ | `0` |
+| `CARBONE_API` | compose (hardcoded) | — | `http://carbone:4000` |
+| `CARBONE_DEBUG` | compose / default | ❌ | `false` |
+| `CARBONE_CONVERT_TO` | compose / default | ❌ | `pdf` |
+| `TEMPLATES_DIR` | compose (hardcoded) | — | `/data/templates` |
+| `PDFS_DIR` | compose (hardcoded) | — | `/data/pdfs` |
+| `CERTS_DIR` | compose (hardcoded) | — | `/data/certs` |
+| `XMLS_DIR` | compose (hardcoded) | — | `/data/xmls` |
+| `JWT_EXPIRATION` | compose / default | ❌ | `8h` |
+| `THROTTLE_TTL` | compose / default | ❌ | `60000` |
+| `THROTTLE_LIMIT` | compose / default | ❌ | `100` |
+| `SRI_SIGNATURE_CERT_PASSWORD` | compose / default | ❌ | `""` (se sube luego vía API) |
 
 ---
+
 
 ## 6. Dominios y servicios
 
@@ -573,11 +555,15 @@ curl -X POST https://api.tudominio.com/certificates/validate/0999999999001.p12 \
 | `No se encontró clave privada` | Certificado P12 inválido o password incorrecto | Verificar archivo P12 y password |
 | `CORS: Origen no permitido` | `ALLOWED_ORIGINS` no incluye el dominio usado | Agregar el origen en variables de entorno |
 | `401 Unauthorized` en Swagger | Token JWT expiró | Hacer login de nuevo |
-| Carbone no genera PDF | Carbone server no responde | Verificar `docker compose logs carbone` |
+| Carbone no genera PDF | Carbone server no responde | Verificar `docker compose logs sri-carbone` |
 | `JWT_SECRET must be 32+ chars` | JWT_SECRET muy corto | Generar uno nuevo con crypto.randomBytes |
 | `SRI_TIMEOUT` en comprobantes | El SRI no respondió | El sistema lo marca como PENDIENTE y lo reintenta automáticamente con la sincronización |
 | Error al hacer build en Dokploy | Falta memoria RAM en la VPS | Asignar al menos 2 GB de RAM para el build |
-| Contenedor se reinicia en bucle | Error en variables de entorno | Revisar logs: `docker compose logs api` |
+| Contenedor se reinicia en bucle | Error en variables de entorno | Revisar logs: `docker logs sri-api` |
+| `Variable de entorno requerida no definida: PORT` | La variable no está definida en Dokploy | Ver sección 5 — con Opción B, `PORT` ya va hardcodeada en el compose; asegúrate de no haber borrado el bloque `environment` |
+| `dependency carbone failed to start: container is unhealthy` | Healthcheck de carbone falla aunque el servicio corra | Ya corregido en el compose con `/proc/net/tcp` y `service_started`. Hacer redeploy. |
+| `Variable de entorno requerida no definida: PUBLIC_URL` (u otra) | Falta la variable en el panel de Dokploy | Ir a Environment del servicio y agregar la variable que falta según la sección 5 |
+| API arranca pero da 502 Bad Gateway | Dokploy apunta al puerto incorrecto | Verificar que el dominio en Dokploy use el puerto **3001** (no 3005) |
 
 ---
 
