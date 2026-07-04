@@ -24,6 +24,11 @@ SET row_security = off;
 
 CREATE SCHEMA IF NOT EXISTS public;
 
+--
+-- Extensions requeridas para UUID generation
+--
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 --
 -- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -

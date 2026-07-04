@@ -6,7 +6,7 @@ import { join } from 'path';
 import * as forge from 'node-forge';
 import { Crypto } from '@peculiar/webcrypto';
 import * as xadesjs from 'xadesjs';
-import * as xmlCore from 'xml-core';
+import { setNodeDependencies } from 'xadesjs';
 import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 import { DatabaseService } from '../../../database';
 import { EncryptionService } from '../../../common/services/encryption.service';
@@ -51,7 +51,7 @@ export class XmlSignerService implements OnModuleInit {
       3600000,
     ); // 1h default
     // Register Node.js DOM dependencies for xadesjs/xmldsigjs
-    xmlCore.setNodeDependencies({
+    setNodeDependencies({
       DOMParser,
       XMLSerializer,
     });
@@ -177,7 +177,7 @@ export class XmlSignerService implements OnModuleInit {
         name: 'RSA-SHA1',
       },
       this.privateKey,
-      xmlDoc,
+      xmlDoc as any,
       {
         x509: [this.certificate],
         references: [
@@ -202,7 +202,7 @@ export class XmlSignerService implements OnModuleInit {
       throw new Error('Error al generar el XML firmado');
     }
 
-    rootElement.appendChild(signedXmlDoc);
+    rootElement.appendChild(signedXmlDoc as any);
 
     const serializer = new XMLSerializer();
     const signedXmlString = serializer.serializeToString(xmlDoc);
@@ -418,7 +418,7 @@ export class XmlSignerService implements OnModuleInit {
         name: 'RSA-SHA1',
       },
       privateKey,
-      xmlDoc,
+      xmlDoc as any,
       {
         x509: [certificate],
         references: [
@@ -443,7 +443,7 @@ export class XmlSignerService implements OnModuleInit {
       throw new Error('Error al generar el XML firmado');
     }
 
-    rootElement.appendChild(signedXmlDoc);
+    rootElement.appendChild(signedXmlDoc as any);
 
     const serializer = new XMLSerializer();
     const signedXmlString = serializer.serializeToString(xmlDoc);
