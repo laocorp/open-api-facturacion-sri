@@ -59,7 +59,7 @@ services:
 
   # ─── Carbone.io (Generación de PDFs) ───
   carbone:
-    image: carboneio/carbone:latest
+    image: carbone/carbone-ee:latest
     container_name: sri-carbone
     restart: unless-stopped
     environment:
