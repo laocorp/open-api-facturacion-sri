@@ -52,7 +52,7 @@ services:
 
     # Port mapping
     ports:
-      - '${PORT:-3001}:3001'
+      - '${PORT:-3005}:3001'
 
     # Volume mounts for persistent data
     volumes:

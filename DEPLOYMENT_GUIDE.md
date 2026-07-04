@@ -8,13 +8,13 @@
 │                                                       │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐            │
 │  │PostgreSQL│  │  Redis   │  │ Carbone  │            │
-│  │   :5432  │  │  :6379   │  │  :3002   │            │
+│  │  :5449   │  │  :6379   │  │  :3006   │            │
 │  └────┬─────┘  └────┬─────┘  └────┬─────┘            │
 │       │              │              │                  │
 │       └──────┬───────┴──────┬──────┘                  │
 │              │              │                          │
 │        ┌─────▼──────────────▼──────┐                   │
-│        │     API NestJS :3001      │                   │
+│        │     API NestJS :3005      │                   │
 │        │  (JWT + BullMQ + XAdES)   │                   │
 │        └────────────┬──────────────┘                   │
 │                     │                                  │
@@ -107,7 +107,7 @@ Pega esos valores en `.env.production`:
    - `nest-cli.json`
    - `tsconfig.build.json`
 5. **Variables de entorno**: Dokploy puede leer `.env.production` o puedes configurarlas en el panel
-6. **Puertos**: El compose expone `3001:3001` (API), `5432:5432` (PostgreSQL), `3002:3000` (Carbone)
+6. **Puertos**: El compose expone `3005:3001` (API), `5449:5432` (PostgreSQL), `3006:3000` (Carbone)
 7. **Dominio**: Configura `sri.tudominio.com` → puerto `3001`
 8. **SSL**: Dokploy genera Let's Encrypt automático
 9. **Deploy**: Click en "Deploy"
@@ -169,8 +169,8 @@ curl -X PATCH http://localhost:3001/auth/change-password \
 ```bash
 # En tu VPS:
 # Solo necesitas puerto 443 (HTTPS) abierto al mundo
-# PostgreSQL :5432 solo debe ser accesible internamente
-# Carbone :3002 solo interno
+# PostgreSQL :5449 solo debe ser accesible internamente
+# Carbone :3006 solo interno
 # Redis :6379 solo interno
 ```
 
