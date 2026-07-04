@@ -86,8 +86,6 @@ services:
     image: open-api-facturacion-sri:latest
     container_name: sri-api
     restart: unless-stopped
-    env_file:
-      - .env.production
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
