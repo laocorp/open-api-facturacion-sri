@@ -67,7 +67,7 @@ services:
     ports:
       - '3006:4000'
     healthcheck:
-      test: ['CMD-SHELL', 'ss -tln | grep -q ":4000"']
+      test: ["CMD-SHELL", "grep -q ':0FA0' /proc/net/tcp"]
       interval: 30s
       timeout: 10s
       retries: 6
