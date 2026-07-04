@@ -87,12 +87,46 @@ services:
     container_name: sri-api
     restart: unless-stopped
     environment:
+      # ─── Server ───
+      NODE_ENV: production
+      PORT: 3001
+      PUBLIC_URL: ${PUBLIC_URL}
+      # ─── Database (internal compose network) ───
       DB_HOST: postgres
       DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-db_sri}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSL: ${DB_SSL:-false}
+      # ─── Redis (internal compose network) ───
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_DB: ${REDIS_DB:-0}
+      # ─── Carbone (internal compose network) ───
       CARBONE_API: http://carbone:4000
+      CARBONE_DEBUG: ${CARBONE_DEBUG:-false}
+      CARBONE_CONVERT_TO: ${CARBONE_CONVERT_TO:-pdf}
+      # ─── Directories (inside container) ───
+      TEMPLATES_DIR: /data/templates
+      PDFS_DIR: /data/pdfs
+      CERTS_DIR: /data/certs
+      XMLS_DIR: /data/xmls
+      # ─── JWT ───
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-8h}
+      # ─── Encryption ───
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ENCRYPTION_SALT: ${ENCRYPTION_SALT}
+      # ─── SRI Ecuador ───
+      SRI_ENVIRONMENT: ${SRI_ENVIRONMENT:-development}
+      SRI_RECEPTION_WSDL: ${SRI_RECEPTION_WSDL}
+      SRI_AUTHORIZATION_WSDL: ${SRI_AUTHORIZATION_WSDL}
+      SRI_SIGNATURE_CERT_PASSWORD: ${SRI_SIGNATURE_CERT_PASSWORD:-}
+      # ─── CORS / Rate limiting ───
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      THROTTLE_TTL: ${THROTTLE_TTL:-60000}
+      THROTTLE_LIMIT: ${THROTTLE_LIMIT:-100}
     ports:
       - '${PORT:-3005}:3001'
     volumes:
