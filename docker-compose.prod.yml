@@ -16,7 +16,7 @@ services:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD es obligatorio}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_new:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
     ports:
       - '5449:5432'
@@ -154,7 +154,7 @@ services:
         max-file: '5'
 
 volumes:
-  postgres_data:
+  postgres_data_new:
     driver: local
   redis_data:
     driver: local
