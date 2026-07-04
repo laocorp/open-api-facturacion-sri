@@ -27,7 +27,7 @@ CREATE SCHEMA IF NOT EXISTS public;
 --
 -- Extensions requeridas para UUID generation
 --
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 --
