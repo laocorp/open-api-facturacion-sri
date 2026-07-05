@@ -23,7 +23,7 @@ COPY . .
 RUN npm run build
 
 # Remove devDependencies after build
-RUN npm prune --production
+RUN npm prune --production --legacy-peer-deps
 
 # -----------------------------
 # Stage 2: Production
