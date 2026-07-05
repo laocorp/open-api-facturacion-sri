@@ -38,6 +38,7 @@ import {
 import { DatabaseService } from '../../database';
 import { EncryptionService } from '../../common/services/encryption.service';
 import { XmlSignerService } from '../sri/services/xml-signer.service';
+import { SriRepositoryService } from '../sri/services/sri-repository.service';
 import { EmisoresService } from '../emisores/emisores.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/dto/auth.dto';
@@ -54,6 +55,7 @@ export class CertificateController {
     private readonly encryptionService: EncryptionService,
     private readonly xmlSignerService: XmlSignerService,
     private readonly emisoresService: EmisoresService,
+    private readonly sriRepository: SriRepositoryService,
   ) {}
 
   /**
@@ -357,10 +359,13 @@ export class CertificateController {
         [fileName, encryptedPassword, expiryDate, subject, p12Buffer, ruc],
       );
 
-      // FIX P4: Invalidar caché del certificado en XmlSignerService
+      // Invalidar caché del certificado en XmlSignerService
       // para forzar la carga del nuevo P12 en la próxima firma
       this.xmlSignerService.clearEmisorCache(ruc);
-      this.logger.log(`Caché de certificado invalidado para RUC: ${ruc}`);
+      // Invalidar caché del emisor en SriRepositoryService
+      // para que el próximo findEmisorByRuc recoja certificate_nombre y password
+      this.sriRepository.clearEmisorCache(ruc);
+      this.logger.log(`Caché de certificado y emisor invalidado para RUC: ${ruc}`);
 
       return { success: true, message: 'Certificado vinculado correctamente' };
     } catch (error) {

@@ -135,6 +135,10 @@ export class SriRepositoryService {
     ); // 5 min default
   }
 
+  clearEmisorCache(ruc: string): void {
+    this.emisorCache.delete(ruc);
+  }
+
   // ==========================================
   // EMISOR METHODS
   // ==========================================
