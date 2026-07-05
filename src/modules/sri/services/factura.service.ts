@@ -218,6 +218,9 @@ export class FacturaService {
         resultado.estado === 'RECHAZADO' ||
         resultado.estado === 'DEVUELTA'
       ) {
+        this.logger.warn(
+          `SRI devolvió ${resultado.estado}: ${JSON.stringify(resultado.mensajes)}`,
+        );
         this.eventEmitter.emit('comprobante.rechazado', {
           emisorId: emisor?.id,
           claveAcceso,
