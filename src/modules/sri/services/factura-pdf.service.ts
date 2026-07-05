@@ -90,14 +90,18 @@ export class FacturaPdfService {
 
     for (let i = 0; i < detalles.length; i++) {
       const d = detalles[i];
+      const pUnit = Number(d.precio_unitario) || 0;
+      const desc = Number(d.descuento) || 0;
+      const sub = Number(d.subtotal) || 0;
+      const cant = Number(d.cantidad) || 0;
       if (y < 60) { currentPage = pdfDoc.addPage([612, 792]); y = height - 40; }
       drawText(`${i + 1}`, colX[0], 8);
       drawText(d.codigo_principal || '', colX[1], 8);
       drawText(d.descripcion || '', colX[2], 8);
-      drawText(`${d.cantidad}`, colX[3], 8);
-      drawText(`${d.precio_unitario?.toFixed(2)}`, colX[4], 8);
-      drawText(`${d.descuento?.toFixed(2) || '0.00'}`, colX[5], 8);
-      drawText(`${d.subtotal?.toFixed(2)}`, colX[6], 8);
+      drawText(`${cant}`, colX[3], 8);
+      drawText(`${pUnit.toFixed(2)}`, colX[4], 8);
+      drawText(`${desc.toFixed(2)}`, colX[5], 8);
+      drawText(`${sub.toFixed(2)}`, colX[6], 8);
       y -= 14;
     }
 
@@ -107,19 +111,20 @@ export class FacturaPdfService {
     p().drawRectangle({ x: width - 200, y: y - 4, width: 160, height: 80, borderColor: rgb(0.6, 0.6, 0.6), borderWidth: 1 });
     y -= 2;
 
+    const toNum = (v: any) => Number(v) || 0;
     const totals = [
-      { label: 'Subtotal', value: comprobante.total_sin_impuestos },
-      { label: 'Descuento', value: comprobante.total_descuento || 0 },
-      { label: 'Propina', value: comprobante.propina || 0 },
+      { label: 'Subtotal', value: toNum(comprobante.total_sin_impuestos) },
+      { label: 'Descuento', value: toNum(comprobante.total_descuento) },
+      { label: 'Propina', value: toNum(comprobante.propina) },
     ];
     for (const t of totals) {
       y -= 14;
       drawText(t.label, width - 190, 9);
-      drawText(`${t.value?.toFixed(2)}`, width - 60, 9);
+      drawText(`${t.value.toFixed(2)}`, width - 60, 9);
     }
     y -= 18;
     drawBold('TOTAL', width - 190, 12);
-    drawBold(`${comprobante.importe_total?.toFixed(2)}`, width - 60, 12);
+    drawBold(`${toNum(comprobante.importe_total).toFixed(2)}`, width - 60, 12);
 
     y = totalY - 90;
     if (pagos.length > 0) {
@@ -128,7 +133,7 @@ export class FacturaPdfService {
       y -= 4;
       for (const p of pagos) {
         y -= 14;
-        drawText(`${p.forma_pago}: $${p.total?.toFixed(2)}`, 44, 9);
+        drawText(`${p.forma_pago}: $${toNum(p.total).toFixed(2)}`, 44, 9);
       }
     }
 
