@@ -267,6 +267,10 @@ export class EmisoresService {
     const values: any[] = [];
     let paramIndex = 1;
 
+    if (dto.ruc !== undefined) {
+      updates.push(`ruc = $${paramIndex++}`);
+      values.push(dto.ruc);
+    }
     if (dto.razonSocial !== undefined) {
       updates.push(`razon_social = $${paramIndex++}`);
       values.push(dto.razonSocial);

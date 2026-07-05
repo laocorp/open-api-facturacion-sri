@@ -66,6 +66,13 @@ export class CreateEmisorDto {
 }
 
 export class UpdateEmisorDto {
+  @ApiPropertyOptional({ description: 'RUC del emisor (13 dígitos)' })
+  @IsOptional()
+  @IsString()
+  @Length(13, 13)
+  @Matches(/^\d{13}$/, { message: 'El RUC debe tener 13 dígitos' })
+  ruc?: string;
+
   @ApiPropertyOptional({ description: 'Razón social' })
   @IsOptional()
   @IsString()
