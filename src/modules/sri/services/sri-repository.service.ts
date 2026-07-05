@@ -606,6 +606,16 @@ export class SriRepositoryService {
     return result.rows;
   }
 
+  async findPagosByComprobanteId(comprobanteId: string): Promise<any[]> {
+    const result = await this.db.query<any>(
+      `SELECT forma_pago, total, plazo, unidad_tiempo
+       FROM comprobante_pagos WHERE comprobante_id = $1
+       ORDER BY id`,
+      [comprobanteId],
+    );
+    return result.rows;
+  }
+
   /**
    * Obtiene la info adicional de un comprobante
    * Retorna array vacío si la tabla no existe o no hay datos

@@ -20,6 +20,7 @@ import {
   GuiaRemisionService,
 } from './services';
 import { SriRepositoryService } from './services/sri-repository.service';
+import { FacturaPdfService } from './services/factura-pdf.service';
 import { XmlStorageService } from './services/xml-storage.service';
 import { EmisoresModule } from '../emisores/emisores.module';
 import { SriEmisionProcessor } from './processors/sri-emision.processor';
@@ -48,6 +49,7 @@ import { SriEmisionProcessor } from './processors/sri-emision.processor';
     SriSoapClient,
     IdentificacionValidatorService,
     CatalogoValidatorService,
+    FacturaPdfService,
     SriEmisionProcessor,
   ],
   exports: [

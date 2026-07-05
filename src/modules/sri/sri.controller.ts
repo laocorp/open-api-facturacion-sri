@@ -31,6 +31,7 @@ import {
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { SriService } from './sri.service';
+import { FacturaPdfService } from './services/factura-pdf.service';
 import { EmisoresService } from '../emisores/emisores.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload, UserRole } from '../auth/dto/auth.dto';
@@ -66,6 +67,7 @@ export class SriController {
     private readonly sriService: SriService,
     private readonly emisoresService: EmisoresService,
     private readonly configService: ConfigService,
+    private readonly facturaPdfService: FacturaPdfService,
   ) {}
 
   /**
@@ -435,6 +437,29 @@ export class SriController {
       `attachment; filename="${claveAcceso}.xml"`,
     );
     res.send(xml);
+  }
+
+  @Get('comprobantes/:claveAcceso/pdf')
+  @ApiOperation({
+    summary: 'Descargar PDF de factura',
+    description: 'Genera y descarga el PDF de una factura autorizada',
+  })
+  @ApiParam({
+    name: 'claveAcceso',
+    description: 'Clave de acceso de 49 dígitos',
+  })
+  @ApiResponse({ status: 200, description: 'PDF de factura' })
+  async descargarPdf(
+    @Param('claveAcceso') claveAcceso: string,
+    @Res() res: Response,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<void> {
+    this.logger.log(`GET /sri/comprobantes/${claveAcceso}/pdf`);
+    await this.validateClaveAccesoAccess(claveAcceso, user);
+    const pdf = await this.facturaPdfService.generatePdf(claveAcceso);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="factura_${claveAcceso}.pdf"`);
+    res.send(pdf);
   }
 
   @Patch('comprobantes/:claveAcceso/anular')
