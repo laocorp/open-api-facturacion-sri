@@ -64,7 +64,7 @@ export class GuiaRemisionService {
 
       // Get emisor info from database
       const emisor = await this.repository.findEmisorByRuc(dto.emisor.ruc);
-      const ambiente = dto.ambiente || emisor?.ambiente || this.base.getDefaultAmbiente();
+      const ambiente = dto.ambiente || (emisor?.ambiente as Ambiente) || this.base.getDefaultAmbiente();
       const tipoEmision = dto.tipoEmision || TipoEmision.NORMAL;
       const puntoEmisionInfo = emisor
         ? await this.repository.findPuntoEmision(
