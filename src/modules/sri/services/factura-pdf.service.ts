@@ -92,7 +92,10 @@ export class FacturaPdfService {
     const metaX = MARGIN + CONTENT_W - 220;
     curPage.drawText(numDoc, { x: metaX, y: PAGE_H - MARGIN - 12, size: 14, font: bold, color: WHITE });
     curPage.drawText(`RUC: ${rucLabel}`, { x: metaX, y: PAGE_H - MARGIN - 28, size: 8, font, color: WHITE });
-    const fechaEmision = comprobante.fecha_emision || '';
+    const rawFecha = comprobante.fecha_emision as any;
+    const fechaEmision = rawFecha instanceof Date
+      ? rawFecha.toISOString().split('T')[0]
+      : String(comprobante.fecha_emision || '');
     curPage.drawText(fechaEmision, { x: metaX, y: PAGE_H - MARGIN - 40, size: 8, font, color: WHITE });
 
     y = PAGE_H - MARGIN - 56;
