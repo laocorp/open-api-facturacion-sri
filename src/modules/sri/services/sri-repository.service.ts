@@ -606,6 +606,16 @@ export class SriRepositoryService {
     return result.rows;
   }
 
+  async findTotalesByComprobanteId(comprobanteId: string): Promise<any[]> {
+    const result = await this.db.query<any>(
+      `SELECT codigo, codigo_porcentaje, base_imponible, tarifa, valor
+       FROM comprobante_totales WHERE comprobante_id = $1
+       ORDER BY id`,
+      [comprobanteId],
+    );
+    return result.rows;
+  }
+
   async findPagosByComprobanteId(comprobanteId: string): Promise<any[]> {
     const result = await this.db.query<any>(
       `SELECT forma_pago, total, plazo, unidad_tiempo
