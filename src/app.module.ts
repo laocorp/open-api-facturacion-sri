@@ -90,6 +90,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
             rootPath: join(pdfDir, 'images'),
             serveRoot: '/images',
           },
+          {
+            rootPath: join(process.cwd(), 'public', 'docs'),
+            serveRoot: '/docs',
+            serveStaticOptions: { index: ['index.html'] },
+          },
         ];
       },
       inject: [ConfigService],

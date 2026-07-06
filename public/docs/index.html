@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Facturación SRI - Documentación</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a2e; background: #f8f9fa; line-height: 1.6; }
+header { background: #0f1b33; color: #fff; padding: 2.5rem 2rem; }
+header h1 { font-size: 1.8rem; margin-bottom: .3rem; }
+header p { color: #8fa0c0; }
+nav { background: #fff; border-bottom: 1px solid #e0e0e0; padding: .8rem 2rem; position: sticky; top: 0; z-index: 10; }
+nav a { color: #0f1b33; text-decoration: none; margin-right: 1.5rem; font-size: .9rem; font-weight: 500; }
+nav a:hover { color: #2c6faa; }
+main { max-width: 900px; margin: 0 auto; padding: 2rem; }
+section { background: #fff; border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+h2 { font-size: 1.3rem; margin-bottom: 1rem; color: #0f1b33; }
+h3 { font-size: 1rem; margin: 1.2rem 0 .5rem; color: #2c6faa; }
+p, li { color: #444; margin-bottom: .5rem; }
+code { background: #eef2f7; padding: .15rem .4rem; border-radius: 4px; font-size: .85rem; color: #c7254e; }
+pre { background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; margin: .8rem 0; }
+pre .comment { color: #6a9955; }
+table { width: 100%; border-collapse: collapse; margin: .8rem 0; }
+th, td { text-align: left; padding: .5rem .8rem; border-bottom: 1px solid #e0e0e0; font-size: .9rem; }
+th { background: #f0f4f8; font-weight: 600; color: #0f1b33; }
+.endpoint { font-family: monospace; background: #e8f0fe; padding: .2rem .5rem; border-radius: 4px; color: #1a73e8; }
+.badge { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .75rem; font-weight: 600; }
+.get { background: #e3f2fd; color: #1565c0; }
+.post { background: #e8f5e9; color: #2e7d32; }
+.put { background: #fff3e0; color: #e65100; }
+.del { background: #fbe9e7; color: #c62828; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>API Facturación Electrónica SRI</h1>
+  <p>Emisión de comprobantes electrónicos autorizados por el SRI — Ecuador</p>
+</header>
+
+<nav>
+  <a href="#inicio">Inicio rápido</a>
+  <a href="#auth">Autenticación</a>
+  <a href="#endpoints">Endpoints</a>
+  <a href="#errores">Errores</a>
+  <a href="/api">Swagger</a>
+</nav>
+
+<main>
+
+<section id="inicio">
+  <h2>Inicio rápido</h2>
+  <p>Usa tu API Key en el header <code>X-Api-Key</code> para autenticarte.</p>
+
+  <h3>1. Obtén tu API Key</h3>
+  <p>Regístrate vía <code>POST /onboarding</code> o desde el panel admin en <code>POST /api-keys</code>.</p>
+
+  <h3>2. Emitir una factura</h3>
+  <pre><span class="comment"># Curl</span>
+curl -X POST https://api.techost.cloud/sri/emitir/factura \
+  -H "X-Api-Key: sk_live_abc123..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "emisor": { "ruc": "1950370393001" },
+    "comprador": {
+      "identificacion": "1790012345001",
+      "razonSocial": "AEROCARIBE S.A.",
+      "direccion": "Av. Amazonas N37-29"
+    },
+    "detalles": [
+      {
+        "codigoPrincipal": "001",
+        "descripcion": "Servicio de consultoría",
+        "cantidad": 1,
+        "precioUnitario": 200.00,
+        "descuento": 0,
+        "impuestos": [{ "codigo": "2", "codigoPorcentaje": "4", "tarifa": 15, "baseImponible": 200, "valor": 30 }]
+      }
+    ],
+    "pagos": [{ "formaPago": "03", "total": 230.00 }]
+  }'</pre>
+
+  <h3>JavaScript (Node.js)</h3>
+  <pre>const res = await fetch('https://api.techost.cloud/sri/emitir/factura', {
+  method: 'POST',
+  headers: { 'X-Api-Key': 'sk_live_...', 'Content-Type': 'application/json' },
+  body: JSON.stringify({ emisor: { ruc: '...' }, /* ... */ }),
+});
+const data = await res.json();
+console.log(data.claveAcceso);</pre>
+
+  <h3>Python</h3>
+  <pre>import requests
+res = requests.post('https://api.techost.cloud/sri/emitir/factura',
+  headers={'X-Api-Key': 'sk_live_...'},
+  json={ 'emisor': { 'ruc': '...' }, /* ... */ })
+data = res.json()
+print(data['claveAcceso'])</pre>
+</section>
+
+<section id="auth">
+  <h2>Autenticación</h2>
+  <p>Todos los endpoints de emisión requieren una API Key válida en el header:</p>
+  <pre>X-Api-Key: sk_live_&lt;tu_api_key&gt;</pre>
+
+  <h3>Rate Limiting</h3>
+  <table>
+    <tr><th>Tier</th><th>Límite</th><th>Ventana</th></tr>
+    <tr><td>Basic</td><td>30 requests</td><td>1 minuto</td></tr>
+    <tr><td>Professional</td><td>120 requests</td><td>1 minuto</td></tr>
+    <tr><td>Enterprise</td><td>600 requests</td><td>1 minuto</td></tr>
+  </table>
+  <p>Las respuestas incluyen headers <code>X-RateLimit-Remaining</code> y <code>X-RateLimit-Reset</code>.</p>
+
+  <h3>Administración (JWT)</h3>
+  <p>Los endpoints de administración (API Keys, usage, configuración) usan JWT. Obtén tu token vía <code>POST /auth/login</code>.</p>
+</section>
+
+<section id="endpoints">
+  <h2>Endpoints principales</h2>
+  <table>
+    <tr><th>Método</th><th>Ruta</th><th>Descripción</th></tr>
+    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/factura</span></td><td>Emitir factura electrónica</td></tr>
+    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/nota-credito</span></td><td>Emitir nota de crédito</td></tr>
+    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/nota-debito</span></td><td>Emitir nota de débito</td></tr>
+    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/retencion</span></td><td>Emitir comprobante de retención</td></tr>
+    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/guia-remision</span></td><td>Emitir guía de remisión</td></tr>
+    <tr><td><span class="badge get">GET</span></td><td><span class="endpoint">/sri/comprobantes/:claveAcceso/pdf</span></td><td>Descargar PDF</td></tr>
+    <tr><td><span class="badge get">GET</span></td><td><span class="endpoint">/sri/comprobantes/:claveAcceso/xml</span></td><td>Descargar XML autorizado</td></tr>
+    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/onboarding</span></td><td>Registro completo (tenant + usuario + emisor + API Key)</td></tr>
+  </table>
+  <p>Ver la <a href="/api">documentación Swagger completa</a> para más detalles.</p>
+</section>
+
+<section id="errores">
+  <h2>Códigos de error</h2>
+  <table>
+    <tr><th>Código</th><th>Significado</th><th>Solución</th></tr>
+    <tr><td>400</td><td>Datos inválidos</td><td>Revisa el formato de los campos en Swagger</td></tr>
+    <tr><td>401</td><td>API Key inválida</td><td>Verifica que el header X-Api-Key sea correcto</td></tr>
+    <tr><td>429</td><td>Rate limit excedido</td><td>Espera y reintenta. Considera upgrade de tier</td></tr>
+    <tr><td>500</td><td>Error interno / SRI</td><td>Revisa logs. El comprobante pudo quedar encolado</td></tr>
+  </table>
+  <p>Errores del SRI se devuelven en <code>mensajes</code> del response con código y detalle.</p>
+</section>
+
+</main>
+</body>
+</html>

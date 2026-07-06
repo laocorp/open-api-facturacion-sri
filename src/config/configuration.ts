@@ -86,12 +86,20 @@ export default () => ({
     ssl: optionalEnv('DB_SSL', 'false'),
   },
 
-  // Redis Configuration (BullMQ + Cache)
+  // Redis Configuration (BullMQ + Cache + Rate Limiting)
   redis: {
     host: optionalEnv('REDIS_HOST', 'localhost'),
     port: parseInt(optionalEnv('REDIS_PORT', '6379'), 10),
     password: optionalEnv('REDIS_PASSWORD', ''),
     db: parseInt(optionalEnv('REDIS_DB', '0'), 10),
+  },
+
+  // Rate Limiting tiers (requests per minute)
+  rateLimit: {
+    basic: parseInt(optionalEnv('RATE_LIMIT_BASIC', '30'), 10),
+    professional: parseInt(optionalEnv('RATE_LIMIT_PROFESSIONAL', '120'), 10),
+    enterprise: parseInt(optionalEnv('RATE_LIMIT_ENTERPRISE', '600'), 10),
+    windowMs: parseInt(optionalEnv('RATE_LIMIT_WINDOW_MS', '60000'), 10),
   },
 
   // Directory Paths (REQUIRED)
@@ -136,6 +144,12 @@ export interface AppConfig {
   };
   encryptionKey: string;
   encryptionSalt: string;
+  rateLimit: {
+    basic: number;
+    professional: number;
+    enterprise: number;
+    windowMs: number;
+  };
   database: {
     host: string;
     port: number;

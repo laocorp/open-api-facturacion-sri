@@ -68,17 +68,32 @@ async function bootstrap() {
     .setDescription(
       `## API Enterprise de Facturación Electrónica para el SRI Ecuador
 
-**Multi-tenant** | **XAdES-BES** | **SOAP SRI** | **Webhooks** | **JWT Auth**
+**Multi-tenant** | **XAdES-BES** | **SOAP SRI** | **Webhooks** | **JWT + API Key Auth**
+
+📚 [Documentación completa →](/docs)
 
 ### 🔐 Autenticación
-Todos los endpoints requieren un token JWT.  
-1. Ejecuta \`POST /auth/login\` con tus credenciales.  
-2. Copia el \`accessToken\` de la respuesta.  
-3. Haz clic en el botón **Authorize 🔒** y pégalo.
+Dos formas de autenticación:
+- **API Key** (emisión SRI): Header \`X-Api-Key: sk_live_...\`
+- **JWT** (administración): \`POST /auth/login\` → \`Authorization: Bearer <token>\`
 
 ### 🌐 Ambientes SRI
-- **Pruebas:** Usar \`"ambiente": "1"\` en las peticiones.
-- **Producción:** Usar \`"ambiente": "2"\` (solo cuando el SRI apruebe la cuenta).`,
+- **Pruebas:** \`"ambiente": "1"\`
+- **Producción:** \`"ambiente": "2"\`
+
+### 🚀 Inicio rápido
+\`\`\`bash
+# 1. Regístrate
+curl -X POST https://api.techost.cloud/onboarding \\
+  -H "Content-Type: application/json" \\
+  -d '{"email":"user@ejemplo.com","password":"pass1234","ruc":"1950370393001","razonSocial":"Mi Empresa S.A.","direccionMatriz":"Av. Principal 123","tenantName":"mi-empresa"}'
+
+# 2. Emite tu primera factura
+curl -X POST https://api.techost.cloud/sri/emitir/factura \\
+  -H "X-Api-Key: sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{...}'
+\`\`\``,
     )
     .setVersion('2.0.0')
     .addBearerAuth(
@@ -89,6 +104,15 @@ Todos los endpoints requieren un token JWT.
         description: 'Token JWT obtenido en POST /auth/login',
       },
       'JWT',
+    )
+    .addApiKey(
+      {
+        type: 'apiKey',
+        in: 'header',
+        name: 'X-Api-Key',
+        description: 'API Key para endpoints de emisión. Ej: sk_live_...',
+      },
+      'X-Api-Key',
     )
     .addTag('Auth - Autenticación', 'Login, registro y gestión de usuarios')
     .addTag('Status', 'Estado del servidor y health checks')
@@ -116,6 +140,7 @@ Todos los endpoints requieren un token JWT.
     .addTag('Templates', 'Gestión de plantillas de documentos')
     .addTag('Signature', 'Firma digital de PDFs')
     .addTag('Images', 'Gestión de imágenes')
+    .addTag('Onboarding', 'Registro completo: tenant + usuario + emisor + API Key')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
