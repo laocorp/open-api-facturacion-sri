@@ -102,6 +102,11 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
             serveRoot: '/payment',
             serveStaticOptions: { index: ['index.html'] },
           },
+          {
+            rootPath: join(process.cwd(), 'public'),
+            serveRoot: '/',
+            serveStaticOptions: { index: ['index.html'] },
+          },
         ];
       },
       inject: [ConfigService],
