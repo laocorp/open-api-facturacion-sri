@@ -37,6 +37,20 @@ COMMENT ON SCHEMA public IS 'standard public schema';
 
 
 --
+-- Name: update_updated_at_column(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.update_updated_at_column() RETURNS trigger
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: user_role; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1696,6 +1710,119 @@ CREATE INDEX idx_webhook_logs_evento ON public.webhook_logs USING btree (evento)
 --
 
 CREATE INDEX idx_xmls_comprobante ON public.comprobante_xmls USING btree (comprobante_id);
+
+
+--
+-- Name: api_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.api_keys (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id uuid NOT NULL,
+    key_hash character varying(255) NOT NULL,
+    key_prefix character varying(20) NOT NULL,
+    name character varying(100) NOT NULL,
+    tier character varying(20) DEFAULT 'basic'::character varying NOT NULL,
+    is_active boolean DEFAULT true NOT NULL,
+    last_used_at timestamp with time zone,
+    expires_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE api_keys; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.api_keys IS 'API Keys para clientes externos (Phase 1 comercialización)';
+
+
+--
+-- Name: usage_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.usage_logs (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id uuid NOT NULL,
+    api_key_id uuid,
+    endpoint text NOT NULL,
+    method character varying(10) NOT NULL,
+    comprobante_type character varying(50),
+    clave_acceso character varying(49),
+    status_code integer,
+    estado character varying(20),
+    response_time_ms integer,
+    ip_address inet,
+    user_agent text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE usage_logs; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.usage_logs IS 'Registro de uso de API para tracking y facturación';
+
+
+--
+-- Name: idx_api_keys_key_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_api_keys_key_hash ON public.api_keys USING btree (key_hash);
+
+
+--
+-- Name: idx_api_keys_tenant; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_api_keys_tenant ON public.api_keys USING btree (tenant_id);
+
+
+--
+-- Name: idx_usage_logs_tenant_created; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_usage_logs_tenant_created ON public.usage_logs USING btree (tenant_id, created_at DESC);
+
+
+--
+-- Name: idx_usage_logs_created; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_usage_logs_created ON public.usage_logs USING btree (created_at) WHERE (created_at < (now() - '6 months'::interval));
+
+
+--
+-- Name: api_keys api_keys_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.api_keys
+    ADD CONSTRAINT api_keys_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
+
+
+--
+-- Name: usage_logs usage_logs_tenant_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.usage_logs
+    ADD CONSTRAINT usage_logs_tenant_id_fkey FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
+
+
+--
+-- Name: usage_logs usage_logs_api_key_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.usage_logs
+    ADD CONSTRAINT usage_logs_api_key_id_fkey FOREIGN KEY (api_key_id) REFERENCES public.api_keys(id) ON DELETE SET NULL;
+
+
+--
+-- Name: api_keys set_updated_at_api_keys; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER set_updated_at_api_keys BEFORE UPDATE ON public.api_keys FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 
 --
