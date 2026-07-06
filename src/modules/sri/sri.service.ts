@@ -29,6 +29,8 @@ import {
   EmisionEncoladaResponseDto,
 } from './dto';
 import { TIPO_COMPROBANTE_DESCRIPCIONES } from './constants';
+import { DatabaseService } from '../../database/database.service';
+import { PayphoneService } from '../payphone/payphone.service';
 
 @Injectable()
 export class SriService {
@@ -46,6 +48,8 @@ export class SriService {
     private readonly eventEmitter: EventEmitter2,
     private readonly configService: ConfigService,
     private readonly xmlBuilder: XmlBuilderService,
+    private readonly payphoneService: PayphoneService,
+    private readonly db: DatabaseService,
     @InjectQueue('sri-emision') private readonly emisionQueue: Queue,
   ) {}
 
@@ -547,7 +551,25 @@ export class SriService {
       numero_autorizacion: resultado.numeroAutorizacion,
     });
 
-    // Si fue autorizado, guardar XML autorizado
+    // Si fue autorizado, deducir saldo
+    if (esAutorizado) {
+      try {
+        const { rows } = await this.db.query(
+          `SELECT tenant_id FROM emisores WHERE id = $1`,
+          [comprobante.emisor_id],
+        );
+        if (rows.length > 0 && rows[0].tenant_id) {
+          await this.payphoneService.deductBalance(
+            rows[0].tenant_id,
+            comprobante.id as string,
+            `${comprobante.tipo_comprobante}:${claveAcceso}`,
+          );
+        }
+      } catch (e) {
+        this.logger.warn(`No se pudo deducir saldo: ${(e as Error).message}`);
+      }
+    }
+
     if (esAutorizado && resultado.xmlAutorizado) {
       // Extraer datos para guardar el XML
       const rucEmisor = extractRucFromClaveAcceso(claveAcceso);

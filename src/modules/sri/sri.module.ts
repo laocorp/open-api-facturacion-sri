@@ -24,11 +24,15 @@ import { FacturaPdfService } from './services/factura-pdf.service';
 import { XmlStorageService } from './services/xml-storage.service';
 import { EmisoresModule } from '../emisores/emisores.module';
 import { SriEmisionProcessor } from './processors/sri-emision.processor';
+import { DatabaseModule } from '../../database';
+import { PayphoneModule } from '../payphone/payphone.module';
 
 @Module({
   imports: [
     ConfigModule,
     EmisoresModule,
+    DatabaseModule,
+    PayphoneModule,
     BullModule.registerQueue({ name: 'sri-emision' }),
   ],
   controllers: [SriController, CatalogosController],

@@ -107,6 +107,37 @@ EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
 ---
 CREATE UNIQUE INDEX IF NOT EXISTS idx_pending_payments_client_tx ON public.pending_payments(client_tx_id);
+---
+CREATE TABLE IF NOT EXISTS public.tenant_balances (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id uuid NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
+    balance_cents integer DEFAULT 0 NOT NULL,
+    updated_at timestamp with time zone DEFAULT now()
+)
+---
+DO $$ BEGIN
+  ALTER TABLE public.tenant_balances ADD CONSTRAINT tenant_balances_pkey PRIMARY KEY (id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+---
+CREATE UNIQUE INDEX IF NOT EXISTS idx_tenant_balances_tenant ON public.tenant_balances(tenant_id);
+---
+CREATE TABLE IF NOT EXISTS public.credit_transactions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id uuid NOT NULL,
+    amount_cents integer NOT NULL,
+    type character varying(20) NOT NULL,
+    reference character varying(100),
+    comprobante_id uuid,
+    created_at timestamp with time zone DEFAULT now()
+)
+---
+DO $$ BEGIN
+  ALTER TABLE public.credit_transactions ADD CONSTRAINT credit_transactions_pkey PRIMARY KEY (id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+---
+CREATE INDEX IF NOT EXISTS idx_credit_tx_tenant ON public.credit_transactions(tenant_id);
 `;
 
 @Injectable()
