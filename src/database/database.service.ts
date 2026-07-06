@@ -10,6 +10,11 @@ import {
 import { ConfigService } from '@nestjs/config';
 
 const MIGRATIONS = `
+CREATE OR REPLACE FUNCTION public.update_updated_at_column() RETURNS trigger
+  LANGUAGE plpgsql AS $$ BEGIN
+    NEW.updated_at = now(); RETURN NEW; END;
+  $$;
+---
 CREATE TABLE IF NOT EXISTS public.api_keys (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id uuid NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
@@ -23,7 +28,10 @@ CREATE TABLE IF NOT EXISTS public.api_keys (
     updated_at timestamp with time zone DEFAULT now()
 )
 ---
-ALTER TABLE public.api_keys ADD CONSTRAINT IF NOT EXISTS api_keys_pkey PRIMARY KEY (id)
+DO $$ BEGIN
+  ALTER TABLE public.api_keys ADD CONSTRAINT api_keys_pkey PRIMARY KEY (id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 ---
 CREATE INDEX IF NOT EXISTS idx_api_keys_tenant ON public.api_keys(tenant_id)
 ---
@@ -45,7 +53,10 @@ CREATE TABLE IF NOT EXISTS public.usage_logs (
     created_at timestamp with time zone DEFAULT now()
 )
 ---
-ALTER TABLE public.usage_logs ADD CONSTRAINT IF NOT EXISTS usage_logs_pkey PRIMARY KEY (id)
+DO $$ BEGIN
+  ALTER TABLE public.usage_logs ADD CONSTRAINT usage_logs_pkey PRIMARY KEY (id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 ---
 CREATE INDEX IF NOT EXISTS idx_usage_logs_tenant ON public.usage_logs(tenant_id)
 ---
