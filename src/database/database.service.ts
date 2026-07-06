@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 import {
   Injectable,
@@ -57,6 +59,16 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         '✅ Conexión a la base de datos establecida correctamente',
       );
       client.release();
+
+      // Auto-run pending migrations
+      try {
+        const migrationPath = join(process.cwd(), 'database', 'migrations', '001_api_keys_usage.sql');
+        const sql = readFileSync(migrationPath, 'utf-8');
+        await this.pool.query(sql);
+        this.logger.log('✅ Migration 001_api_keys_usage applied');
+      } catch (err) {
+        this.logger.error('❌ Migration failed', err);
+      }
     } catch (error) {
       // No relanzar — dejar que la app arranque pero con errores claros en cada query
       this.logger.error(
