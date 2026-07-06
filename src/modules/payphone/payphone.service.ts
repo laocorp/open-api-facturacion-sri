@@ -11,26 +11,24 @@ const BUNDLES = [
   { label: 'Business $100', cents: 10000, bonus: 2000 },
 ];
 
-interface PayphoneSaleResponse {
-  id: number;
-  url: string;
-  clientTransactionId?: string;
-}
-
 @Injectable()
 export class PayphoneService {
   private readonly logger = new Logger(PayphoneService.name);
   private readonly apiUrl: string;
+  private readonly paymentBoxUrl: string;
   private readonly token: string;
-  private readonly storeId: number;
+  private readonly storeId: string;
+  private readonly publicUrl: string;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly db: DatabaseService,
   ) {
     this.apiUrl = this.configService.get<string>('payphone.apiUrl', 'https://api.payphone.app');
+    this.paymentBoxUrl = 'https://paymentbox.payphonetodoesposible.com';
     this.token = this.configService.get<string>('payphone.token', '');
-    this.storeId = this.configService.get<number>('payphone.storeId', 0);
+    this.storeId = this.configService.get<string>('payphone.storeId', '');
+    this.publicUrl = this.configService.get<string>('publicUrl', '');
   }
 
   async getBalance(tenantId: string): Promise<{ balanceCents: number; comprobantesDisponibles: number }> {
@@ -52,58 +50,47 @@ export class PayphoneService {
     }));
   }
 
-  async buyBundle(tenantId: string, bundleCents: number, successUrl?: string) {
+  async buyBundle(tenantId: string, bundleCents: number) {
     const bundle = BUNDLES.find((b) => b.cents === bundleCents);
     if (!bundle) throw new HttpException('Bundle no válido', HttpStatus.BAD_REQUEST);
 
     const clientTransactionId = this.generateClientTxId();
     const totalCents = bundle.cents + bundle.bonus;
-    const tax = Math.round(bundle.cents * 0.15 / 1.15);
-    const amountWithTax = bundle.cents - tax;
-
-    const body = {
-      amount: bundle.cents,
-      amountWithTax,
-      tax,
-      currency: 'USD',
-      clientTransactionId,
-      storeId: this.storeId,
-      reference: `bundle:${bundle.cents}|tenant:${tenantId}`,
-    };
-
-    const res = await this.callPayphone<PayphoneSaleResponse>('/api/v2/sale', body);
 
     await this.db.query(
-      `INSERT INTO pending_payments (client_tx_id, tenant_id, amount, payphone_sale_id, tier)
-       VALUES ($1, $2, $3, $4, 'bundle')`,
-      [clientTransactionId, tenantId, totalCents, res.id],
+      `INSERT INTO pending_payments (client_tx_id, tenant_id, amount, tier)
+       VALUES ($1, $2, $3, 'bundle')`,
+      [clientTransactionId, tenantId, totalCents],
     );
 
-    return { payphoneId: res.id, url: res.url, clientTransactionId };
+    const payUrl = `${this.publicUrl}/pay?clientTxId=${clientTransactionId}&amount=${bundle.cents}&tenantId=${tenantId}&label=${encodeURIComponent(bundle.label)}`;
+
+    return { payUrl, clientTransactionId };
   }
 
-  async handleWebhook(payload: Record<string, unknown>) {
-    const saleId = payload.id_sale ?? payload.id_venta;
-    const clientTxId = (payload.clientTransactionId || payload.client_transaction_id) as string | undefined;
-
-    if (!clientTxId) return { Response: false, ErrorCode: '001' };
-
+  async confirmPayment(id: number, clientTxId: string): Promise<{ approved: boolean; message: string }> {
     const { rows } = await this.db.query(
       `SELECT id, tenant_id, amount, status FROM pending_payments WHERE client_tx_id = $1`,
       [clientTxId],
     );
-    if (rows.length === 0) return { Response: false, ErrorCode: '002' };
-
+    if (rows.length === 0) {
+      return { approved: false, message: 'Transacción no encontrada' };
+    }
     const payment = rows[0];
-    if (payment.status === 'completed') return { Response: true, ErrorCode: '' };
+    if (payment.status === 'completed') {
+      return { approved: true, message: 'Ya confirmada' };
+    }
 
     try {
-      const confirm = await this.callPayphone<{ status: string }>(`/api/v2/sale/${saleId}/confirm`, {});
-      const approved = confirm.status === 'approved' || payload.estado === 'approved';
+      const confirmRes = await this.callPayphoneBox<{ statusCode: number; transactionStatus: string; transactionId: number }>(
+        '/api/confirm',
+        { id, clientTxId },
+      );
+      const approved = confirmRes.statusCode === 3;
 
       await this.db.query(
-        `UPDATE pending_payments SET status = $1, confirmed_at = NOW() WHERE id = $2`,
-        [approved ? 'completed' : 'failed', payment.id],
+        `UPDATE pending_payments SET status = $1, payphone_sale_id = $2, confirmed_at = NOW() WHERE id = $3`,
+        [approved ? 'completed' : 'failed', confirmRes.transactionId, payment.id],
       );
 
       if (approved) {
@@ -116,14 +103,14 @@ export class PayphoneService {
         await this.db.query(
           `INSERT INTO credit_transactions (tenant_id, amount_cents, type, reference)
            VALUES ($1, $2, 'topup', $3)`,
-          [payment.tenant_id, payment.amount, `payphone:${saleId}`],
+          [payment.tenant_id, payment.amount, `payphone:${confirmRes.transactionId}`],
         );
         this.logger.log(`Balance +${payment.amount}¢ for tenant ${payment.tenant_id}`);
       }
-      return { Response: true, ErrorCode: '' };
+      return { approved, message: approved ? 'Aprobada' : 'Rechazada' };
     } catch (err) {
-      this.logger.error(`Webhook error: ${(err as Error).message}`);
-      return { Response: false, ErrorCode: '003' };
+      this.logger.error(`Confirm error: ${(err as Error).message}`);
+      return { approved: false, message: 'Error al confirmar' };
     }
   }
 
@@ -145,8 +132,8 @@ export class PayphoneService {
     );
   }
 
-  private async callPayphone<T>(path: string, body: Record<string, unknown>): Promise<T> {
-    const res = await fetch(`${this.apiUrl}${path}`, {
+  private async callPayphoneBox<T>(path: string, body: Record<string, unknown>): Promise<T> {
+    const res = await fetch(`${this.paymentBoxUrl}${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.token}` },
       body: JSON.stringify(body),

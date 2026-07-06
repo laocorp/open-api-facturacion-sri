@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { PayphoneController } from './payphone.controller';
+import { PayController } from './pay.controller';
 import { PayphoneService } from './payphone.service';
 import { DatabaseModule } from '../../database';
-import { ApiKeysModule } from '../api-keys/api-keys.module';
 
 @Module({
-  imports: [DatabaseModule, ApiKeysModule],
-  controllers: [PayphoneController],
+  imports: [DatabaseModule],
+  controllers: [PayphoneController, PayController],
   providers: [PayphoneService],
   exports: [PayphoneService],
 })

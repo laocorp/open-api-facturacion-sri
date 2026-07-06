@@ -101,16 +101,18 @@ print(data['claveAcceso'])</pre>
 </section>
 
 <section id="pricing">
-  <h2>Planes y precios</h2>
+  <h2>Precios — Pay per use</h2>
+  <p><strong>$0.05 por comprobante</strong> emitido y autorizado. Sin mensualidad.</p>
+
+  <h3>Bundles de recarga</h3>
   <table>
-    <tr><th>Tier</th><th>Límite / min</th><th>Precio</th><th>Ideal para</th></tr>
-    <tr><td><strong>Basic</strong></td><td>30 requests</td><td><em>Próximamente</em></td><td>Pruebas, bajo volumen</td></tr>
-    <tr><td><strong>Professional</strong></td><td>120 requests</td><td><em>Próximamente</em></td><td>PyMEs, facturación diaria</td></tr>
-    <tr><td><strong>Enterprise</strong></td><td>600 requests</td><td><em>Próximamente</em></td><td>Alto volumen, múltiples emisores</td></tr>
-    <tr><td><strong>Unlimited</strong></td><td>Ilimitado</td><td><em>Próximamente</em></td><td>Corporativo, whitelabel</td></tr>
+    <tr><th>Bundle</th><th>Pago</th><th>Bonus</th><th>Total comprobantes</th></tr>
+    <tr><td><strong>Básico</strong></td><td>$10</td><td>—</td><td>200</td></tr>
+    <tr><td><strong>Popular</strong></td><td>$25</td><td>+$2.50</td><td>550</td></tr>
+    <tr><td><strong>Pro</strong></td><td>$50</td><td>+$7.50</td><td>1,250</td></tr>
+    <tr><td><strong>Business</strong></td><td>$100</td><td>+$20</td><td>3,000</td></tr>
   </table>
-  <p>Las respuestas incluyen headers <code>X-RateLimit-Remaining</code> y <code>X-RateLimit-Reset</code>.</p>
-  <p>Cambia de plan vía <code>PUT /api-keys/:id</code> con <code>{ "tier": "professional" }</code>.</p>
+  <p>Compra vía <code>POST /payphone/buy-bundle</code>. Consulta saldo en <code>GET /payphone/balance/:tenantId</code>.</p>
 </section>
 
 <section id="auth">
