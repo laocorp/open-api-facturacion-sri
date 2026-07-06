@@ -37,6 +37,7 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
 import { TenantsModule } from './modules/tenants/tenants.module';
 import { PuntosEmisionModule } from './modules/puntos-emision/puntos-emision.module';
 import { ApiKeysModule } from './modules/api-keys/api-keys.module';
+import { UsageModule } from './modules/usage/usage.module';
 
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
@@ -120,6 +121,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TenantsModule,
     PuntosEmisionModule,
     ApiKeysModule,
+    UsageModule,
   ],
   providers: [
     // Guard JWT global — protege todos los endpoints excepto @Public()
