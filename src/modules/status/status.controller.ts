@@ -1,4 +1,4 @@
-import { Controller, Get, Redirect } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { StatusService } from './status.service';
 import { Public } from '../auth/decorators/public.decorator';
@@ -50,12 +50,6 @@ export class StatusController {
 
   /**
    * GET /
-   * Redirect to status
+   * Landing page (served by ServeStaticModule)
    */
-  @Get()
-  @Redirect('/status', 302)
-  @ApiOperation({ summary: 'Redirigir a status' })
-  root() {
-    // Redirect handled by @Redirect decorator
-  }
 }
