@@ -13,6 +13,7 @@ import { AuditModule } from './common/services/audit.module';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 import { QueueModule } from './common/queues/queue.module';
 import { RedisCacheModule } from './common/cache/redis-cache.module';
+import { RedisModule } from './common/redis/redis.module';
 
 // Database Module
 import { DatabaseModule } from './database';
@@ -97,6 +98,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     AuditModule,
     QueueModule,
     RedisCacheModule,
+    RedisModule,
 
     // Database Module
     DatabaseModule,
