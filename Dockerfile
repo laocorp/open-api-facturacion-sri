@@ -49,6 +49,9 @@ COPY --from=builder /app/node_modules ./node_modules
 # Copy built application
 COPY --from=builder /app/dist ./dist
 
+# Copy static assets (public/docs)
+COPY --from=builder /app/public ./public
+
 # Create directories for volumes
 RUN mkdir -p /data/templates /data/pdfs /data/certs /data/xmls \
     /data/pdfs/con_firma /data/pdfs/others /data/pdfs/documents /data/pdfs/images
