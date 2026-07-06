@@ -155,6 +155,17 @@ export class AuthService {
   }
 
   /**
+   * Elimina un usuario por ID
+   */
+  async deleteUser(id: string) {
+    const r = await this.db.query(
+      `DELETE FROM usuarios WHERE id = $1 AND rol != 'SUPERADMIN'`,
+      [id],
+    );
+    if (r.rowCount === 0) throw new NotFoundException('Usuario no encontrado o es SUPERADMIN');
+  }
+
+  /**
    * Registra un nuevo usuario (solo SUPERADMIN puede crear usuarios)
    */
   async register(dto: RegisterUserDto): Promise<{

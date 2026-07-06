@@ -4,6 +4,8 @@ import {
   Body,
   Get,
   Patch,
+  Delete,
+  Param,
   Logger,
   HttpCode,
   HttpStatus,
@@ -103,6 +105,15 @@ export class AuthController {
   @ApiOperation({ summary: 'Listar todos los usuarios (solo SUPERADMIN)' })
   async listUsers() {
     return this.authService.listUsers();
+  }
+
+  @Delete('users/:id')
+  @Roles(UserRole.SUPERADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Eliminar usuario (solo SUPERADMIN)' })
+  async deleteUser(@Param('id') id: string) {
+    await this.authService.deleteUser(id);
+    return { message: 'Usuario eliminado' };
   }
 
   /**
