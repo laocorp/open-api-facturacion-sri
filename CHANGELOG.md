@@ -1,6 +1,6 @@
 # Changelog
 
-Todos los cambios notables del proyecto **Open API Facturación Electrónica SRI** se documentan en este archivo.
+Todos los cambios notables del proyecto **Techost API** se documentan en este archivo.
 
 Este formato sigue el estándar [Keep a Changelog](https://keepachangelog.com/es/1.0.0/) y el proyecto adhiere al [Versionado Semántico](https://semver.org/lang/es/).
 

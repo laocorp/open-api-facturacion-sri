@@ -83,7 +83,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: open-api-facturacion-sri:latest
+    image: techost-api:latest
     container_name: sri-api
     restart: unless-stopped
     environment:

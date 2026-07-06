@@ -98,7 +98,7 @@ Dokploy necesita acceso al repositorio Git. Asegúrate de tener:
 ## 3. Estructura del proyecto
 
 ```
-open-api-facturacion-sri/
+techost-api/
 ├── docker-compose.prod.yml      ← Dokploy usa este archivo
 ├── Dockerfile                   ← Build multi-stage
 ├── package.json                 ← Dependencias
@@ -158,7 +158,7 @@ Dentro del proyecto:
 1. Haz clic en **"Nuevo servicio"**
 2. Tipo: **"Docker Compose"**
 3. **Source**: Conéctalo a tu repositorio de GitHub
-   - Selecciona el repositorio `laocorp/open-api-facturacion-sri`
+   - Selecciona el repositorio `laocorp/techost-api`
    - Rama: `main`
    - Ruta del archivo compose: `docker-compose.prod.yml`
 4. **Nombre del servicio**: `sri-api` (o el que prefieras)

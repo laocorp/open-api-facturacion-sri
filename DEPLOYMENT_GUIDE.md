@@ -47,7 +47,7 @@
 ```bash
 # En tu máquina local o directo en el VPS via git
 git clone https://github.com/laocorp/open-api-facturacion-sri.git
-cd open-api-facturacion-sri
+cd techost-api
 
 # Instalar dependencias (solo si quieres probar local)
 npm install

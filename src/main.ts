@@ -62,9 +62,9 @@ async function bootstrap() {
   // ===== FILTRO DE EXCEPCIONES GLOBAL =====
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  // ===== SWAGGER — Open API Facturación SRI =====
+  // ===== SWAGGER — Techost API =====
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Open API Facturación SRI')
+    .setTitle('Techost API')
     .setDescription(
       `## API Enterprise de Facturación Electrónica para el SRI Ecuador
 
@@ -178,7 +178,7 @@ curl -X POST https://api.techost.cloud/sri/emitir/factura \\
 
   logger.log(`
 =======================================================
-  Open API Facturación SRI — Facturación Electrónica Ecuador
+  Techost API — Facturación Electrónica Ecuador
 =======================================================
   Entorno:    ${nodeEnv.toUpperCase()}
   Env File:   ${envFile}

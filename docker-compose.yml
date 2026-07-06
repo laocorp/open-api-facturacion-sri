@@ -10,7 +10,7 @@ services:
   # ─── Redis (BullMQ + Cache) ───
   redis:
     image: redis:7-alpine
-    container_name: open-api-redis
+    container_name: techost-redis
     restart: unless-stopped
     command: >
       /bin/sh -c '
@@ -36,11 +36,11 @@ services:
         max-file: '2'
 
   # ─── Open API Facturación SRI ───
-  open-api-facturacion-sri:
+  techost-api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: open-api-facturacion-sri
+    container_name: techost-api
     restart: unless-stopped
     env_file:
       - .env.docker

@@ -24,8 +24,8 @@
   ─────────────────                     ─────────────────────
 
   ┌─────────────────┐                   ┌─────────────────────┐
-  │  Código Fuente  │                   │   /opt/open-api-facturacion-sri  │
-  │  open-api-facturacion-sri/   │                   │                     │
+  │  Código Fuente  │                   │   /opt/techost-api  │
+  │  techost-api/   │                   │                     │
   │                 │                   │  docker-compose.yml │
   │  npm run        │                   │  templates/         │
   │  docker:push    │                   │  pdfs/              │
@@ -36,7 +36,7 @@
   │   Docker Hub    │◄─────────────────────────────┘
   │                 │    docker compose pull
   │  angelobarzola/ │
-  │  open-api-facturacion-sri    │
+  │  techost-api    │
   └─────────────────┘
 ```
 
@@ -75,9 +75,9 @@ nginx -v
 
 ```bash
 # Crear directorio principal
-sudo mkdir -p /opt/open-api-facturacion-sri
-sudo chown $USER:$USER /opt/open-api-facturacion-sri
-cd /opt/open-api-facturacion-sri
+sudo mkdir -p /opt/techost-api
+sudo chown $USER:$USER /opt/techost-api
+cd /opt/techost-api
 ```
 
 ### Paso 2: Login a Docker Hub
@@ -93,9 +93,9 @@ docker login
 ```bash
 cat > docker-compose.prod.yml << 'EOF'
 services:
-  open-api-facturacion-sri:
-    image: angelobarzola/open-api-facturacion-sri:latest
-    container_name: open-api-facturacion-sri
+  techost-api:
+    image: angelobarzola/techost-api:latest
+    container_name: techost-api
     restart: unless-stopped
     env_file:
       - .env.docker
@@ -164,7 +164,7 @@ curl http://localhost:3001/status
 ### Crear archivo de configuración
 
 ```bash
-sudo nano /etc/nginx/sites-available/open-api-facturacion-sri
+sudo nano /etc/nginx/sites-available/techost-api
 ```
 
 ### Contenido (ajustar dominio):
@@ -199,7 +199,7 @@ server {
 ### Habilitar y recargar:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/open-api-facturacion-sri /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/techost-api /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -219,7 +219,7 @@ npm run docker:push
 ### En el servidor:
 
 ```bash
-cd /opt/open-api-facturacion-sri
+cd /opt/techost-api
 
 # Descargar nueva versión
 docker compose -f docker-compose.prod.yml pull
@@ -274,8 +274,8 @@ docker compose -f docker-compose.prod.yml logs -f
 
 | Comando                          | Descripción                |
 | -------------------------------- | -------------------------- |
-| `docker exec -it open-api-facturacion-sri sh` | Entrar al contenedor       |
-| `docker stats open-api-facturacion-sri`       | Ver uso de recursos        |
+| `docker exec -it techost-api sh` | Entrar al contenedor       |
+| `docker stats techost-api`       | Ver uso de recursos        |
 | `docker system prune -a`         | Limpiar imágenes no usadas |
 
 ---
@@ -321,7 +321,7 @@ docker compose -f docker-compose.prod.yml up -d
 ## Estructura Final en Servidor
 
 ```
-/opt/open-api-facturacion-sri/
+/opt/techost-api/
 ├── docker-compose.prod.yml    # Configuración de Docker
 ├── .env.docker                # Variables de entorno
 ├── templates/                  # Archivos de plantillas

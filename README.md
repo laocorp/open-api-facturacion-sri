@@ -121,7 +121,7 @@ La mayoría de soluciones de facturación electrónica para Ecuador son librerí
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/AngeloBarzolaVillamar/open-api-facturacion-sri.git
-cd open-api-facturacion-sri
+cd techost-api
 
 # 2. Instalar dependencias
 npm install
@@ -483,7 +483,7 @@ Password:  Admin123!
 ## 📁 Estructura del Proyecto
 
 ```
-open-api-facturacion-sri/
+techost-api/
 ├── src/
 │   ├── common/
 │   │   ├── cache/            # Módulo Redis Cache

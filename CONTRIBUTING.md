@@ -75,7 +75,7 @@ cp .env.example .env.development
 # Edita .env.development con tu configuración local
 
 # 5. Levanta Redis con Docker (necesario para BullMQ y caché)
-docker run -d --name open-api-redis -p 6379:6379 redis:7-alpine
+docker run -d --name techost-redis -p 6379:6379 redis:7-alpine
 
 # 6. Inicia la aplicación en modo desarrollo
 npm run start:dev

@@ -172,7 +172,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
           'DB_CONNECTION_TIMEOUT',
           10000,
         ),
-        application_name: `open-api-facturacion-sri-${process.env.NODE_ENV ?? 'dev'}`,
+        application_name: `techost-api-${process.env.NODE_ENV ?? 'dev'}`,
       });
 
       // Listener de errores del pool
