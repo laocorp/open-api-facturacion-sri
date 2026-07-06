@@ -41,6 +41,7 @@ th { background: #f0f4f8; font-weight: 600; color: #0f1b33; }
 
 <nav>
   <a href="#inicio">Inicio rápido</a>
+  <a href="#pricing">Planes</a>
   <a href="#auth">Autenticación</a>
   <a href="#endpoints">Endpoints</a>
   <a href="#errores">Errores</a>
@@ -99,19 +100,25 @@ data = res.json()
 print(data['claveAcceso'])</pre>
 </section>
 
+<section id="pricing">
+  <h2>Planes y precios</h2>
+  <table>
+    <tr><th>Tier</th><th>Límite / min</th><th>Precio</th><th>Ideal para</th></tr>
+    <tr><td><strong>Basic</strong></td><td>30 requests</td><td><em>Próximamente</em></td><td>Pruebas, bajo volumen</td></tr>
+    <tr><td><strong>Professional</strong></td><td>120 requests</td><td><em>Próximamente</em></td><td>PyMEs, facturación diaria</td></tr>
+    <tr><td><strong>Enterprise</strong></td><td>600 requests</td><td><em>Próximamente</em></td><td>Alto volumen, múltiples emisores</td></tr>
+    <tr><td><strong>Unlimited</strong></td><td>Ilimitado</td><td><em>Próximamente</em></td><td>Corporativo, whitelabel</td></tr>
+  </table>
+  <p>Las respuestas incluyen headers <code>X-RateLimit-Remaining</code> y <code>X-RateLimit-Reset</code>.</p>
+  <p>Cambia de plan vía <code>PUT /api-keys/:id</code> con <code>{ "tier": "professional" }</code>.</p>
+</section>
+
 <section id="auth">
   <h2>Autenticación</h2>
   <p>Todos los endpoints de emisión requieren una API Key válida en el header:</p>
   <pre>X-Api-Key: sk_live_&lt;tu_api_key&gt;</pre>
 
-  <h3>Rate Limiting</h3>
-  <table>
-    <tr><th>Tier</th><th>Límite</th><th>Ventana</th></tr>
-    <tr><td>Basic</td><td>30 requests</td><td>1 minuto</td></tr>
-    <tr><td>Professional</td><td>120 requests</td><td>1 minuto</td></tr>
-    <tr><td>Enterprise</td><td>600 requests</td><td>1 minuto</td></tr>
-  </table>
-  <p>Las respuestas incluyen headers <code>X-RateLimit-Remaining</code> y <code>X-RateLimit-Reset</code>.</p>
+  <p>Las API Keys se administran vía JWT en <code>GET/POST /api-keys</code>.</p>
 
   <h3>Administración (JWT)</h3>
   <p>Los endpoints de administración (API Keys, usage, configuración) usan JWT. Obtén tu token vía <code>POST /auth/login</code>.</p>
