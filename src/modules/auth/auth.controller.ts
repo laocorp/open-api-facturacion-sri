@@ -94,6 +94,18 @@ export class AuthController {
   }
 
   /**
+   * GET /auth/users
+   * Lista todos los usuarios (solo SUPERADMIN)
+   */
+  @Get('users')
+  @Roles(UserRole.SUPERADMIN)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Listar todos los usuarios (solo SUPERADMIN)' })
+  async listUsers() {
+    return this.authService.listUsers();
+  }
+
+  /**
    * GET /auth/me
    * Retorna información del usuario autenticado
    */

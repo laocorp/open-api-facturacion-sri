@@ -141,6 +141,19 @@ export class AuthService {
   }
 
   /**
+   * Lista todos los usuarios con su tenant
+   */
+  async listUsers() {
+    return this.db.query(
+      `SELECT u.id, u.email, u.rol, u.activo, u.last_login, u.created_at,
+              t.nombre AS tenant_nombre
+       FROM usuarios u
+       LEFT JOIN tenants t ON t.id = u.tenant_id
+       ORDER BY u.created_at DESC`,
+    );
+  }
+
+  /**
    * Registra un nuevo usuario (solo SUPERADMIN puede crear usuarios)
    */
   async register(dto: RegisterUserDto): Promise<{
