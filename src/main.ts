@@ -142,6 +142,7 @@ curl -X POST https://api.techost.cloud/sri/emitir/factura \\
     .addTag('Images', 'Gestión de imágenes')
     .addTag('Onboarding', 'Registro completo: tenant + usuario + emisor + API Key')
     .addTag('Admin', 'Tareas administrativas (solo SUPERADMIN)')
+    .addTag('Payphone - Pagos', 'Integración con Payphone para pagos y upgrades de tier')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);

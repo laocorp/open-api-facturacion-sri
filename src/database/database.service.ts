@@ -88,6 +88,25 @@ DO $$ BEGIN
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
+---
+CREATE TABLE IF NOT EXISTS public.pending_payments (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    client_tx_id character varying(12) NOT NULL,
+    tenant_id uuid NOT NULL,
+    tier character varying(20) NOT NULL,
+    amount integer NOT NULL,
+    payphone_sale_id integer,
+    status character varying(20) DEFAULT 'pending' NOT NULL,
+    confirmed_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now()
+)
+---
+DO $$ BEGIN
+  ALTER TABLE public.pending_payments ADD CONSTRAINT pending_payments_pkey PRIMARY KEY (id);
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+---
+CREATE UNIQUE INDEX IF NOT EXISTS idx_pending_payments_client_tx ON public.pending_payments(client_tx_id);
 `;
 
 @Injectable()

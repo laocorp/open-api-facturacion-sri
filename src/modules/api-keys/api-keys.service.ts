@@ -92,6 +92,14 @@ export class ApiKeysService {
     return this.findOne(id, tenantId);
   }
 
+  async setTierForTenant(tenantId: string, tier: string): Promise<void> {
+    await this.db.query(
+      `UPDATE api_keys SET tier = $1, updated_at = NOW() WHERE tenant_id = $2 AND activo = true`,
+      [tier, tenantId],
+    );
+    this.logger.log(`Tier actualizado para tenant ${tenantId}: ${tier}`);
+  }
+
   async rotate(id: string, tenantId: string): Promise<ApiKeyResponseDto> {
     await this.findOne(id, tenantId);
     const rawKey = crypto.randomBytes(24).toString('hex');

@@ -94,6 +94,13 @@ export default () => ({
     db: parseInt(optionalEnv('REDIS_DB', '0'), 10),
   },
 
+  // Payphone (payment gateway)
+  payphone: {
+    apiUrl: optionalEnv('PAYPHONE_API_URL', 'https://api.payphone.app'),
+    token: optionalEnv('PAYPHONE_TOKEN', ''),
+    storeId: parseInt(optionalEnv('PAYPHONE_STORE_ID', '0'), 10),
+  },
+
   // Rate Limiting tiers (requests per minute)
   rateLimit: {
     basic: parseInt(optionalEnv('RATE_LIMIT_BASIC', '30'), 10),
@@ -144,6 +151,11 @@ export interface AppConfig {
   };
   encryptionKey: string;
   encryptionSalt: string;
+  payphone: {
+    apiUrl: string;
+    token: string;
+    storeId: number;
+  };
   rateLimit: {
     basic: number;
     professional: number;
