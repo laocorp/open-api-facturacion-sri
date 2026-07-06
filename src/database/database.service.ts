@@ -33,15 +33,15 @@ CREATE INDEX IF NOT EXISTS idx_api_keys_activo ON public.api_keys(activo) WHERE 
 ---
 CREATE TABLE IF NOT EXISTS public.usage_logs (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id uuid NOT NULL REFERENCES public.tenants(id) ON DELETE CASCADE,
-    api_key_id uuid REFERENCES public.api_keys(id) ON DELETE SET NULL,
+    tenant_id uuid NOT NULL,
+    api_key_id uuid,
     endpoint character varying(255) NOT NULL,
     method character varying(10) NOT NULL,
     status_code integer,
     ip_address inet,
     user_agent text,
     response_time_ms integer,
-    comprobante_id uuid REFERENCES public.comprobantes(id) ON DELETE SET NULL,
+    comprobante_id uuid,
     created_at timestamp with time zone DEFAULT now()
 )
 ---
@@ -56,6 +56,21 @@ CREATE INDEX IF NOT EXISTS idx_usage_logs_endpoint ON public.usage_logs(endpoint
 CREATE INDEX IF NOT EXISTS idx_usage_logs_created_at ON public.usage_logs(created_at)
 ---
 CREATE INDEX IF NOT EXISTS idx_usage_logs_tenant_created ON public.usage_logs(tenant_id, created_at DESC)
+---
+DO $$ BEGIN
+  ALTER TABLE public.usage_logs ADD CONSTRAINT fk_usage_logs_tenant FOREIGN KEY (tenant_id) REFERENCES public.tenants(id) ON DELETE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+---
+DO $$ BEGIN
+  ALTER TABLE public.usage_logs ADD CONSTRAINT fk_usage_logs_api_key FOREIGN KEY (api_key_id) REFERENCES public.api_keys(id) ON DELETE SET NULL;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+---
+DO $$ BEGIN
+  ALTER TABLE public.usage_logs ADD CONSTRAINT fk_usage_logs_comprobante FOREIGN KEY (comprobante_id) REFERENCES public.comprobantes(id) ON DELETE SET NULL;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 ---
 DO $$ BEGIN
   CREATE TRIGGER update_api_keys_updated_at BEFORE UPDATE ON public.api_keys
