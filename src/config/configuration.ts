@@ -98,7 +98,7 @@ export default () => ({
   payphone: {
     apiUrl: optionalEnv('PAYPHONE_API_URL', 'https://api.payphone.app'),
     token: optionalEnv('PAYPHONE_TOKEN', ''),
-    storeId: parseInt(optionalEnv('PAYPHONE_STORE_ID', '0'), 10),
+    storeId: optionalEnv('PAYPHONE_STORE_ID', '0'),
   },
 
   // Rate Limiting tiers (requests per minute)
@@ -154,7 +154,7 @@ export interface AppConfig {
   payphone: {
     apiUrl: string;
     token: string;
-    storeId: number;
+    storeId: string;
   };
   rateLimit: {
     basic: number;
