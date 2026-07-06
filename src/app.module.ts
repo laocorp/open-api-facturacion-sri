@@ -39,6 +39,7 @@ import { PuntosEmisionModule } from './modules/puntos-emision/puntos-emision.mod
 import { ApiKeysModule } from './modules/api-keys/api-keys.module';
 import { UsageModule } from './modules/usage/usage.module';
 import { OnboardingModule } from './modules/onboarding/onboarding.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
@@ -129,6 +130,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     ApiKeysModule,
     UsageModule,
     OnboardingModule,
+    AdminModule,
   ],
   providers: [
     // Guard JWT global — protege todos los endpoints excepto @Public()
