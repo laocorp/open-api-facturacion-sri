@@ -61,26 +61,62 @@
   }
 
   /* IntersectionObserver: reveal animations */
-  const revealElements = document.querySelectorAll('.reveal');
+  var revealSelectors = '[class*="reveal"]';
+  var revealElements = document.querySelectorAll(revealSelectors);
 
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(function(entries) {
+  function makeObserver(rootMargin, threshold) {
+    if (!('IntersectionObserver' in window)) return null;
+    return new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+          entry.target.dispatchEvent(new CustomEvent('revealed'));
+          this.unobserve(entry.target);
         }
       });
-    }, {
-      threshold: 0.08,
-      rootMargin: '0px 0px -40px 0px',
-    });
+    }, { threshold: threshold || 0.08, rootMargin: rootMargin || '0px 0px -40px 0px' });
+  }
 
-    revealElements.forEach(function(el) {
-      observer.observe(el);
-    });
+  var revealObserver = makeObserver();
+  if (revealObserver) {
+    revealElements.forEach(function(el) { revealObserver.observe(el); });
   } else {
     revealElements.forEach(function(el) { el.classList.add('visible'); });
+  }
+
+  /* Counter animation for metrics */
+  function animateCounter(el) {
+    var target = parseInt(el.getAttribute('data-target'), 10);
+    var suffix = el.getAttribute('data-suffix') || '';
+    var prefix = el.getAttribute('data-prefix') || '';
+    var duration = 1500;
+    var start = performance.now();
+
+    function tick(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(eased * target);
+      el.textContent = prefix + current + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  document.querySelectorAll('.counter-num').forEach(function(el) {
+    el.addEventListener('revealed', function() { animateCounter(el); }, { once: true });
+  });
+
+  /* Step connection line animation */
+  var stepLineFill = document.getElementById('step-line-fill');
+  if (stepLineFill) {
+    var stepsObserver = makeObserver('0px 0px -80px 0px', 0.15);
+    if (stepsObserver) {
+      stepsObserver.observe(stepLineFill);
+    } else {
+      stepLineFill.classList.add('visible');
+    }
   }
 
   /* Smooth scroll */

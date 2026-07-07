@@ -1,159 +1,871 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Techost API - Documentación</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1a1a2e; background: #f8f9fa; line-height: 1.6; }
-header { background: #0f1b33; color: #fff; padding: 2.5rem 2rem; }
-header h1 { font-size: 1.8rem; margin-bottom: .3rem; }
-header p { color: #8fa0c0; }
-nav { background: #fff; border-bottom: 1px solid #e0e0e0; padding: .8rem 2rem; position: sticky; top: 0; z-index: 10; }
-nav a { color: #0f1b33; text-decoration: none; margin-right: 1.5rem; font-size: .9rem; font-weight: 500; }
-nav a:hover { color: #2c6faa; }
-main { max-width: 900px; margin: 0 auto; padding: 2rem; }
-section { background: #fff; border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-h2 { font-size: 1.3rem; margin-bottom: 1rem; color: #0f1b33; }
-h3 { font-size: 1rem; margin: 1.2rem 0 .5rem; color: #2c6faa; }
-p, li { color: #444; margin-bottom: .5rem; }
-code { background: #eef2f7; padding: .15rem .4rem; border-radius: 4px; font-size: .85rem; color: #c7254e; }
-pre { background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: .85rem; margin: .8rem 0; }
-pre .comment { color: #6a9955; }
-table { width: 100%; border-collapse: collapse; margin: .8rem 0; }
-th, td { text-align: left; padding: .5rem .8rem; border-bottom: 1px solid #e0e0e0; font-size: .9rem; }
-th { background: #f0f4f8; font-weight: 600; color: #0f1b33; }
-.endpoint { font-family: monospace; background: #e8f0fe; padding: .2rem .5rem; border-radius: 4px; color: #1a73e8; }
-.badge { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .75rem; font-weight: 600; }
-.get { background: #e3f2fd; color: #1565c0; }
-.post { background: #e8f5e9; color: #2e7d32; }
-.put { background: #fff3e0; color: #e65100; }
-.del { background: #fbe9e7; color: #c62828; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechOST API — Documentación</title>
+  <meta name="description" content="Documentación oficial de TechOST API. Guía de inicio rápido, autenticación, endpoints, códigos de error y bundles de facturación electrónica SRI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
+  <link rel="alternate icon" href="/favicon/favicon.ico">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy-800: #0a1628;
+      --navy-700: #0f1d35;
+      --green-500: #059669;
+      --green-400: #10b981;
+      --green-100: #ecfdf5;
+      --blue-500: #0052cc;
+      --gray-50: #f7f8fa;
+      --gray-100: #eef0f4;
+      --gray-200: #dde0e7;
+      --gray-300: #b8bcc8;
+      --gray-400: #8e93a3;
+      --gray-500: #646a7e;
+      --gray-600: #4a5063;
+      --gray-700: #323849;
+      --gray-800: #1e2332;
+      --white: #ffffff;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --shadow-sm: 0 1px 3px rgba(6,13,26,0.06), 0 1px 2px rgba(6,13,26,0.04);
+      --shadow-md: 0 4px 12px rgba(6,13,26,0.08);
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── NAVBAR ─── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 56px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+    }
+
+    .navbar-inner {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--navy-800);
+    }
+
+    .navbar-logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--green-500), var(--green-400));
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .navbar-logo span { color: var(--green-500); }
+
+    .navbar-links { display: flex; align-items: center; gap: 20px; }
+    .navbar-links a { font-size: 13px; font-weight: 500; color: var(--gray-400); transition: color 0.2s; }
+    .navbar-links a:hover { color: var(--navy-800); }
+
+    .navbar-links .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--green-500), var(--green-400));
+      color: var(--white);
+      transition: box-shadow 0.2s;
+    }
+    .navbar-links .btn:hover { box-shadow: 0 4px 12px rgba(5,150,105,0.25); }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      bottom: 0;
+      width: 240px;
+      background: var(--white);
+      border-right: 1px solid var(--gray-100);
+      overflow-y: auto;
+      padding: 24px 0;
+    }
+
+    .sidebar-group { margin-bottom: 20px; }
+    .sidebar-group-title {
+      padding: 6px 24px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--gray-300);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .sidebar a {
+      display: block;
+      padding: 7px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-500);
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+    .sidebar a:hover { color: var(--navy-800); background: var(--gray-50); }
+    .sidebar a.active {
+      color: var(--green-500);
+      background: var(--green-100);
+      border-left-color: var(--green-500);
+    }
+
+    /* ─── CONTENT ─── */
+    .content {
+      margin-top: 56px;
+      margin-left: 240px;
+      flex: 1;
+      padding: 40px 56px 80px;
+      max-width: 900px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy-800);
+      letter-spacing: -0.025em;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--gray-400);
+      margin-bottom: 48px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--navy-800);
+      margin: 40px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    h2:first-of-type { margin-top: 0; }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--navy-800);
+      margin: 28px 0 10px;
+    }
+
+    p { margin-bottom: 14px; color: var(--gray-600); }
+    p strong { color: var(--navy-800); }
+
+    ul, ol { margin: 0 0 16px 20px; }
+    li { margin-bottom: 6px; color: var(--gray-600); }
+
+    /* Inline code */
+    code:not(pre code) {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--gray-100);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: var(--green-500);
+    }
+
+    /* Code blocks */
+    pre {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      background: #0d1117;
+      color: #e6edf3;
+      padding: 20px 24px;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      position: relative;
+    }
+
+    pre .c { color: #8b949e; }    /* comment */
+    pre .k { color: #ff7b72; }    /* keyword */
+    pre .s { color: #a5d6ff; }    /* string */
+    pre .n { color: #e6edf3; }    /* name/default */
+    pre .p { color: #e6edf3; }    /* punctuation */
+    pre .o { color: #ff7b72; }    /* operator */
+    pre .m { color: #79c0ff; }    /* number */
+    pre .f { color: #d2a8ff; }    /* function */
+    pre .v { color: #e6edf3; }    /* variable */
+    pre .kc { color: #79c0ff; }   /* const */
+    pre .cm { color: #8b949e; font-style: italic; }
+    pre .dl { color: #a5d6ff; }   /* delimiter (template literals) */
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 0;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      overflow: hidden;
+    }
+
+    .code-tab {
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      background: #161b22;
+      color: #8b949e;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .code-tab:hover { color: #e6edf3; background: #1c2128; }
+    .code-tab.active { color: #e6edf3; background: #0d1117; }
+
+    pre.code-block { border-radius: 0 0 var(--radius-md) var(--radius-md); margin-top: 0; }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--gray-50);
+    }
+
+    td { color: var(--gray-600); }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .badge-get { background: #e3f2fd; color: #1565c0; }
+    .badge-post { background: var(--green-100); color: var(--green-500); }
+    .badge-put { background: #fff3e0; color: #e65100; }
+    .badge-del { background: #fbe9e7; color: #c62828; }
+
+    .endpoint-path {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--navy-800);
+    }
+
+    /* Info callout */
+    .callout {
+      padding: 16px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      margin: 16px 0 24px;
+      border-left: 3px solid;
+    }
+
+    .callout-info {
+      background: var(--gray-50);
+      border-color: var(--blue-500);
+    }
+
+    .callout-info strong { color: var(--blue-500); }
+
+    .callout-success {
+      background: var(--green-100);
+      border-color: var(--green-500);
+    }
+
+    .callout-success strong { color: var(--green-500); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .content { margin-left: 0; padding: 24px 20px 60px; }
+    }
+
+    @media (max-width: 600px) {
+      .navbar-links a:not(.btn) { display: none; }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>Techost API</h1>
-  <p>API de facturación electrónica SRI — Ecuador</p>
-</header>
+  <!-- ═══ TOP BAR ═══ -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-logo">
+        <span class="navbar-logo-mark">T</span>
+        TechOST<span>API</span>
+      </a>
+      <nav class="navbar-links">
+        <a href="/">Inicio</a>
+        <a href="/api">Swagger</a>
+        <a href="/docs/postman.json">Postman</a>
+        <a href="#contact" class="btn">Comenzar ahora</a>
+      </nav>
+    </div>
+  </header>
 
-<nav>
-  <a href="#inicio">Inicio rápido</a>
-  <a href="#pricing">Planes</a>
-  <a href="#auth">Autenticación</a>
-  <a href="#endpoints">Endpoints</a>
-  <a href="#errores">Errores</a>
-  <a href="/api">Swagger</a>
-</nav>
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" role="navigation">
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Empezar</div>
+      <a href="#inicio" class="active">Inicio rápido</a>
+      <a href="#autenticacion">Autenticación</a>
+      <a href="#hmac">Firma HMAC</a>
+      <a href="#pricing">Precios</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">API Reference</div>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#factura">Emitir factura</a>
+      <a href="#nota-credito">Nota de crédito</a>
+      <a href="#retencion">Retención</a>
+      <a href="#guia">Guía de remisión</a>
+      <a href="#consulta">Consulta</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Recursos</div>
+      <a href="#errores">Códigos de error</a>
+      <a href="#sdks">SDKs</a>
+      <a href="#webhooks">Webhooks</a>
+      <a href="#postman">Postman</a>
+    </div>
+  </aside>
 
-<main>
+  <!-- ═══ CONTENT ═══ -->
+  <main class="content">
 
-<section id="inicio">
-  <h2>Inicio rápido</h2>
-  <p>Usa tu API Key en el header <code>X-Api-Key</code> para autenticarte.</p>
+    <h1>Documentación</h1>
+    <p class="subtitle">API de facturación electrónica SRI para Ecuador. Integración REST simple, multi-tenancy, firma XAdES-BES.</p>
 
-  <h3>1. Obtén tu API Key</h3>
-  <p>Regístrate vía <code>POST /onboarding</code> o desde el panel admin en <code>POST /api-keys</code>.</p>
+    <!-- ════════════════════════════════════════ -->
+    <!-- INICIO RÁPIDO -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="inicio">
+      <h2>Inicio rápido</h2>
+      <p>Emita su primer comprobante autorizado por el SRI en menos de 5 minutos. Solo necesita una <strong>API Key</strong> y enviar un JSON con los datos del comprobante.</p>
 
-  <h3>2. Emitir una factura</h3>
-  <pre><span class="comment"># Curl</span>
+      <h3>1. Obtenga su API Key</h3>
+      <p>Regístrese vía <code>POST /onboarding</code> o genere una nueva API Key desde el panel de administración. Recibirá un <code>apiKey</code> (prefijo público) y un <code>apiSecret</code> (mostrado una sola vez).</p>
+
+      <h3>2. Emita su primera factura</h3>
+      <p>Ejemplo completo con curl, JavaScript, Python y PHP:</p>
+
+      <div class="code-header">
+        <button class="code-tab active" data-lang="curl">curl</button>
+        <button class="code-tab" data-lang="js">JavaScript</button>
+        <button class="code-tab" data-lang="python">Python</button>
+        <button class="code-tab" data-lang="php">PHP</button>
+      </div>
+
+      <pre class="code-block" data-lang="curl"><span class="c">#!/usr/bin/env bash</span>
 curl -X POST https://api.techost.cloud/sri/emitir/factura \
-  -H "X-Api-Key: sk_live_abc123..." \
-  -H "Content-Type: application/json" \
-  -d '{
-    "emisor": { "ruc": "1950370393001" },
-    "comprador": {
-      "identificacion": "1790012345001",
-      "razonSocial": "AEROCARIBE S.A.",
-      "direccion": "Av. Amazonas N37-29"
-    },
-    "detalles": [
-      {
-        "codigoPrincipal": "001",
-        "descripcion": "Servicio de consultoría",
-        "cantidad": 1,
-        "precioUnitario": 200.00,
-        "descuento": 0,
-        "impuestos": [{ "codigo": "2", "codigoPorcentaje": "4", "tarifa": 15, "baseImponible": 200, "valor": 30 }]
-      }
-    ],
-    "pagos": [{ "formaPago": "03", "total": 230.00 }]
-  }'</pre>
+  -H <span class="s">"X-Api-Key: sk_live_a1b2c3d4e5f6"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{
+  "emisor": {
+    "ruc": "1950370393001",
+    "razonSocial": "COMERCIAL XYZ S.A.",
+    "codDoc": "01",
+    "establecimiento": "001",
+    "ptoEmision": "001",
+    "dirMatriz": "Av. Principal 123",
+    "contribuyenteEspecial": "",
+    "obligadoContabilidad": "SI"
+  },
+  "comprador": {
+    "identificacion": "1790012345001",
+    "tipoIdentificacion": "04",
+    "razonSocial": "AEROCARIBE S.A.",
+    "direccion": "Av. Amazonas N37-29",
+    "email": "cliente@ejemplo.com"
+  },
+  "detalles": [
+    {
+      "codigoPrincipal": "P001",
+      "descripcion": "Servicio de consultoría",
+      "cantidad": 1,
+      "precioUnitario": 200.00,
+      "descuento": 0,
+      "impuestos": [
+        { "codigo": "2", "codigoPorcentaje": "4", "tarifa": 15, "baseImponible": 200, "valor": 30 }
+      ]
+    }
+  ],
+  "pagos": [
+    { "formaPago": "03", "total": 230.00 }
+  ],
+  "infoAdicional": [
+    { "nombre": "Email", "valor": "cliente@ejemplo.com" }
+  ]
+}'</span></pre>
 
-  <h3>JavaScript (Node.js)</h3>
-  <pre>const res = await fetch('https://api.techost.cloud/sri/emitir/factura', {
-  method: 'POST',
-  headers: { 'X-Api-Key': 'sk_live_...', 'Content-Type': 'application/json' },
-  body: JSON.stringify({ emisor: { ruc: '...' }, /* ... */ }),
+      <pre class="code-block" data-lang="js" style="display:none"><span class="c">// Node.js — fetch</span>
+<span class="k">const</span> <span class="v">res</span> <span class="o">=</span> <span class="k">await</span> <span class="f">fetch</span>(<span class="s">'https://api.techost.cloud/sri/emitir/factura'</span>, {
+  <span class="v">method</span>: <span class="s">'POST'</span>,
+  <span class="v">headers</span>: {
+    <span class="s">'X-Api-Key'</span>: <span class="s">'sk_live_a1b2c3d4e5f6'</span>,
+    <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span>
+  },
+  <span class="v">body</span>: <span class="f">JSON</span>.<span class="f">stringify</span>({ <span class="c">/* ... payload */</span> })
 });
-const data = await res.json();
-console.log(data.claveAcceso);</pre>
+<span class="k">const</span> <span class="v">data</span> <span class="o">=</span> <span class="k">await</span> <span class="v">res</span>.<span class="f">json</span>();
+<span class="f">console</span>.<span class="f">log</span>(<span class="v">data</span>.<span class="v">claveAcceso</span>);</pre>
 
-  <h3>Python</h3>
-  <pre>import requests
-res = requests.post('https://api.techost.cloud/sri/emitir/factura',
-  headers={'X-Api-Key': 'sk_live_...'},
-  json={ 'emisor': { 'ruc': '...' }, /* ... */ })
-data = res.json()
-print(data['claveAcceso'])</pre>
-</section>
+      <pre class="code-block" data-lang="python" style="display:none"><span class="c"># Python — requests</span>
+<span class="k">import</span> <span class="n">requests</span>
 
-<section id="pricing">
-  <h2>Precios — Pay per use</h2>
-  <p><strong>$0.05 por comprobante</strong> emitido y autorizado. Sin mensualidad.</p>
+<span class="v">res</span> <span class="o">=</span> <span class="n">requests</span>.<span class="f">post</span>(
+    <span class="s">'https://api.techost.cloud/sri/emitir/factura'</span>,
+    <span class="v">headers</span>={<span class="s">'X-Api-Key'</span>: <span class="s">'sk_live_a1b2c3d4e5f6'</span>},
+    <span class="v">json</span>={<span class="c">/* ... payload */</span>}
+)
+<span class="v">data</span> <span class="o">=</span> <span class="v">res</span>.<span class="f">json</span>()
+<span class="f">print</span>(<span class="v">data</span>[<span class="s">'claveAcceso'</span>])</pre>
 
-  <h3>Bundles de recarga</h3>
-  <table>
-    <tr><th>Bundle</th><th>Pago</th><th>Bonus</th><th>Total comprobantes</th></tr>
-    <tr><td><strong>Básico</strong></td><td>$10</td><td>—</td><td>200</td></tr>
-    <tr><td><strong>Popular</strong></td><td>$25</td><td>+$2.50</td><td>550</td></tr>
-    <tr><td><strong>Pro</strong></td><td>$50</td><td>+$7.50</td><td>1,150</td></tr>
-    <tr><td><strong>Business</strong></td><td>$100</td><td>+$20</td><td>2,400</td></tr>
-  </table>
-  <p>Compra vía <code>POST /payphone/buy-bundle</code>. Consulta saldo en <code>GET /payphone/balance/:tenantId</code>.</p>
-</section>
+      <pre class="code-block" data-lang="php" style="display:none"><span class="c">// PHP — cURL</span>
+<span class="v">$ch</span> <span class="o">=</span> <span class="f">curl_init</span>(<span class="s">'https://api.techost.cloud/sri/emitir/factura'</span>);
+<span class="f">curl_setopt_array</span>(<span class="v">$ch</span>, [
+    <span class="n">CURLOPT_POST</span> <span class="o">=></span> <span class="kc">true</span>,
+    <span class="n">CURLOPT_HTTPHEADER</span> <span class="o">=></span> [
+        <span class="s">'X-Api-Key: sk_live_a1b2c3d4e5f6'</span>,
+        <span class="s">'Content-Type: application/json'</span>
+    ],
+    <span class="n">CURLOPT_POSTFIELDS</span> <span class="o">=></span> <span class="f">json_encode</span>([<span class="c">/* ... payload */</span>]),
+    <span class="n">CURLOPT_RETURNTRANSFER</span> <span class="o">=></span> <span class="kc">true</span>
+]);
+<span class="v">$data</span> <span class="o">=</span> <span class="f">json_decode</span>(<span class="f">curl_exec</span>(<span class="v">$ch</span>));
+<span class="f">echo</span> <span class="v">$data</span>-><span class="v">claveAcceso</span>;</pre>
 
-<section id="auth">
-  <h2>Autenticación</h2>
-  <p>Todos los endpoints de emisión requieren una API Key válida en el header:</p>
-  <pre>X-Api-Key: sk_live_&lt;tu_api_key&gt;</pre>
+      <h3>Respuesta exitosa</h3>
+      <pre><span class="kv">{</span>
+  <span class="k">"estado"</span>: <span class="s">"AUTORIZADO"</span>,
+  <span class="k">"claveAcceso"</span>: <span class="s">"060720260117900123450012001001000012345678901"</span>,
+  <span class="k">"numero"</span>: <span class="s">"001-001-000012345"</span>,
+  <span class="k">"fechaAutorizacion"</span>: <span class="s">"06/07/2026 19:20:18"</span>,
+  <span class="k">"ambiente"</span>: <span class="m">2</span>
+<span class="kv">}</span></pre>
+    </section>
 
-  <p>Las API Keys se administran vía JWT en <code>GET/POST /api-keys</code>.</p>
+    <!-- ════════════════════════════════════════ -->
+    <!-- AUTENTICACIÓN -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="autenticacion">
+      <h2>Autenticación</h2>
+      <p>Todos los endpoints de emisión requieren autenticación. La API soporta dos mecanismos:</p>
 
-  <h3>Administración (JWT)</h3>
-  <p>Los endpoints de administración (API Keys, usage, configuración) usan JWT. Obtén tu token vía <code>POST /auth/login</code>.</p>
-</section>
+      <h3>API Key (emisión SRI)</h3>
+      <p>Incluya su API Key en el header <code>X-Api-Key</code> en cada petición:</p>
+      <pre><span class="c"># Header requerido en todos los endpoints de emisión</span>
+X-Api-Key: sk_live_a1b2c3d4e5f6</pre>
 
-<section id="endpoints">
-  <h2>Endpoints principales</h2>
-  <table>
-    <tr><th>Método</th><th>Ruta</th><th>Descripción</th></tr>
-    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/factura</span></td><td>Emitir factura electrónica</td></tr>
-    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/nota-credito</span></td><td>Emitir nota de crédito</td></tr>
-    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/nota-debito</span></td><td>Emitir nota de débito</td></tr>
-    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/retencion</span></td><td>Emitir comprobante de retención</td></tr>
-    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/sri/emitir/guia-remision</span></td><td>Emitir guía de remisión</td></tr>
-    <tr><td><span class="badge get">GET</span></td><td><span class="endpoint">/sri/comprobantes/:claveAcceso/pdf</span></td><td>Descargar PDF</td></tr>
-    <tr><td><span class="badge get">GET</span></td><td><span class="endpoint">/sri/comprobantes/:claveAcceso/xml</span></td><td>Descargar XML autorizado</td></tr>
-    <tr><td><span class="badge post">POST</span></td><td><span class="endpoint">/onboarding</span></td><td>Registro completo (tenant + usuario + emisor + API Key)</td></tr>
-  </table>
-  <p>Ver la <a href="/api">documentación Swagger completa</a> para más detalles.</p>
-</section>
+      <div class="callout callout-info">
+        <strong>Importante:</strong> El <code>apiSecret</code> se muestra una sola vez al crear la API Key. Guárdelo de forma segura. No podrá recuperarlo después.
+      </div>
 
-<section id="errores">
-  <h2>Códigos de error</h2>
-  <table>
-    <tr><th>Código</th><th>Significado</th><th>Solución</th></tr>
-    <tr><td>400</td><td>Datos inválidos</td><td>Revisa el formato de los campos en Swagger</td></tr>
-    <tr><td>401</td><td>API Key inválida</td><td>Verifica que el header X-Api-Key sea correcto</td></tr>
-    <tr><td>429</td><td>Rate limit excedido</td><td>Espera y reintenta. Considera upgrade de tier</td></tr>
-    <tr><td>500</td><td>Error interno / SRI</td><td>Revisa logs. El comprobante pudo quedar encolado</td></tr>
-  </table>
-  <p>Errores del SRI se devuelven en <code>mensajes</code> del response con código y detalle.</p>
-</section>
+      <h3>JWT (administración)</h3>
+      <p>Los endpoints de administración (API Keys, webhooks, configuración de tenant) usan JWT. Obtenga su token vía <code>POST /auth/login</code> e inclúyalo como Bearer token:</p>
+      <pre>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</pre>
 
-</main>
+      <h3>Multi-tenancy</h3>
+      <p>Para operaciones multi-tenant, incluya el header <code>X-Tenant-ID</code> con el UUID del tenant destino:</p>
+      <pre>X-Tenant-ID: a1b2c3d4-e5f6-7890-abcd-ef1234567890</pre>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- FIRMA HMAC -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="hmac">
+      <h2>Firma HMAC</h2>
+      <p>Para mayor seguridad, puede firmar sus peticiones usando HMAC-SHA256. La firma permite verificar que la petición no fue alterada en tránsito y que proviene de un cliente autorizado.</p>
+
+      <h3>Generar la firma</h3>
+      <p>Construya el <em>string to sign</em> concatenando: <code>HTTP_METHOD + "\n" + URI + "\n" + BODY</code>. Luego genere el HMAC-SHA256 usando su <code>apiSecret</code> como clave y codifique en Base64.</p>
+
+      <div class="code-header">
+        <button class="code-tab active" data-lang="hmac-js">JavaScript</button>
+        <button class="code-tab" data-lang="hmac-py">Python</button>
+        <button class="code-tab" data-lang="hmac-php">PHP</button>
+      </div>
+
+      <pre class="code-block" data-lang="hmac-js"><span class="k">const</span> <span class="v">crypto</span> <span class="o">=</span> <span class="f">require</span>(<span class="s">'crypto'</span>);
+
+<span class="k">function</span> <span class="f">generateSignature</span>(<span class="v">method</span>, <span class="v">path</span>, <span class="v">body</span>, <span class="v">secret</span>) {
+  <span class="k">const</span> <span class="v">stringToSign</span> <span class="o">=</span> <span class="v">method</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="v">path</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="f">JSON</span>.<span class="f">stringify</span>(<span class="v">body</span>);
+  <span class="k">return</span> <span class="v">crypto</span>
+    .<span class="f">createHmac</span>(<span class="s">'sha256'</span>, <span class="v">secret</span>)
+    .<span class="f">update</span>(<span class="v">stringToSign</span>)
+    .<span class="f">digest</span>(<span class="s">'base64'</span>);
+}
+
+<span class="c">// Uso</span>
+<span class="k">const</span> <span class="v">apiSecret</span> <span class="o">=</span> <span class="s">'tu_api_secret'</span>;
+<span class="k">const</span> <span class="v">signature</span> <span class="o">=</span> <span class="f">generateSignature</span>(<span class="s">'POST'</span>, <span class="s">'/sri/emitir/factura'</span>, <span class="v">payload</span>, <span class="v">apiSecret</span>);
+
+<span class="c">// Enviar en el header</span>
+<span class="c">// X-API-Signature: &lt;signature&gt;</span></pre>
+
+      <pre class="code-block" data-lang="hmac-py" style="display:none"><span class="k">import</span> <span class="n">hmac</span>
+<span class="k">import</span> <span class="n">hashlib</span>
+<span class="k">import</span> <span class="n">base64</span>
+<span class="k">import</span> <span class="n">json</span>
+
+<span class="k">def</span> <span class="f">generate_signature</span>(<span class="v">method</span>, <span class="v">path</span>, <span class="v">body</span>, <span class="v">secret</span>):
+    <span class="v">string_to_sign</span> <span class="o">=</span> <span class="v">method</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="v">path</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="n">json</span>.<span class="f">dumps</span>(<span class="v">body</span>, <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span>)
+    <span class="v">digest</span> <span class="o">=</span> <span class="n">hmac</span>.<span class="f">new</span>(
+        <span class="v">secret</span>.<span class="f">encode</span>(<span class="s">'utf-8'</span>),
+        <span class="v">string_to_sign</span>.<span class="f">encode</span>(<span class="s">'utf-8'</span>),
+        <span class="n">hashlib</span>.<span class="n">sha256</span>
+    ).<span class="f">digest</span>()
+    <span class="k">return</span> <span class="n">base64</span>.<span class="f">b64encode</span>(<span class="v">digest</span>).<span class="f">decode</span>()
+
+<span class="c"># Uso</span>
+<span class="v">sig</span> <span class="o">=</span> <span class="f">generate_signature</span>(<span class="s">'POST'</span>, <span class="s">'/sri/emitir/factura'</span>, <span class="v">payload</span>, <span class="s">'tu_api_secret'</span>)
+<span class="c"># X-API-Signature: &lt;sig&gt;</span></pre>
+
+      <pre class="code-block" data-lang="hmac-php" style="display:none"><span class="c">// PHP — HMAC signature</span>
+<span class="k">function</span> <span class="f">generateSignature</span>(<span class="v">$method</span>, <span class="v">$path</span>, <span class="v">$body</span>, <span class="v">$secret</span>) {
+    <span class="v">$stringToSign</span> <span class="o">=</span> <span class="v">$method</span> <span class="o">.</span> <span class="s">"\n"</span> <span class="o">.</span> <span class="v">$path</span> <span class="o">.</span> <span class="s">"\n"</span> <span class="o">.</span> <span class="f">json_encode</span>(<span class="v">$body</span>);
+    <span class="k">return</span> <span class="f">base64_encode</span>(
+        <span class="f">hash_hmac</span>(<span class="s">'sha256'</span>, <span class="v">$stringToSign</span>, <span class="v">$secret</span>, <span class="kc">true</span>)
+    );
+}
+
+<span class="c">// Header</span>
+<span class="c">// X-API-Signature: &lt;signature&gt;</span></pre>
+
+      <div class="callout callout-info">
+        <strong>Nota:</strong> La firma HMAC es opcional pero recomendada para entornos productivos. Si incluye <code>X-API-Signature</code>, la API verificará su validez antes de procesar la petición.
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- PRECIOS -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="pricing">
+      <h2>Precios — Pay per use</h2>
+      <p><strong>$0.05 por comprobante</strong> emitido y autorizado. Sin mensualidad, sin planes, sin contratos. Pague solo por lo que emite.</p>
+
+      <h3>Bundles de recarga</h3>
+      <table>
+        <tr><th>Bundle</th><th>Pago</th><th>Bonus</th><th>Total comprobantes</th></tr>
+        <tr><td><strong>Básico</strong></td><td>$10</td><td>—</td><td>200</td></tr>
+        <tr><td><strong>Popular</strong></td><td>$25</td><td>+$2.50</td><td>550</td></tr>
+        <tr><td><strong>Pro</strong></td><td>$50</td><td>+$7.50</td><td>1,150</td></tr>
+        <tr><td><strong>Business</strong></td><td>$100</td><td>+$20</td><td>2,400</td></tr>
+      </table>
+
+      <p>Compre vía <code>POST /payphone/buy-bundle</code>. Consulte su saldo en <code>GET /payphone/balance/:tenantId</code>. Los comprobantes no utilizados no caducan.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- ENDPOINTS -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="endpoints">
+      <h2>Endpoints principales</h2>
+      <p>Todos los endpoints de emisión SRI usan base URL <code>https://api.techost.cloud</code> y requieren el header <code>X-Api-Key</code>.</p>
+
+      <table>
+        <tr><th>Método</th><th>Ruta</th><th>Descripción</th></tr>
+        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/factura</span></td><td>Emitir factura electrónica</td></tr>
+        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/nota-credito</span></td><td>Emitir nota de crédito</td></tr>
+        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/nota-debito</span></td><td>Emitir nota de débito</td></tr>
+        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/retencion</span></td><td>Emitir comprobante de retención</td></tr>
+        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/guia-remision</span></td><td>Emitir guía de remisión</td></tr>
+        <tr><td><span class="badge badge-get">GET</span></td><td><span class="endpoint-path">/sri/comprobantes/:claveAcceso/pdf</span></td><td>Descargar PDF del comprobante</td></tr>
+        <tr><td><span class="badge badge-get">GET</span></td><td><span class="endpoint-path">/sri/comprobantes/:claveAcceso/xml</span></td><td>Descargar XML autorizado</td></tr>
+        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/onboarding</span></td><td>Registro completo (tenant + usuario + emisor + API Key)</td></tr>
+      </table>
+
+      <p>Consulte la <a href="/api" style="color:var(--green-500);font-weight:500">documentación Swagger completa</a> para ver todos los endpoints, schemas y probar las peticiones en vivo.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- EMITIR FACTURA (detalle) -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="factura">
+      <h2>Emitir factura</h2>
+      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/factura</span></p>
+      <p>Endpoint principal para emisión de facturas electrónicas. Valida contra el esquema SRI, firma con XAdES-BES y envía al SRI en ambiente especificado.</p>
+
+      <h3>Parámetros del emisor</h3>
+      <table>
+        <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+        <tr><td><code>ruc</code></td><td>string</td><td>RUC del emisor (13 dígitos)</td></tr>
+        <tr><td><code>razonSocial</code></td><td>string</td><td>Razón social del emisor</td></tr>
+        <tr><td><code>codDoc</code></td><td>string</td><td>Código del comprobante: <code>01</code> factura</td></tr>
+        <tr><td><code>establecimiento</code></td><td>string</td><td>Código de establecimiento (3 dígitos)</td></tr>
+        <tr><td><code>ptoEmision</code></td><td>string</td><td>Código de punto de emisión (3 dígitos)</td></tr>
+        <tr><td><code>dirMatriz</code></td><td>string</td><td>Dirección de la matriz</td></tr>
+        <tr><td><code>obligadoContabilidad</code></td><td>string</td><td><code>SI</code> o <code>NO</code></td></tr>
+      </table>
+
+      <h3>Parámetros del comprador</h3>
+      <table>
+        <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+        <tr><td><code>identificacion</code></td><td>string</td><td>RUC, cédula o pasaporte</td></tr>
+        <tr><td><code>tipoIdentificacion</code></td><td>string</td><td><code>04</code> RUC, <code>05</code> cédula, <code>06</code> pasaporte, <code>07</code> consumidor final</td></tr>
+        <tr><td><code>razonSocial</code></td><td>string</td><td>Razón social o nombre del comprador</td></tr>
+        <tr><td><code>direccion</code></td><td>string</td><td>Dirección (opcional)</td></tr>
+        <tr><td><code>email</code></td><td>string</td><td>Correo electrónico (opcional)</td></tr>
+      </table>
+
+      <h3>Ambientes</h3>
+      <table>
+        <tr><th>Ambiente</th><th>Valor</th><th>Descripción</th></tr>
+        <tr><td>Pruebas</td><td><code>1</code></td><td>Comprobantes de prueba sin validez fiscal</td></tr>
+        <tr><td>Producción</td><td><code>2</code></td><td>Comprobantes reales autorizados por el SRI</td></tr>
+      </table>
+
+      <div class="callout callout-success">
+        <strong>Tip:</strong> Use ambiente 1 para desarrollo y pruebas. Cuando esté listo, cambie <code>"ambiente": 2</code> para producción. No necesita cambiar nada más.
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- NOTA DE CRÉDITO -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="nota-credito">
+      <h2>Nota de crédito</h2>
+      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/nota-credito</span></p>
+      <p>Anule total o parcialmente una factura ya emitida. Debe incluir la <code>claveAcceso</code> de la factura original y el motivo de la nota de crédito.</p>
+      <pre><span class="kv">{</span>
+  <span class="k">"emisor"</span>: { <span class="c">/* ... */</span> },
+  <span class="k">"comprador"</span>: { <span class="c">/* ... */</span> },
+  <span class="k">"claveAccesoOriginal"</span>: <span class="s">"060720260117900123450012001001000012345678901"</span>,
+  <span class="k">"detalles"</span>: [<span class="c">/* ítems a anular */</span>],
+  <span class="k">"moneda"</span>: <span class="s">"DOLAR"</span>,
+  <span class="k">"total"</span>: <span class="m">50.00</span>
+<span class="kv">}</span></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- RETENCIÓN -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="retencion">
+      <h2>Comprobante de retención</h2>
+      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/retencion</span></p>
+      <p>Emite un comprobante de retención electrónico. Incluye los impuestos retenidos con su código, porcentaje y valor correspondiente.</p>
+      <pre><span class="kv">{</span>
+  <span class="k">"emisor"</span>: { <span class="c">/* ... */</span> },
+  <span class="k">"comprador"</span>: { <span class="c">/* ... */</span> },
+  <span class="k">"impuestos"</span>: [
+    {
+      <span class="k">"codigo"</span>: <span class="s">"2"</span>,
+      <span class="k">"codigoPorcentaje"</span>: <span class="s">"4"</span>,
+      <span class="k">"baseImponible"</span>: <span class="m">200.00</span>,
+      <span class="k">"porcentajeRetener"</span>: <span class="m">2.00</span>,
+      <span class="k">"valorRetenido"</span>: <span class="m">4.00</span>
+    }
+  ],
+  <span class="k">"periodoFiscal"</span>: <span class="s">"07/2026"</span>
+<span class="kv">}</span></pre>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- GUÍA DE REMISIÓN -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="guia">
+      <h2>Guía de remisión</h2>
+      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/guia-remision</span></p>
+      <p>Documento electrónico que ampara el traslado de mercadería. Incluye origen, destino, transportista y los ítems transportados.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- CONSULTA -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="consulta">
+      <h2>Consulta de comprobantes</h2>
+
+      <h3>Descargar PDF</h3>
+      <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/comprobantes/:claveAcceso/pdf</span></p>
+      <p>Descarga el PDF del comprobante con todos los datos fiscales, firmado electrónicamente.</p>
+
+      <h3>Descargar XML</h3>
+      <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/comprobantes/:claveAcceso/xml</span></p>
+      <p>Descarga el XML autorizado por el SRI con la firma XAdES-BES incluida.</p>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- ERRORES -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="errores">
+      <h2>Códigos de error</h2>
+      <p>La API utiliza códigos HTTP estándar para indicar el resultado de cada petición. Los errores del SRI se devuelven en el campo <code>mensajes</code> del response.</p>
+
+      <table>
+        <tr><th>Código</th><th>Significado</th><th>Solución</th></tr>
+        <tr><td><strong>400</strong></td><td>Datos inválidos</td><td>Revise el formato de los campos. Consulte el esquema en Swagger.</td></tr>
+        <tr><td><strong>401</strong></td><td>API Key inválida o faltante</td><td>Verifique el header <code>X-Api-Key</code>. Si usa HMAC, verifique la firma.</td></tr>
+        <tr><td><strong>402</strong></td><td>Saldo insuficiente</td><td>Compre un bundle vía <code>POST /payphone/buy-bundle</code>.</td></tr>
+        <tr><td><strong>429</strong></td><td>Rate limit excedido</td><td>Espere y reintente. Considere actualizar su tier de rate limiting.</td></tr>
+        <tr><td><strong>500</strong></td><td>Error interno del servidor</td><td>El comprobante pudo quedar encolado. Consulte el estado vía el log de webhooks.</td></tr>
+      </table>
+
+      <div class="callout callout-success">
+        <strong>Rate limits por tier:</strong> Basic 30 req/min, Professional 120 req/min, Enterprise 600 req/min, Unlimited sin límite.
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- SDKs -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="sdks">
+      <h2>SDKs oficiales</h2>
+      <p>Integre TechOST API en su proyecto con nuestros SDKs open-source. Todos incluyen autenticación, manejo de errores y ejemplos completos.</p>
+
+      <table>
+        <tr><th>Lenguaje</th><th>Repositorio</th><th>Instalación</th></tr>
+        <tr><td><strong>JavaScript / TypeScript</strong></td><td><code>github.com/techost/sdk-js</code></td><td><code>npm install @techost/api</code></td></tr>
+        <tr><td><strong>Python</strong></td><td><code>github.com/techost/sdk-py</code></td><td><code>pip install techost-api</code></td></tr>
+        <tr><td><strong>PHP</strong></td><td><code>github.com/techost/sdk-php</code></td><td><code>composer require techost/api</code></td></tr>
+        <tr><td><strong>Java</strong></td><td><code>github.com/techost/sdk-java</code></td><td>Maven: <code>techost:api:1.0.0</code></td></tr>
+      </table>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- WEBHOOKS -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="webhooks">
+      <h2>Webhooks</h2>
+      <p>Reciba notificaciones en tiempo real cuando sus comprobantes cambien de estado. Configure URLs de callback que la API llamará automáticamente ante cada evento.</p>
+
+      <h3>Eventos disponibles</h3>
+      <table>
+        <tr><th>Evento</th><th>Descripción</th></tr>
+        <tr><td><code>comprobante.autorizado</code></td><td>El comprobante fue autorizado por el SRI</td></tr>
+        <tr><td><code>comprobante.rechazado</code></td><td>El SRI rechazó el comprobante</td></tr>
+        <tr><td><code>comprobante.pendiente</code></td><td>El comprobante está en proceso de autorización</td></tr>
+        <tr><td><code>certificado.por_vencer</code></td><td>El certificado digital está próximo a vencer</td></tr>
+      </table>
+
+      <h3>Configuración</h3>
+      <p>Administre sus webhooks vía <code>POST /api-keys/:id/webhooks</code>. Cada webhook incluye una firma HMAC en el header <code>X-Webhook-Signature</code> para verificar su autenticidad.</p>
+
+      <div class="callout callout-info">
+        <strong>Payload del webhook:</strong> La API envía un POST con el evento, el comprobante y sus datos actualizados. Incluye el campo <code>event</code> y <code>data</code> con el objeto completo del comprobante.
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- POSTMAN -->
+    <!-- ════════════════════════════════════════ -->
+    <section id="postman">
+      <h2>Colección de Postman</h2>
+      <p>Descargue la colección de Postman para importar todos los endpoints preconfigurados con variables de entorno.</p>
+
+      <p><a href="/docs/postman.json" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:8px;background:linear-gradient(135deg,var(--green-500),var(--green-400));color:var(--white);font-weight:600;font-size:14px;transition:box-shadow 0.2s">Descargar Postman collection</a></p>
+
+      <p>La colección incluye:</p>
+      <ul>
+        <li>Todos los endpoints de emisión SRI preconfigurados</li>
+        <li>Variables de entorno para <code>apiKey</code> y <code>apiSecret</code></li>
+        <li>Ejemplos de body para cada tipo de comprobante</li>
+        <li>Scripts de prueba de respuesta</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script>
+    (function() {
+      /* Code tabs */
+      document.querySelectorAll('.code-header').forEach(function(header) {
+        var tabs = header.querySelectorAll('.code-tab');
+        tabs.forEach(function(tab) {
+          tab.addEventListener('click', function() {
+            var lang = this.getAttribute('data-lang');
+            var blocks = this.closest('section').querySelectorAll('.code-block[data-lang^="' + lang.split('-')[0] + '"], .code-block[data-lang="' + lang + '"]');
+            /* Also same-section blocks */
+            var allBlocks = this.closest('section').querySelectorAll('.code-block');
+            /* Narrow: find exact match or lang prefix */
+            header.querySelectorAll('.code-tab').forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+
+            /* Show blocks matching this tab's lang group */
+            var groupPrefix = lang.split('-')[0];
+            allBlocks.forEach(function(block) {
+              var bl = block.getAttribute('data-lang') || '';
+              block.style.display = (bl === lang || (bl && bl.startsWith(groupPrefix + '-'))) ? '' : 'none';
+            });
+          });
+        });
+      });
+
+      /* Sidebar active link */
+      var sidebarLinks = document.querySelectorAll('.sidebar a');
+      var sections = document.querySelectorAll('section[id]');
+      function onScroll() {
+        var y = window.scrollY + 80;
+        var current = '';
+        sections.forEach(function(s) {
+          var top = s.offsetTop;
+          if (y >= top) current = s.getAttribute('id');
+        });
+        sidebarLinks.forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+  </script>
 </body>
 </html>

@@ -580,6 +580,11 @@ body {
   border: 1px solid var(--gray-100);
 }
 
+/* ─── COUNTER ANIMATION ─── */
+.counter-num {
+  display: inline-block;
+}
+
 /* ─── METRICS STRIP ─── */
 .strip {
   padding: 48px 0;
@@ -638,12 +643,39 @@ body {
   margin-bottom: 16px;
 }
 
+/* ─── STEP CONNECTION LINE ─── */
+.steps-wrapper {
+  position: relative;
+}
+
+.step-line {
+  position: absolute;
+  top: 32px;
+  left: 16.67%;
+  right: 16.67%;
+  height: 2px;
+  background: var(--gray-100);
+  z-index: 0;
+  overflow: hidden;
+}
+
+.step-line-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--green-500), var(--green-400));
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step-line-fill.visible { width: 100%; }
+
 /* ─── HOW IT WORKS ─── */
 .steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   align-items: start;
+  position: relative;
+  z-index: 1;
 }
 
 .step { text-align: center; }
