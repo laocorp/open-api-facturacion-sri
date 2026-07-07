@@ -1,1180 +1,885 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechOST API — Documentación</title>
-  <meta name="description" content="Documentación oficial de TechOST API. Guía de inicio rápido, autenticación, endpoints, códigos de error y bundles de facturación electrónica SRI.">
+  <title>TechOST API — Documentación Técnica</title>
+  <meta name="description" content="Documentación oficial de TechOST API. Inicio rápido, autenticación JWT, endpoints SRI, DTOs, webhooks y más.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
-  <link rel="alternate icon" href="/favicon/favicon.ico">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --navy-800: #0a1628;
-      --navy-700: #0f1d35;
-      --green-500: #059669;
-      --green-400: #10b981;
-      --green-100: #ecfdf5;
-      --blue-500: #0052cc;
-      --gray-50: #f7f8fa;
-      --gray-100: #eef0f4;
-      --gray-200: #dde0e7;
-      --gray-300: #b8bcc8;
-      --gray-400: #8e93a3;
-      --gray-500: #646a7e;
-      --gray-600: #4a5063;
-      --gray-700: #323849;
-      --gray-800: #1e2332;
-      --white: #ffffff;
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --shadow-sm: 0 1px 3px rgba(6,13,26,0.06), 0 1px 2px rgba(6,13,26,0.04);
-      --shadow-md: 0 4px 12px rgba(6,13,26,0.08);
-      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      --navy-800: #0a1628; --navy-700: #0f1d35; --green-500: #059669;
+      --green-400: #10b981; --green-100: #ecfdf5; --blue-500: #0052cc;
+      --blue-100: #e6f0ff; --gray-50: #f7f8fa; --gray-100: #eef0f4;
+      --gray-200: #dde0e7; --gray-300: #b8bcc8; --gray-400: #8e93a3;
+      --gray-500: #646a7e; --gray-600: #4a5063; --gray-700: #323849;
+      --gray-800: #1e2332; --white: #ffffff; --amber-500: #d97706;
+      --red-500: #dc2626;
+      --radius-sm: 8px; --radius-md: 12px;
+      --font-sans: 'IBM Plex Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
     }
-
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font-sans);
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--gray-700);
-      background: var(--gray-50);
-      -webkit-font-smoothing: antialiased;
-      display: flex;
-      min-height: 100vh;
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.7;
+      color: var(--gray-700); background: var(--gray-50);
+      -webkit-font-smoothing: antialiased; display: flex; min-height: 100vh;
     }
-
     a { color: inherit; text-decoration: none; }
-
-    /* ─── NAVBAR ─── */
     .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      height: 56px;
-      background: var(--white);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px; background: var(--white);
       border-bottom: 1px solid var(--gray-100);
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
+      display: flex; align-items: center; padding: 0 24px;
     }
-
     .navbar-inner {
-      max-width: 1280px;
-      width: 100%;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      max-width: 1280px; width: 100%; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
     .navbar-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 17px;
-      color: var(--navy-800);
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 17px; color: var(--navy-800);
     }
-
     .navbar-logo-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, var(--green-500), var(--green-400));
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
+      width: 28px; height: 28px; border-radius: 6px;
+      background: linear-gradient(135deg,var(--green-500),var(--green-400));
+      color: var(--white); display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
     }
-
     .navbar-logo span { color: var(--green-500); }
-
     .navbar-links { display: flex; align-items: center; gap: 20px; }
     .navbar-links a { font-size: 13px; font-weight: 500; color: var(--gray-400); transition: color 0.2s; }
     .navbar-links a:hover { color: var(--navy-800); }
-
     .navbar-links .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 600;
-      background: linear-gradient(135deg, var(--green-500), var(--green-400));
-      color: var(--white);
-      transition: box-shadow 0.2s;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 16px; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600;
+      background: linear-gradient(135deg,var(--green-500),var(--green-400));
+      color: var(--white); transition: box-shadow 0.2s;
     }
     .navbar-links .btn:hover { box-shadow: 0 4px 12px rgba(5,150,105,0.25); }
-
-    /* ─── SIDEBAR ─── */
     .sidebar {
-      position: fixed;
-      top: 56px;
-      left: 0;
-      bottom: 0;
-      width: 240px;
-      background: var(--white);
+      position: fixed; top: 56px; left: 0; bottom: 0;
+      width: 240px; background: var(--white);
       border-right: 1px solid var(--gray-100);
-      overflow-y: auto;
-      padding: 24px 0;
+      overflow-y: auto; padding: 24px 0;
     }
-
+    .sidebar-search-wrap { position: relative; padding: 0 16px 12px; }
+    .sidebar-search {
+      width: 100%; padding: 8px 12px 8px 32px;
+      border: 1px solid var(--gray-100); border-radius: var(--radius-sm);
+      font-size: 13px; font-family: var(--font-sans);
+      color: var(--gray-700); background: var(--gray-50); outline: none;
+    }
+    .sidebar-search:focus { border-color: var(--green-500); }
+    .sidebar-search::placeholder { color: var(--gray-300); }
+    .sidebar-search-icon { position: absolute; left: 26px; margin-top: 9px; color: var(--gray-300); pointer-events: none; }
+    .sidebar-link-hidden { display: none !important; }
+    .sidebar-group-hidden { display: none !important; }
     .sidebar-group { margin-bottom: 20px; }
-    .sidebar-group-title {
-      padding: 6px 24px;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--gray-300);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
+    .sidebar-group-title { padding: 6px 24px; font-size: 10px; font-weight: 600; color: var(--gray-300); text-transform: uppercase; letter-spacing: 0.08em; }
     .sidebar a {
-      display: block;
-      padding: 7px 24px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--gray-500);
-      transition: all 0.15s;
+      display: block; padding: 7px 24px; font-size: 13px; font-weight: 500;
+      color: var(--gray-500); transition: all 0.15s;
       border-left: 2px solid transparent;
     }
     .sidebar a:hover { color: var(--navy-800); background: var(--gray-50); }
-    .sidebar a.active {
-      color: var(--green-500);
-      background: var(--green-100);
-      border-left-color: var(--green-500);
-    }
-
-    /* ─── CONTENT ─── */
-    .content {
-      margin-top: 56px;
-      margin-left: 240px;
-      flex: 1;
-      padding: 40px 56px 80px;
-      max-width: 900px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--navy-800);
-      letter-spacing: -0.025em;
-      margin-bottom: 6px;
-    }
-
-    .subtitle {
-      font-size: 15px;
-      color: var(--gray-400);
-      margin-bottom: 48px;
-    }
-
-    h2 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--navy-800);
-      margin: 40px 0 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--gray-100);
-    }
-
+    .sidebar a.active { color: var(--green-500); background: var(--green-100); border-left-color: var(--green-500); }
+    .content { margin-top: 56px; margin-left: 240px; flex: 1; padding: 40px 56px 80px; max-width: 900px; }
+    h1 { font-size: 2rem; font-weight: 700; color: var(--navy-800); letter-spacing: -0.025em; margin-bottom: 6px; }
+    .subtitle { font-size: 15px; color: var(--gray-400); margin-bottom: 48px; }
+    h2 { font-size: 1.3rem; font-weight: 600; color: var(--navy-800); margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-100); }
     h2:first-of-type { margin-top: 0; }
-
-    h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--navy-800);
-      margin: 28px 0 10px;
-    }
-
+    h3 { font-size: 1rem; font-weight: 600; color: var(--navy-800); margin: 28px 0 10px; }
     p { margin-bottom: 14px; color: var(--gray-600); }
     p strong { color: var(--navy-800); }
-
     ul, ol { margin: 0 0 16px 20px; }
     li { margin-bottom: 6px; color: var(--gray-600); }
-
-    /* Inline code */
-    code:not(pre code) {
-      font-family: var(--font-mono);
-      font-size: 0.85em;
-      background: var(--gray-100);
-      padding: 2px 7px;
-      border-radius: 4px;
-      color: var(--green-500);
-    }
-
-    /* Code blocks */
-    pre {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.7;
-      background: #0d1117;
-      color: #e6edf3;
-      padding: 20px 24px;
-      border-radius: var(--radius-md);
-      overflow-x: auto;
-      margin: 16px 0 24px;
-      position: relative;
-    }
-
-    pre .c { color: #8b949e; }    /* comment */
-    pre .k { color: #ff7b72; }    /* keyword */
-    pre .s { color: #a5d6ff; }    /* string */
-    pre .n { color: #e6edf3; }    /* name/default */
-    pre .p { color: #e6edf3; }    /* punctuation */
-    pre .o { color: #ff7b72; }    /* operator */
-    pre .m { color: #79c0ff; }    /* number */
-    pre .f { color: #d2a8ff; }    /* function */
-    pre .v { color: #e6edf3; }    /* variable */
-    pre .kc { color: #79c0ff; }   /* const */
-    pre .cm { color: #8b949e; font-style: italic; }
-    pre .dl { color: #a5d6ff; }   /* delimiter (template literals) */
-
-    .code-header {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 0;
-      border-radius: var(--radius-md) var(--radius-md) 0 0;
-      overflow: hidden;
-    }
-
-    .code-tab {
-      padding: 8px 18px;
-      font-size: 12px;
-      font-weight: 500;
-      font-family: var(--font-sans);
-      background: #161b22;
-      color: #8b949e;
-      border: none;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
+    code:not(pre code) { font-family: var(--font-mono); font-size: 0.85em; background: var(--gray-100); padding: 2px 7px; border-radius: 4px; color: var(--green-500); }
+    pre { font-family: var(--font-mono); font-size: 13px; line-height: 1.7; background: #0d1117; color: #e6edf3; padding: 20px 24px; border-radius: var(--radius-md); overflow-x: auto; margin: 16px 0 24px; position: relative; }
+    pre .c { color: #8b949e; } pre .k { color: #ff7b72; } pre .s { color: #a5d6ff; } pre .n { color: #e6edf3; } pre .p { color: #e6edf3; } pre .o { color: #ff7b72; } pre .m { color: #79c0ff; } pre .f { color: #d2a8ff; } pre .v { color: #e6edf3; } pre .kc { color: #79c0ff; } pre .kv { color: #e6edf3; font-weight: 600; } pre .cm { color: #8b949e; font-style: italic; }
+    .code-header { display: flex; align-items: center; gap: 0; margin-bottom: 0; border-radius: var(--radius-md) var(--radius-md) 0 0; overflow: hidden; }
+    .code-tab { padding: 8px 18px; font-size: 12px; font-weight: 500; font-family: var(--font-sans); background: #161b22; color: #8b949e; border: none; cursor: pointer; transition: all 0.15s; }
     .code-tab:hover { color: #e6edf3; background: #1c2128; }
     .code-tab.active { color: #e6edf3; background: #0d1117; }
-
     pre.code-block { border-radius: 0 0 var(--radius-md) var(--radius-md); margin-top: 0; }
-
-    /* Table */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0 24px;
-      font-size: 14px;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--gray-100);
-    }
-
-    th {
-      font-weight: 600;
-      font-size: 12px;
-      color: var(--gray-400);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      background: var(--gray-50);
-    }
-
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--gray-100); }
+    th { font-weight: 600; font-size: 12px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.04em; background: var(--gray-50); }
     td { color: var(--gray-600); }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      font-family: var(--font-mono);
-    }
-
-    .badge-get { background: #e3f2fd; color: #1565c0; }
-    .badge-post { background: var(--green-100); color: var(--green-500); }
-    .badge-put { background: #fff3e0; color: #e65100; }
-    .badge-del { background: #fbe9e7; color: #c62828; }
-
-    .endpoint-path {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--navy-800);
-    }
-
-    /* Info callout */
-    .callout {
-      padding: 16px 20px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      margin: 16px 0 24px;
-      border-left: 3px solid;
-    }
-
-    .callout-info {
-      background: var(--gray-50);
-      border-color: var(--blue-500);
-    }
-
-    .callout-info strong { color: var(--blue-500); }
-
-    .callout-success {
-      background: var(--green-100);
-      border-color: var(--green-500);
-    }
-
-    .callout-success strong { color: var(--green-500); }
-
-    /* ─── COPY BUTTON ─── */
-    .copy-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      background: #21262d;
-      border: 1px solid #30363d;
-      color: #8b949e;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      opacity: 0;
-    }
-
-    pre:hover .copy-btn, .code-wrap:hover .copy-btn { opacity: 1; }
-    .copy-btn:hover { background: #30363d; color: #e6edf3; }
-    .copy-btn.copied { color: var(--green-400); border-color: var(--green-500); }
-
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--navy-800);
-      color: var(--white);
-      padding: 10px 24px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0;
-      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-      pointer-events: none;
-      z-index: 999;
-    }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; font-family: var(--font-mono); }
+    .badge-get { background: #e3f2fd; color: #1565c0; } .badge-post { background: var(--green-100); color: var(--green-500); }
+    .badge-put { background: #fff3e0; color: #e65100; } .badge-patch { background: #e8f5e9; color: #2e7d32; } .badge-del { background: #fbe9e7; color: #c62828; }
+    .endpoint-path { font-family: var(--font-mono); font-size: 13px; color: var(--navy-800); }
+    .callout { padding: 16px 20px; border-radius: var(--radius-sm); font-size: 14px; margin: 16px 0 24px; border-left: 3px solid; }
+    .callout-info { background: var(--blue-100); border-color: var(--blue-500); } .callout-info strong { color: var(--blue-500); }
+    .callout-success { background: var(--green-100); border-color: var(--green-500); } .callout-success strong { color: var(--green-500); }
+    .callout-warning { background: #fff8e1; border-color: var(--amber-500); } .callout-warning strong { color: var(--amber-500); }
+    .copy-btn { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 6px; background: #21262d; border: 1px solid #30363d; color: #8b949e; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; opacity: 0; }
+    pre:hover .copy-btn { opacity: 1; } .copy-btn:hover { background: #30363d; color: #e6edf3; } .copy-btn.copied { color: var(--green-400); border-color: var(--green-500); }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy-800); color: var(--white); padding: 10px 24px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 999; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ─── FLOATING TOC ─── */
-    .toc-floating {
-      position: fixed;
-      top: 120px;
-      right: max(24px, calc((100vw - 1280px) / 2 - 220px));
-      width: 180px;
-      max-height: calc(100vh - 160px);
-      overflow-y: auto;
-      z-index: 50;
-    }
-
-    .toc-floating-title {
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gray-300);
-      margin-bottom: 12px;
-    }
-
-    .toc-floating a {
-      display: block;
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--gray-400);
-      padding: 4px 0 4px 12px;
-      border-left: 2px solid var(--gray-100);
-      transition: all 0.15s;
-      line-height: 1.5;
-    }
-
-    .toc-floating a:hover { color: var(--navy-800); border-color: var(--gray-300); }
-    .toc-floating a.active { color: var(--green-500); border-color: var(--green-500); }
+    .toc-floating { position: fixed; top: 120px; right: max(24px, calc((100vw - 1280px) / 2 - 220px)); width: 180px; max-height: calc(100vh - 160px); overflow-y: auto; z-index: 50; }
+    .toc-floating-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-300); margin-bottom: 12px; }
+    .toc-floating a { display: block; font-size: 12.5px; font-weight: 500; color: var(--gray-400); padding: 4px 0 4px 12px; border-left: 2px solid var(--gray-100); transition: all 0.15s; line-height: 1.5; }
+    .toc-floating a:hover { color: var(--navy-800); border-color: var(--gray-300); } .toc-floating a.active { color: var(--green-500); border-color: var(--green-500); }
     .toc-floating a.toc-h3 { padding-left: 24px; font-size: 12px; }
-
-    /* ─── SIDEBAR SEARCH ─── */
-    .sidebar-search-wrap {
-      padding: 0 16px 12px;
-    }
-
-    .sidebar-search {
-      width: 100%;
-      padding: 8px 12px 8px 32px;
-      border: 1px solid var(--gray-100);
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-family: var(--font-sans);
-      color: var(--gray-700);
-      background: var(--gray-50);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .sidebar-search:focus { border-color: var(--green-500); }
-    .sidebar-search::placeholder { color: var(--gray-300); }
-    .sidebar-search-icon {
-      position: absolute;
-      left: 26px;
-      margin-top: 9px;
-      color: var(--gray-300);
-      pointer-events: none;
-    }
-
-    .sidebar-search-wrap { position: relative; }
-    .sidebar-link-hidden { display: none !important; }
-    .sidebar-group-hidden { display: none !important; }
-
-    /* ─── REVEAL ANIMATIONS ─── */
-    .reveal, [class*="rv-"] {
-      opacity: 0;
-      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .reveal { transform: translateY(20px); }
-    .rv-up { transform: translateY(24px); }
-    .rv-left { transform: translateX(-24px); }
-    .rv-scale { transform: scale(0.95); }
+    .reveal, [class*="rv-"] { opacity: 0; transition: opacity 0.6s, transform 0.6s; }
+    .reveal { transform: translateY(20px); } .rv-up { transform: translateY(24px); } .rv-left { transform: translateX(-24px); }
     .reveal.visible, [class*="rv-"].visible { opacity: 1; transform: none; }
-
-    .rv-d1 { transition-delay: 0s; }
-    .rv-d2 { transition-delay: 0.1s; }
-    .rv-d3 { transition-delay: 0.2s; }
-    .rv-d4 { transition-delay: 0.3s; }
-
-    /* ─── MOBILE SIDEBAR ─── */
-    .sidebar-toggle {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 200;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--green-500), var(--green-400));
-      color: var(--white);
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 16px rgba(5,150,105,0.3);
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s;
-    }
-    .sidebar-toggle:hover { transform: scale(1.05); }
-    .sidebar-toggle svg { width: 20px; height: 20px; }
-
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 150;
-      background: rgba(6,13,26,0.4);
-      backdrop-filter: blur(4px);
-    }
-    .sidebar-overlay.open { display: block; }
-
-    .sidebar.open {
-      display: block;
-      z-index: 160;
-      box-shadow: 0 0 40px rgba(0,0,0,0.15);
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 1100px) {
-      .toc-floating { display: none; }
-    }
-
-    @media (max-width: 900px) {
-      .sidebar { display: none; }
-      .content { margin-left: 0; padding: 24px 20px 60px; }
-      .sidebar-toggle { display: flex; }
-    }
-
-    @media (max-width: 600px) {
-      .navbar-links a:not(.btn) { display: none; }
-    }
+    .rv-d1 { transition-delay: 0s; } .rv-d2 { transition-delay: 0.1s; } .rv-d3 { transition-delay: 0.2s; } .rv-d4 { transition-delay: 0.3s; }
+    .sidebar-toggle { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 200; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg,var(--green-500),var(--green-400)); color: var(--white); border: none; cursor: pointer; box-shadow: 0 4px 16px rgba(5,150,105,0.3); align-items: center; justify-content: center; }
+    .sidebar-toggle:hover { transform: scale(1.05); } .sidebar-toggle svg { width: 20px; height: 20px; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; z-index: 150; background: rgba(6,13,26,0.4); backdrop-filter: blur(4px); }
+    .sidebar-overlay.open { display: block; } .sidebar.open { display: block; z-index: 160; box-shadow: 0 0 40px rgba(0,0,0,0.15); }
+    @media (max-width: 1100px) { .toc-floating { display: none; } }
+    @media (max-width: 900px) { .sidebar { display: none; } .content { margin-left: 0; padding: 24px 20px 60px; } .sidebar-toggle { display: flex; } }
+    @media (max-width: 600px) { .navbar-links a:not(.btn) { display: none; } }
   </style>
 </head>
 <body>
+<div class="toast" id="toast">¡Copiado!</div>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Abrir menú">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- ═══ TOP BAR ═══ -->
-  <header class="navbar">
-    <div class="navbar-inner">
-      <a href="/" class="navbar-logo">
-        <span class="navbar-logo-mark">T</span>
-        TechOST<span>API</span>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-logo">
+      <div class="navbar-logo-mark">T</div>
+      TechOST<span>API</span>
+    </a>
+    <div class="navbar-links">
+      <a href="/">Inicio</a>
+      <a href="https://github.com/laocorp/open-api-facturacion-sri" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:soporte@techost.ec" class="btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9 22 2z"/></svg>
+        Contacto
       </a>
-      <nav class="navbar-links">
-        <a href="/">Inicio</a>
-        <a href="/api">Swagger</a>
-        <a href="/docs/postman.json">Postman</a>
-        <a href="#contact" class="btn">Comenzar ahora</a>
-      </nav>
     </div>
-  </header>
+  </div>
+</nav>
 
-  <!-- ═══ SIDEBAR ═══ -->
-  <aside class="sidebar" id="sidebar" role="navigation">
-    <div class="sidebar-search-wrap">
-      <svg class="sidebar-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input class="sidebar-search" id="sidebar-search" type="search" placeholder="Buscar en docs..." aria-label="Buscar en la documentación">
-    </div>
-    <div class="sidebar-group">
-      <div class="sidebar-group-title">Empezar</div>
-      <a href="#inicio" class="active">Inicio rápido</a>
-      <a href="#autenticacion">Autenticación</a>
-      <a href="#hmac">Firma HMAC</a>
-      <a href="#pricing">Precios</a>
-    </div>
-    <div class="sidebar-group">
-      <div class="sidebar-group-title">API Reference</div>
-      <a href="#endpoints">Endpoints</a>
-      <a href="#factura">Emitir factura</a>
-      <a href="#nota-credito">Nota de crédito</a>
-      <a href="#retencion">Retención</a>
-      <a href="#guia">Guía de remisión</a>
-      <a href="#consulta">Consulta</a>
-    </div>
-    <div class="sidebar-group">
-      <div class="sidebar-group-title">Recursos</div>
-      <a href="#errores">Códigos de error</a>
-      <a href="#sdks">SDKs</a>
-      <a href="#webhooks">Webhooks</a>
-      <a href="#postman">Postman</a>
-    </div>
-  </aside>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-search-wrap">
+    <span class="sidebar-search-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input class="sidebar-search" id="sidebarSearch" type="text" placeholder="Buscar…" autocomplete="off">
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Introducción</div>
+    <a href="#inicio" class="active">Inicio rápido</a>
+    <a href="#autenticacion">Autenticación</a>
+    <a href="#manejo-errores">Manejo de errores</a>
+    <a href="#librerias">Librerías cliente</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">SRI</div>
+    <a href="#sri-emision">Emisión de comprobantes</a>
+    <a href="#sri-consulta">Consulta y gestión</a>
+    <a href="#sri-autorizacion">Verificación SRI</a>
+    <a href="#sri-preview">Preview y validación</a>
+    <a href="#sri-sincronizar">Sincronización</a>
+    <a href="#sri-catalogos">Catálogos</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Recursos</div>
+    <a href="#emisores">Emisores</a>
+    <a href="#puntos-emision">Puntos de emisión</a>
+    <a href="#secuenciales">Secuenciales</a>
+    <a href="#api-keys">API Keys</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Webhooks</div>
+    <a href="#webhooks">Webhooks</a>
+    <a href="#webhook-eventos">Eventos</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Avanzado</div>
+    <a href="#payphone">Payphone</a>
+    <a href="#estadisticas">Estadísticas</a>
+    <a href="#estado">Estado del sistema</a>
+    <a href="#limitaciones">Límites y rate limiting</a>
+    <a href="#versiones">Versiones</a>
+  </div>
+</aside>
+<div class="toc-floating" id="tocFloating">
+  <div class="toc-floating-title">En esta página</div>
+  <a href="#inicio" class="active">Inicio rápido</a>
+  <a href="#autenticacion">Autenticación</a>
+  <a href="#sri-emision">Emisión</a>
+  <a href="#webhooks">Webhooks</a>
+</div>
 
-  <!-- ═══ SIDEBAR MOBILE TOGGLE + OVERLAY ═══ -->
-  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú de navegación">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-  </button>
-  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+<main class="content" id="mainContent">
 
-  <!-- ═══ FLOATING TOC ═══ -->
-  <nav class="toc-floating" id="toc-floating" aria-label="En esta página"></nav>
+<!-- INICIO -->
+<section id="inicio">
+  <h1>Documentación API</h1>
+  <p class="subtitle">TechOST API — Facturación electrónica SRI. Integra tu sistema con el SRI a través de una API REST moderna, segura y auditable.</p>
 
-  <!-- ═══ CONTENT ═══ -->
-  <main class="content">
+  <div class="callout callout-info"><strong>Entorno de pruebas.</strong> Autentícate con <code>ambiente: 1</code> y emite comprobantes sin valor fiscal. Usa RUC <code>1790012344001</code> y números de documento ficticios (001-001-000000001).</div>
 
-    <h1>Documentación</h1>
-    <p class="subtitle">API de facturación electrónica SRI para Ecuador. Integración REST simple, multi-tenancy, firma XAdES-BES.</p>
+  <h2>Inicio rápido</h2>
+  <p>TechOST API expone 3 grupos principales de recursos bajo <code>https://api.techost.ec</code>:</p>
+  <table>
+    <thead><tr><th>Base path</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><code>/sri</code></td><td>Emisión, consulta, autorización y verificación de comprobantes electrónicos SRI</td></tr>
+      <tr><td><code>/auth</code>, <code>/api-keys</code>, <code>/emisores</code>, <code>/puntos-emision</code>, <code>/secuenciales</code></td><td>Gestión de autenticación y recursos maestros</td></tr>
+      <tr><td><code>/webhooks</code>, <code>/payphone</code></td><td>Notificaciones automáticas y pagos integrados</td></tr>
+    </tbody>
+  </table>
+  <p>Ejemplo de emisión — factura electrónica:</p>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- INICIO RÁPIDO -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="inicio" class="reveal">
-      <h2>Inicio rápido</h2>
-      <p>Emita su primer comprobante autorizado por el SRI en menos de 5 minutos. Solo necesita una <strong>API Key</strong> y enviar un JSON con los datos del comprobante.</p>
-
-      <h3>1. Obtenga su API Key</h3>
-      <p>Regístrese vía <code>POST /onboarding</code> o genere una nueva API Key desde el panel de administración. Recibirá un <code>apiKey</code> (prefijo público) y un <code>apiSecret</code> (mostrado una sola vez).</p>
-
-      <h3>2. Emita su primera factura</h3>
-      <p>Ejemplo completo con curl, JavaScript, Python y PHP:</p>
-
-      <div class="code-header">
-        <button class="code-tab active" data-lang="curl">curl</button>
-        <button class="code-tab" data-lang="js">JavaScript</button>
-        <button class="code-tab" data-lang="python">Python</button>
-        <button class="code-tab" data-lang="php">PHP</button>
-      </div>
-
-      <pre class="code-block" data-lang="curl"><span class="c">#!/usr/bin/env bash</span>
-curl -X POST https://api.techost.cloud/sri/emitir/factura \
-  -H <span class="s">"X-Api-Key: sk_live_a1b2c3d4e5f6"</span> \
+  <pre><code><span class="k">curl</span> https://api.techost.ec/sri/factura \
+  -X POST \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span> \
   -H <span class="s">"Content-Type: application/json"</span> \
   -d <span class="s">'{
-  "emisor": {
-    "ruc": "1950370393001",
-    "razonSocial": "COMERCIAL XYZ S.A.",
-    "codDoc": "01",
-    "establecimiento": "001",
-    "ptoEmision": "001",
-    "dirMatriz": "Av. Principal 123",
-    "contribuyenteEspecial": "",
-    "obligadoContabilidad": "SI"
-  },
-  "comprador": {
-    "identificacion": "1790012345001",
-    "tipoIdentificacion": "04",
-    "razonSocial": "AEROCARIBE S.A.",
-    "direccion": "Av. Amazonas N37-29",
-    "email": "cliente@ejemplo.com"
-  },
-  "detalles": [
-    {
-      "codigoPrincipal": "P001",
-      "descripcion": "Servicio de consultoría",
-      "cantidad": 1,
-      "precioUnitario": 200.00,
-      "descuento": 0,
-      "impuestos": [
-        { "codigo": "2", "codigoPorcentaje": "4", "tarifa": 15, "baseImponible": 200, "valor": 30 }
-      ]
-    }
-  ],
-  "pagos": [
-    { "formaPago": "03", "total": 230.00 }
-  ],
-  "infoAdicional": [
-    { "nombre": "Email", "valor": "cliente@ejemplo.com" }
-  ]
-}'</span></pre>
+  "comprador": { "identificacion": "1712345678001", "razonSocial": "Cliente Ejemplo S.A.", "tipoIdentificacion": "04", "dirMatriz": "Quito", "obligadoContabilidad": "SI" },
+  "emisor": { "ruc": "1790012344001", "razonSocial": "TechOST S.A.", "nombreComercial": "TechOST", "codEstablecimiento": "001", "puntoEmision": "001", "dirMatriz": "Quito", "contribuyenteEspecial": "", "obligadoContabilidad": "SI" },
+  "detalles": [{ "codigoPrincipal": "001", "descripcion": "Servicio de consultoría", "cantidad": 1, "precioUnitario": 100.00, "impuestos": [{ "codigo": "2", "codigoPorcentaje": "0", "tarifa": 0, "baseImponible": 100.00, "valor": 0 }] }],
+  "pagos": [{ "formaPago": "01", "total": 100.00, "plazo": 0, "unidadTiempo": "DÍAS" }]
+}'</span></code></pre>
 
-      <pre class="code-block" data-lang="js" style="display:none"><span class="c">// Node.js — fetch</span>
-<span class="k">const</span> <span class="v">res</span> <span class="o">=</span> <span class="k">await</span> <span class="f">fetch</span>(<span class="s">'https://api.techost.cloud/sri/emitir/factura'</span>, {
-  <span class="v">method</span>: <span class="s">'POST'</span>,
-  <span class="v">headers</span>: {
-    <span class="s">'X-Api-Key'</span>: <span class="s">'sk_live_a1b2c3d4e5f6'</span>,
-    <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span>
-  },
-  <span class="v">body</span>: <span class="f">JSON</span>.<span class="f">stringify</span>({ <span class="c">/* ... payload */</span> })
-});
-<span class="k">const</span> <span class="v">data</span> <span class="o">=</span> <span class="k">await</span> <span class="v">res</span>.<span class="f">json</span>();
-<span class="f">console</span>.<span class="f">log</span>(<span class="v">data</span>.<span class="v">claveAcceso</span>);</pre>
+  <p>Respuesta exitosa (201 Created):</p>
+  <pre><code>{<span class="s">
+  "claveAcceso"</span>: <span class="s">"0107202501179001234400110010010000000011234567812"</span>,<span class="s">
+  "numero"</span>: <span class="s">"001-001-000000001"</span>,<span class="s">
+  "fecha"</span>: <span class="s">"2025-07-01T12:00:00.000Z"</span>,<span class="s">
+  "estado"</span>: <span class="s">"PENDIENTE"</span>,<span class="s">
+  "ambiente"</span>: 1,<span class="s">
+  "valorTotal"</span>: 100.00
+}</span></code></pre>
+</section>
+<!-- AUTENTICACIÓN -->
+<section id="autenticacion">
+  <h2>Autenticación</h2>
+  <p>TechOST API usa <strong>JWT (Bearer token)</strong> como mecanismo de autenticación. Todas las rutas de negocio (<code>/sri/*</code>, <code>/emisores/*</code>, etc.) están protegidas por un guardia global <code>JwtAuthGuard</code>.</p>
 
-      <pre class="code-block" data-lang="python" style="display:none"><span class="c"># Python — requests</span>
-<span class="k">import</span> <span class="n">requests</span>
+  <div class="callout callout-warning"><strong>IMPORTANTE.</strong> No existe middleware HMAC para peticiones entrantes. La verificación HMAC solo se usa en webhooks salientes (ver <a href="#webhooks">sección webhooks</a>).</div>
 
-<span class="v">res</span> <span class="o">=</span> <span class="n">requests</span>.<span class="f">post</span>(
-    <span class="s">'https://api.techost.cloud/sri/emitir/factura'</span>,
-    <span class="v">headers</span>={<span class="s">'X-Api-Key'</span>: <span class="s">'sk_live_a1b2c3d4e5f6'</span>},
-    <span class="v">json</span>={<span class="c">/* ... payload */</span>}
-)
-<span class="v">data</span> <span class="o">=</span> <span class="v">res</span>.<span class="f">json</span>()
-<span class="f">print</span>(<span class="v">data</span>[<span class="s">'claveAcceso'</span>])</pre>
+  <h3>Obtener token JWT</h3>
+  <p>Regístrate en <a href="https://techost.ec" target="_blank" rel="noopener">techost.ec</a> para obtener tus credenciales. El endpoint <code>/auth/login</code> recibe email y contraseña:</p>
+  <pre><code><span class="k">curl</span> https://api.techost.ec/auth/login \
+  -X POST \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{ "email": "tusuario@ejemplo.com", "password": "tucontraseña" }'</span></code></pre>
+  <p>Respuesta:</p>
+  <pre><code>{<span class="s">
+  "access_token"</span>: <span class="s">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,<span class="s">
+  "refresh_token"</span>: <span class="s">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,<span class="s">
+  "expires_in"</span>: 3600
+}</span></code></pre>
 
-      <pre class="code-block" data-lang="php" style="display:none"><span class="c">// PHP — cURL</span>
-<span class="v">$ch</span> <span class="o">=</span> <span class="f">curl_init</span>(<span class="s">'https://api.techost.cloud/sri/emitir/factura'</span>);
-<span class="f">curl_setopt_array</span>(<span class="v">$ch</span>, [
-    <span class="n">CURLOPT_POST</span> <span class="o">=></span> <span class="kc">true</span>,
-    <span class="n">CURLOPT_HTTPHEADER</span> <span class="o">=></span> [
-        <span class="s">'X-Api-Key: sk_live_a1b2c3d4e5f6'</span>,
-        <span class="s">'Content-Type: application/json'</span>
-    ],
-    <span class="n">CURLOPT_POSTFIELDS</span> <span class="o">=></span> <span class="f">json_encode</span>([<span class="c">/* ... payload */</span>]),
-    <span class="n">CURLOPT_RETURNTRANSFER</span> <span class="o">=></span> <span class="kc">true</span>
-]);
-<span class="v">$data</span> <span class="o">=</span> <span class="f">json_decode</span>(<span class="f">curl_exec</span>(<span class="v">$ch</span>));
-<span class="f">echo</span> <span class="v">$data</span>-><span class="v">claveAcceso</span>;</pre>
+  <h3>Usar el token</h3>
+  <p>Incluye el token en el header <code>Authorization</code> en todos los requests:</p>
+  <pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></pre>
 
-      <h3>Respuesta exitosa</h3>
-      <pre><span class="kv">{</span>
-  <span class="k">"estado"</span>: <span class="s">"AUTORIZADO"</span>,
-  <span class="k">"claveAcceso"</span>: <span class="s">"060720260117900123450012001001000012345678901"</span>,
-  <span class="k">"numero"</span>: <span class="s">"001-001-000012345"</span>,
-  <span class="k">"fechaAutorizacion"</span>: <span class="s">"06/07/2026 19:20:18"</span>,
-  <span class="k">"ambiente"</span>: <span class="m">2</span>
-<span class="kv">}</span></pre>
-    </section>
+  <h3>Refresh token</h3>
+  <p>Cuando el token expire, usa <code>/auth/refresh</code> con el <code>refresh_token</code> en el body (protegido con JwtAuthGuard):</p>
+  <pre><code><span class="k">curl</span> https://api.techost.ec/auth/refresh \
+  -X POST \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{ "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }'</span></code></pre>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- AUTENTICACIÓN -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="autenticacion" class="reveal">
-      <h2>Autenticación</h2>
-      <p>Todos los endpoints de emisión requieren autenticación. La API soporta dos mecanismos:</p>
+  <h3>Perfil de usuario</h3>
+  <p>Obtén los datos del usuario autenticado:</p>
+  <pre><code><span class="k">curl</span> https://api.techost.ec/auth/perfil \
+  -X GET \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span></code></pre>
+</section>
+<!-- ERRORES -->
+<section id="manejo-errores">
+  <h2>Manejo de errores</h2>
+  <p>La API sigue convenciones REST estándar con códigos HTTP y respuestas estructuradas:</p>
+  <table>
+    <thead><tr><th>Código</th><th>Significado</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><code>200</code></td><td>OK</td><td>Operación exitosa</td></tr>
+      <tr><td><code>201</code></td><td>Created</td><td>Recurso creado exitosamente</td></tr>
+      <tr><td><code>400</code></td><td>Bad Request</td><td>DTO inválido, validación fallida o error de negocio (ej. emisor no encontrado)</td></tr>
+      <tr><td><code>401</code></td><td>Unauthorized</td><td>Token JWT no provisto, expirado o inválido</td></tr>
+      <tr><td><code>403</code></td><td>Forbidden</td><td>API Key inactiva o límite de rate excedido</td></tr>
+      <tr><td><code>404</code></td><td>Not Found</td><td>Recurso no existe (emisor, comprobante, etc.)</td></tr>
+      <tr><td><code>409</code></td><td>Conflict</td><td>Comprobante duplicado o estado no válido para la operación</td></tr>
+      <tr><td><code>422</code></td><td>Unprocessable Entity</td><td>Error de negocio SRI (firma, esquema XML, autorización)</td></tr>
+      <tr><td><code>429</code></td><td>Too Many Requests</td><td>Rate limit excedido</td></tr>
+      <tr><td><code>500</code></td><td>Internal Server Error</td><td>Error inesperado del servidor</td></tr>
+    </tbody>
+  </table>
+  <p>Estructura de error estándar:</p>
+  <pre><code>{<span class="s">
+  "statusCode"</span>: 400,<span class="s">
+  "message"</span>: <span class="s">"El comprador debe tener una identificación válida"</span>,<span class="s">
+  "error"</span>: <span class="s">"Bad Request"</span>
+}</span></code></pre>
+</section>
 
-      <h3>API Key (emisión SRI)</h3>
-      <p>Incluya su API Key en el header <code>X-Api-Key</code> en cada petición:</p>
-      <pre><span class="c"># Header requerido en todos los endpoints de emisión</span>
-X-Api-Key: sk_live_a1b2c3d4e5f6</pre>
+<!-- LIBRERÍAS -->
+<section id="librerias">
+  <h2>Librerías cliente</h2>
+  <table>
+    <thead><tr><th>Lenguaje</th><th>Instalación</th><th>Documentación</th></tr></thead>
+    <tbody>
+      <tr><td>JavaScript / TypeScript</td><td><code>npm install @techost/api</code></td><td><a href="#">npm</a></td></tr>
+      <tr><td>Python</td><td><code>pip install techost-api</code></td><td><a href="#">PyPI</a></td></tr>
+      <tr><td>PHP</td><td><code>composer require techost/api</code></td><td><a href="#">Packagist</a></td></tr>
+    </tbody>
+  </table>
+</section>
+<!-- SRI EMISIÓN -->
+<section id="sri-emision">
+  <h2>Emisión de comprobantes</h2>
+  <p>Todos los endpoints de emisión requieren autenticación JWT y comparten la misma estructura base. El campo <code>ambiente</code> determina el entorno: <code>1</code> = Pruebas, <code>2</code> = Producción.</p>
 
-      <div class="callout callout-info">
-        <strong>Importante:</strong> El <code>apiSecret</code> se muestra una sola vez al crear la API Key. Guárdelo de forma segura. No podrá recuperarlo después.
-      </div>
+  <h3>POST /sri/factura</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/factura</span></p>
+  <p>Crea y envía al SRI una factura electrónica. <strong>Rate limit:</strong> 10 req/min por API Key.</p>
+  <pre><code><span class="c">// CreateFacturaDto — estructura completa</span>
+{<span class="s">
+  "comprador"</span>: {<span class="s">
+    "identificacion"</span>: <span class="s">"1712345678001"</span>,    <span class="c">// RUC 13 dígitos o cédula 10</span><span class="s">
+    "razonSocial"</span>: <span class="s">"Cliente Ejemplo S.A."</span>,<span class="s">
+    "tipoIdentificacion"</span>: <span class="s">"04"</span>,              <span class="c">// 04=RUC, 05=Cédula, 06=Consumidor Final, 07=Pasaporte</span><span class="s">
+    "dirMatriz"</span>: <span class="s">"Quito"</span>,<span class="s">
+    "obligadoContabilidad"</span>: <span class="s">"SI"</span>,              <span class="c">// Opcional. "SI" | "NO"</span><span class="s">
+    "email"</span>: <span class="s">"cliente@ejemplo.com"</span>              <span class="c">// Opcional. Para envío automático</span>
+  },<span class="s">
+  "emisor"</span>: {<span class="s">
+    "ruc"</span>: <span class="s">"1790012344001"</span>,<span class="s">
+    "razonSocial"</span>: <span class="s">"TechOST S.A."</span>,<span class="s">
+    "nombreComercial"</span>: <span class="s">"TechOST"</span>,<span class="s">
+    "codEstablecimiento"</span>: <span class="s">"001"</span>,<span class="s">
+    "puntoEmision"</span>: <span class="s">"001"</span>,                    <span class="c">// Nombre exacto del campo (NO ptoEmision)</span><span class="s">
+    "dirMatriz"</span>: <span class="s">"Quito"</span>,<span class="s">
+    "contribuyenteEspecial"</span>: <span class="s">""</span>,               <span class="c">// Opcional. Número resolución</span><span class="s">
+    "obligadoContabilidad"</span>: <span class="s">"SI"</span>,<span class="s">
+    "dirEstablecimiento"</span>: <span class="s">"Quito"</span>,                <span class="c">// Opcional</span><span class="s">
+    "llaveFirma"</span>: <span class="s">"-----BEGIN PRIVATE KEY-----..."</span>,<span class="c">// Opcional. Sobre-escribe llave del emisor</span><span class="s">
+    "certificadoFirma"</span>: <span class="s">"-----BEGIN CERTIFICATE-----..."</span> <span class="c">// Opcional</span>
+  },<span class="s">
+  "detalles"</span>: [{<span class="s">
+    "codigoPrincipal"</span>: <span class="s">"001"</span>,<span class="s">
+    "codigoAuxiliar"</span>: <span class="s">""</span>,                         <span class="c">// Opcional</span><span class="s">
+    "descripcion"</span>: <span class="s">"Servicio de consultoría"</span>,<span class="s">
+    "cantidad"</span>: 1,<span class="s">
+    "precioUnitario"</span>: 100.00,<span class="s">
+    "descuento"</span>: 0,                                    <span class="c">// Opcional</span><span class="s">
+    "impuestos"</span>: [{<span class="s">
+      "codigo"</span>: <span class="s">"2"</span>,                                   <span class="c">// 2=IVA, 3=ICE, 5=IRBPNR</span><span class="s">
+      "codigoPorcentaje"</span>: <span class="s">"0"</span>,                         <span class="c">// 0=0%, 2=12%, 4=Exento, 6=No objeto, 7=15%, 8=5%, etc.</span><span class="s">
+      "tarifa"</span>: 0,                                      <span class="c">// Porcentaje numérico</span><span class="s">
+      "baseImponible"</span>: 100.00,<span class="s">
+      "valor"</span>: 0
+    }]
+  }],<span class="s">
+  "pagos"</span>: [{<span class="s">
+    "formaPago"</span>: <span class="s">"01"</span>,                               <span class="c">// 01=Sin utilización, 15=Compensación deudas, 19=Otros, 20=Transferencia, 21=Tarjeta crédito...</span><span class="s">
+    "total"</span>: 100.00,<span class="s">
+    "plazo"</span>: 0,<span class="s">
+    "unidadTiempo"</span>: <span class="s">"DÍAS"</span>
+  }],<span class="s">
+  "informacionAdicional"</span>: [{                         <span class="c">// Opcional</span><span class="s">
+    "nombre"</span>: <span class="s">"Email"</span>,<span class="s">
+    "valor"</span>: <span class="s">"cliente@ejemplo.com"</span>
+  }],<span class="s">
+  "ambiente"</span>: 1,                                     <span class="c">// Opcional. Default: 1 (Pruebas)</span><span class="s">
+  "tipoEmision"</span>: <span class="s">"1"</span>                               <span class="c">// Opcional. Default: "1" (Normal)</span>
+}</span></code></pre>
 
-      <h3>JWT (administración)</h3>
-      <p>Los endpoints de administración (API Keys, webhooks, configuración de tenant) usan JWT. Obtenga su token vía <code>POST /auth/login</code> e inclúyalo como Bearer token:</p>
-      <pre>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</pre>
+  <p>Respuesta exitosa:</p>
+  <pre><code>{<span class="s">
+  "id"</span>: <span class="s">"uuid-del-comprobante"</span>,<span class="s">
+  "claveAcceso"</span>: <span class="s">"0107202501179001234400110010010000000011234567812"</span>,<span class="s">
+  "numero"</span>: <span class="s">"001-001-000000001"</span>,<span class="s">
+  "fecha"</span>: <span class="s">"2025-07-01T12:00:00.000Z"</span>,<span class="s">
+  "estado"</span>: <span class="s">"PENDIENTE"</span>,<span class="s">
+  "ambiente"</span>: 1,<span class="s">
+  "tipoEmision"</span>: <span class="s">"1"</span>,<span class="s">
+  "tipoDocumento"</span>: <span class="s">"01"</span>,<span class="s">
+  "valorTotal"</span>: 100.00,<span class="s">
+  "fechaAutorizacion"</span>: null,<span class="s">
+  "numeroAutorizacion"</span>: null,<span class="s">
+  "comprobanteXml"</span>: null
+}</span></code></pre>
 
-      <h3>Multi-tenancy</h3>
-      <p>Para operaciones multi-tenant, incluya el header <code>X-Tenant-ID</code> con el UUID del tenant destino:</p>
-      <pre>X-Tenant-ID: a1b2c3d4-e5f6-7890-abcd-ef1234567890</pre>
-    </section>
+  <h3>POST /sri/nota-credito</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/nota-credito</span></p>
+  <p>Emite una nota de crédito electrónica. Requiere el número de factura que se modifica.</p>
+  <pre><code>{<span class="s">
+  "comprador"</span>: { <span class="c">/* mismo schema que factura */</span> },<span class="s">
+  "emisor"</span>: { <span class="c">/* mismo schema que factura */</span> },<span class="s">
+  "detalles"</span>: [{<span class="s">
+    "codigoPrincipal"</span>: <span class="s">"001"</span>,<span class="s">
+    "descripcion"</span>: <span class="s">"Devolución parcial"</span>,<span class="s">
+    "cantidad"</span>: 1,<span class="s">
+    "precioUnitario"</span>: 50.00,<span class="s">
+    "descuento"</span>: 0,<span class="s">
+    "impuestos"</span>: [{ <span class="c">/* mismo schema que factura */</span> }]
+  }],<span class="s">
+  "pagos"</span>: [{ <span class="c">/* mismo schema que factura */</span> }],<span class="s">
+  "moneda"</span>: <span class="s">"DOLAR"</span>,                              <span class="c">// Opcional</span><span class="s">
+  "fechaEmisionDocSustento"</span>: <span class="s">"2025-07-01"</span>,       <span class="c">// Fecha de la factura original</span><span class="s">
+  "numDocSustento"</span>: <span class="s">"001-001-000000001"</span>,<span class="s">
+  "codDocSustento"</span>: <span class="s">"01"</span>,                        <span class="c">// 01=factura, 04=nota-credito, 06=guia, etc.</span><span class="s">
+  "motivo"</span>: <span class="s">"Devolución parcial de productos"</span>,<span class="s">
+  "ambiente"</span>: 1,<span class="s">
+  "tipoEmision"</span>: <span class="s">"1"</span>
+}</span></code></pre>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- FIRMA HMAC -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="hmac" class="reveal">
-      <h2>Firma HMAC</h2>
-      <p>Para mayor seguridad, puede firmar sus peticiones usando HMAC-SHA256. La firma permite verificar que la petición no fue alterada en tránsito y que proviene de un cliente autorizado.</p>
+  <h3>POST /sri/guia-remision</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/guia-remision</span></p>
+  <p>Emite una guía de remisión electrónica.</p>
+  <pre><code>{<span class="s">
+  "emisor"</span>: { <span class="c">/* mismo schema que factura */</span> },<span class="s">
+  "destinatarios"</span>: [{<span class="s">
+    "identificacion"</span>: <span class="s">"1712345678001"</span>,<span class="s">
+    "razonSocial"</span>: <span class="s">"Cliente Ejemplo S.A."</span>,<span class="s">
+    "tipoIdentificacion"</span>: <span class="s">"04"</span>,<span class="s">
+    "dirEstablecimiento"</span>: <span class="s">"Quito"</span>,<span class="s">
+    "dirDestinatario"</span>: <span class="s">"Av. Siempre Viva 123"</span>,<span class="s">
+    "motivoTraslado"</span>: <span class="s">"Venta de productos"</span>,<span class="s">
+    "detalles"</span>: [{<span class="s">
+      "codigoPrincipal"</span>: <span class="s">"001"</span>,<span class="s">
+      "descripcion"</span>: <span class="s">"Widget"</span>,<span class="s">
+      "cantidad"</span>: 10
+    }]
+  }],<span class="s">
+  "fechaIniTransporte"</span>: <span class="s">"2025-07-01"</span>,             <span class="c">// Opcional</span><span class="s">
+  "fechaFinTransporte"</span>: <span class="s">"2025-07-02"</span>,            <span class="c">// Opcional</span><span class="s">
+  "placa"</span>: <span class="s">"PBC-1234"</span>,                              <span class="c">// Opcional</span><span class="s">
+  "ambiente"</span>: 1,<span class="s">
+  "tipoEmision"</span>: <span class="s">"1"</span>
+}</span></code></pre>
 
-      <h3>Generar la firma</h3>
-      <p>Construya el <em>string to sign</em> concatenando: <code>HTTP_METHOD + "\n" + URI + "\n" + BODY</code>. Luego genere el HMAC-SHA256 usando su <code>apiSecret</code> como clave y codifique en Base64.</p>
+  <h3>POST /sri/comprobante-retencion</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/comprobante-retencion</span></p>
+  <p>Emite un comprobante de retención electrónico.</p>
+  <pre><code>{<span class="s">
+  "emisor"</span>: { <span class="c">/* mismo schema que factura */</span> },<span class="s">
+  "sujetoRetenido"</span>: {<span class="s">
+    "identificacion"</span>: <span class="s">"1712345678001"</span>,<span class="s">
+    "razonSocial"</span>: <span class="s">"Proveedor Ejemplo S.A."</span>,<span class="s">
+    "tipoIdentificacion"</span>: <span class="s">"04"</span>,<span class="s">
+    "dirMatriz"</span>: <span class="s">"Quito"</span>,<span class="s">
+    "obligadoContabilidad"</span>: <span class="s">"SI"</span>,<span class="s">
+    "email"</span>: <span class="s">"proveedor@ejemplo.com"</span>
+  },<span class="s">
+  "infoRetencion"</span>: {<span class="s">
+    "fechaEmisionDocSustento"</span>: <span class="s">"2025-07-01"</span>,<span class="s">
+    "numDocSustento"</span>: <span class="s">"001-001-000000001"</span>,<span class="s">
+    "codDocSustento"</span>: <span class="s">"01"</span>,<span class="s">
+    "tipoRegimen"</span>: <span class="s">"ORDINARIO"</span>,<span class="s">
+    "impuestos"</span>: [{<span class="s">
+      "codigo"</span>: <span class="s">"1"</span>,                                   <span class="c">// 1=Renta, 2=IVA, 6=ISD</span><span class="s">
+      "codigoRetencion"</span>: <span class="s">"1"</span>,                         <span class="c">// Según impuesto y tipo</span><span class="s">
+      "baseImponible"</span>: 100.00,<span class="s">
+      "porcentajeRetener"</span>: 2.00,                          <span class="c">// Opcional</span><span class="s">
+      "valorRetenido"</span>: 2.00,<span class="s">
+      "codDocSustento"</span>: <span class="s">"01"</span>,<span class="s">
+      "numDocSustento"</span>: <span class="s">"001-001-000000001"</span>,<span class="s">
+      "fechaEmisionDocSustento"</span>: <span class="s">"2025-07-01"</span>
+    }]
+  },<span class="s">
+  "ambiente"</span>: 1,<span class="s">
+  "tipoEmision"</span>: <span class="s">"1"</span>
+}</span></code></pre>
+</section>
+<!-- SRI CONSULTA -->
+<section id="sri-consulta">
+  <h2>Consulta y gestión de comprobantes</h2>
 
-      <div class="code-header">
-        <button class="code-tab active" data-lang="hmac-js">JavaScript</button>
-        <button class="code-tab" data-lang="hmac-py">Python</button>
-        <button class="code-tab" data-lang="hmac-php">PHP</button>
-      </div>
+  <h3>GET /sri/comprobantes</h3>
+  <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/comprobantes</span></p>
+  <p>Lista comprobantes con paginación y filtros.</p>
+  <p><strong>Parámetros query:</strong></p>
+  <table>
+    <thead><tr><th>Parámetro</th><th>Tipo</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><code>page</code></td><td>number</td><td>Número de página (default: 1)</td></tr>
+      <tr><td><code>limit</code></td><td>number</td><td>Items por página (default: 10, max: 100)</td></tr>
+      <tr><td><code>estado</code></td><td>string</td><td>Filtrar por estado: PENDIENTE, AUTORIZADO, RECHAZADO, DEVUELTO, ANULADO</td></tr>
+      <tr><td><code>tipoDocumento</code></td><td>string</td><td>Filtrar por tipo: 01, 04, 06, 07</td></tr>
+      <tr><td><code>desde</code></td><td>ISO date</td><td>Fecha inicio</td></tr>
+      <tr><td><code>hasta</code></td><td>ISO date</td><td>Fecha fin</td></tr>
+    </tbody>
+  </table>
+  <pre><code><span class="k">curl</span> <span class="s">"https://api.techost.ec/sri/comprobantes?page=1&amp;limit=20&amp;estado=AUTORIZADO"</span> \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span></code></pre>
 
-      <pre class="code-block" data-lang="hmac-js"><span class="k">const</span> <span class="v">crypto</span> <span class="o">=</span> <span class="f">require</span>(<span class="s">'crypto'</span>);
+  <h3>GET /sri/comprobantes/:claveAcceso</h3>
+  <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/comprobantes/:claveAcceso</span></p>
+  <p>Obtiene un comprobante por su clave de acceso (49 dígitos).</p>
 
-<span class="k">function</span> <span class="f">generateSignature</span>(<span class="v">method</span>, <span class="v">path</span>, <span class="v">body</span>, <span class="v">secret</span>) {
-  <span class="k">const</span> <span class="v">stringToSign</span> <span class="o">=</span> <span class="v">method</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="v">path</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="f">JSON</span>.<span class="f">stringify</span>(<span class="v">body</span>);
-  <span class="k">return</span> <span class="v">crypto</span>
-    .<span class="f">createHmac</span>(<span class="s">'sha256'</span>, <span class="v">secret</span>)
-    .<span class="f">update</span>(<span class="v">stringToSign</span>)
-    .<span class="f">digest</span>(<span class="s">'base64'</span>);
-}
+  <h3>PATCH /sri/comprobantes/:claveAcceso/anular</h3>
+  <p><span class="badge badge-patch">PATCH</span> <span class="endpoint-path">/sri/comprobantes/:claveAcceso/anular</span></p>
+  <p>Anula un comprobante emitido. Solo puede anularse en estado <code>AUTORIZADO</code>.</p>
+  <pre><code><span class="k">curl</span> https://api.techost.ec/sri/comprobantes/0107202501179001234400110010010000000011234567812/anular \
+  -X PATCH \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{ "motivo": "Anulación por error del cliente" }'</span></code></pre>
 
-<span class="c">// Uso</span>
-<span class="k">const</span> <span class="v">apiSecret</span> <span class="o">=</span> <span class="s">'tu_api_secret'</span>;
-<span class="k">const</span> <span class="v">signature</span> <span class="o">=</span> <span class="f">generateSignature</span>(<span class="s">'POST'</span>, <span class="s">'/sri/emitir/factura'</span>, <span class="v">payload</span>, <span class="v">apiSecret</span>);
+  <h3>POST /sri/comprobantes/:claveAcceso/reintentar</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/comprobantes/:claveAcceso/reintentar</span></p>
+  <p>Reintenta el envío al SRI de un comprobante en estado <code>PENDIENTE</code> o <code>RECHAZADO</code>.</p>
+</section>
 
-<span class="c">// Enviar en el header</span>
-<span class="c">// X-API-Signature: &lt;signature&gt;</span></pre>
+<!-- VERIFICACIÓN SRI -->
+<section id="sri-autorizacion">
+  <h2>Verificación con el SRI</h2>
 
-      <pre class="code-block" data-lang="hmac-py" style="display:none"><span class="k">import</span> <span class="n">hmac</span>
-<span class="k">import</span> <span class="n">hashlib</span>
-<span class="k">import</span> <span class="n">base64</span>
-<span class="k">import</span> <span class="n">json</span>
+  <h3>GET /sri/autorizar/:claveAcceso</h3>
+  <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/autorizar/:claveAcceso</span></p>
+  <p>Consulta al SRI el estado de autorización de un comprobante. Actualiza el registro local y retorna el estado actual.</p>
 
-<span class="k">def</span> <span class="f">generate_signature</span>(<span class="v">method</span>, <span class="v">path</span>, <span class="v">body</span>, <span class="v">secret</span>):
-    <span class="v">string_to_sign</span> <span class="o">=</span> <span class="v">method</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="v">path</span> <span class="o">+</span> <span class="s">'\n'</span> <span class="o">+</span> <span class="n">json</span>.<span class="f">dumps</span>(<span class="v">body</span>, <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span>)
-    <span class="v">digest</span> <span class="o">=</span> <span class="n">hmac</span>.<span class="f">new</span>(
-        <span class="v">secret</span>.<span class="f">encode</span>(<span class="s">'utf-8'</span>),
-        <span class="v">string_to_sign</span>.<span class="f">encode</span>(<span class="s">'utf-8'</span>),
-        <span class="n">hashlib</span>.<span class="n">sha256</span>
-    ).<span class="f">digest</span>()
-    <span class="k">return</span> <span class="n">base64</span>.<span class="f">b64encode</span>(<span class="v">digest</span>).<span class="f">decode</span>()
+  <h3>GET /sri/verificar/:claveAcceso</h3>
+  <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/verificar/:claveAcceso</span></p>
+  <p>Verifica si un comprobante existe en el SRI sin actualizar el registro local. Retorna información pública del comprobante.</p>
+</section>
+<!-- PREVIEW Y VALIDACIÓN -->
+<section id="sri-preview">
+  <h2>Preview y validación</h2>
 
-<span class="c"># Uso</span>
-<span class="v">sig</span> <span class="o">=</span> <span class="f">generate_signature</span>(<span class="s">'POST'</span>, <span class="s">'/sri/emitir/factura'</span>, <span class="v">payload</span>, <span class="s">'tu_api_secret'</span>)
-<span class="c"># X-API-Signature: &lt;sig&gt;</span></pre>
+  <h3>POST /sri/preview/factura</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/preview/factura</span></p>
+  <p>Genera el XML firmado de una factura sin enviarlo al SRI. Útil para depuración y previsualización.</p>
+  <pre><code><span class="k">curl</span> https://api.techost.ec/sri/preview/factura \
+  -X POST \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{ /* mismo payload que POST /sri/factura */ }'</span></code></pre>
+  <p>Respuesta: <code>{ "xmlFirmado": "&lt;?...&gt;" }</code></p>
 
-      <pre class="code-block" data-lang="hmac-php" style="display:none"><span class="c">// PHP — HMAC signature</span>
-<span class="k">function</span> <span class="f">generateSignature</span>(<span class="v">$method</span>, <span class="v">$path</span>, <span class="v">$body</span>, <span class="v">$secret</span>) {
-    <span class="v">$stringToSign</span> <span class="o">=</span> <span class="v">$method</span> <span class="o">.</span> <span class="s">"\n"</span> <span class="o">.</span> <span class="v">$path</span> <span class="o">.</span> <span class="s">"\n"</span> <span class="o">.</span> <span class="f">json_encode</span>(<span class="v">$body</span>);
-    <span class="k">return</span> <span class="f">base64_encode</span>(
-        <span class="f">hash_hmac</span>(<span class="s">'sha256'</span>, <span class="v">$stringToSign</span>, <span class="v">$secret</span>, <span class="kc">true</span>)
-    );
-}
+  <h3>POST /sri/validar</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/validar</span></p>
+  <p>Valida un archivo XML firmado contra los esquemas XSD del SRI. Acepta <code>multipart/form-data</code> con el campo <code>archivo</code>.</p>
 
-<span class="c">// Header</span>
-<span class="c">// X-API-Signature: &lt;signature&gt;</span></pre>
+  <h3>POST /sri/debug/factura-firmada</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/debug/factura-firmada</span></p>
+  <p>Endpoint de depuración que retorna el XML firmado generado internamente durante el flujo de emisión. Recibe el mismo payload que factura.</p>
+</section>
 
-      <div class="callout callout-info">
-        <strong>Nota:</strong> La firma HMAC es opcional pero recomendada para entornos productivos. Si incluye <code>X-API-Signature</code>, la API verificará su validez antes de procesar la petición.
-      </div>
-    </section>
+<!-- SINCRONIZACIÓN -->
+<section id="sri-sincronizar">
+  <h2>Sincronización</h2>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- PRECIOS -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="pricing" class="reveal">
-      <h2>Precios — Pay per use</h2>
-      <p><strong>$0.05 por comprobante</strong> emitido y autorizado. Sin mensualidad, sin planes, sin contratos. Pague solo por lo que emite.</p>
+  <h3>POST /sri/sincronizar</h3>
+  <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/sincronizar</span></p>
+  <p>Fuerza la sincronización de comprobantes pendientes con el SRI. Procesa todos los comprobantes del usuario autenticado cuyo estado sea <code>PENDIENTE</code>, consultando al SRI y actualizando cada uno.</p>
+  <pre><code><span class="k">curl</span> https://api.techost.ec/sri/sincronizar \
+  -X POST \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span></code></pre>
+  <p>Respuesta: <code>{ "procesados": 5, "autorizados": 3, "rechazados": 1, "errores": 1, "detalle": [ ... ] }</code></p>
+</section>
 
-      <h3>Bundles de recarga</h3>
-      <table>
-        <tr><th>Bundle</th><th>Pago</th><th>Bonus</th><th>Total comprobantes</th></tr>
-        <tr><td><strong>Básico</strong></td><td>$10</td><td>—</td><td>200</td></tr>
-        <tr><td><strong>Popular</strong></td><td>$25</td><td>+$2.50</td><td>550</td></tr>
-        <tr><td><strong>Pro</strong></td><td>$50</td><td>+$7.50</td><td>1,150</td></tr>
-        <tr><td><strong>Business</strong></td><td>$100</td><td>+$20</td><td>2,400</td></tr>
-      </table>
+<!-- CATÁLOGOS -->
+<section id="sri-catalogos">
+  <h2>Catálogos SRI</h2>
+  <p>Endpoints públicos que devuelven los catálogos de referencia del SRI. No requieren autenticación.</p>
 
-      <p>Compre vía <code>POST /payphone/buy-bundle</code>. Consulte su saldo en <code>GET /payphone/balance/:tenantId</code>. Los comprobantes no utilizados no caducan.</p>
-    </section>
+  <table>
+    <thead><tr><th>Endpoint</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-get">GET</span> <code>/sri/catalogos/tipos-identificacion</code></td><td>Tipos de identificación (04=RUC, 05=Cédula, etc.)</td></tr>
+      <tr><td><span class="badge badge-get">GET</span> <code>/sri/catalogos/tipos-documento</code></td><td>Tipos de comprobante (01=Factura, 04=Nota de Crédito, etc.)</td></tr>
+      <tr><td><span class="badge badge-get">GET</span> <code>/sri/catalogos/impuestos</code></td><td>Códigos de impuestos (2=IVA, 3=ICE, 5=IRBPNR)</td></tr>
+      <tr><td><span class="badge badge-get">GET</span> <code>/sri/catalogos/formas-pago</code></td><td>Formas de pago (01=Sin utilización, 20=Transferencia, etc.)</td></tr>
+      <tr><td><span class="badge badge-get">GET</span> <code>/sri/catalogos/tarifas-iva</code></td><td>Tarifas IVA con códigos SRI</td></tr>
+      <tr><td><span class="badge badge-get">GET</span> <code>/sri/catalogos/retenciones</code></td><td>Códigos y porcentajes de retención</td></tr>
+    </tbody>
+  </table>
+</section>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- ENDPOINTS -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="endpoints" class="reveal">
-      <h2>Endpoints principales</h2>
-      <p>Todos los endpoints de emisión SRI usan base URL <code>https://api.techost.cloud</code> y requieren el header <code>X-Api-Key</code>.</p>
+<!-- EMISORES -->
+<section id="emisores">
+  <h2>Emisores</h2>
+  <p>CRUD completo para gestionar los datos del emisor (tu empresa). Requiere JWT.</p>
 
-      <table>
-        <tr><th>Método</th><th>Ruta</th><th>Descripción</th></tr>
-        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/factura</span></td><td>Emitir factura electrónica</td></tr>
-        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/nota-credito</span></td><td>Emitir nota de crédito</td></tr>
-        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/nota-debito</span></td><td>Emitir nota de débito</td></tr>
-        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/retencion</span></td><td>Emitir comprobante de retención</td></tr>
-        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/sri/emitir/guia-remision</span></td><td>Emitir guía de remisión</td></tr>
-        <tr><td><span class="badge badge-get">GET</span></td><td><span class="endpoint-path">/sri/comprobantes/:claveAcceso/pdf</span></td><td>Descargar PDF del comprobante</td></tr>
-        <tr><td><span class="badge badge-get">GET</span></td><td><span class="endpoint-path">/sri/comprobantes/:claveAcceso/xml</span></td><td>Descargar XML autorizado</td></tr>
-        <tr><td><span class="badge badge-post">POST</span></td><td><span class="endpoint-path">/onboarding</span></td><td>Registro completo (tenant + usuario + emisor + API Key)</td></tr>
-      </table>
+  <table>
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/emisores</code></td><td>Crear emisor con sus datos fiscales y certificado de firma</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/emisores</code></td><td>Listar emisores del usuario</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/emisores/:id</code></td><td>Obtener emisor por ID</td></tr>
+      <tr><td><span class="badge badge-put">PUT</span></td><td><code>/emisores/:id</code></td><td>Actualizar datos del emisor</td></tr>
+      <tr><td><span class="badge badge-del">DELETE</span></td><td><code>/emisores/:id</code></td><td>Eliminar emisor</td></tr>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/emisores/onboarding</code></td><td>Onboarding completo: crea emisor + puntos de emisión + secuenciales</td></tr>
+    </tbody>
+  </table>
+</section>
 
-      <p>Consulte la <a href="/api" style="color:var(--green-500);font-weight:500">documentación Swagger completa</a> para ver todos los endpoints, schemas y probar las peticiones en vivo.</p>
-    </section>
+<!-- PUNTOS DE EMISIÓN -->
+<section id="puntos-emision">
+  <h2>Puntos de emisión</h2>
+  <table>
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/puntos-emision</code></td><td>Crear punto de emisión</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/puntos-emision</code></td><td>Listar puntos de emisión</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/puntos-emision/:id</code></td><td>Obtener punto de emisión</td></tr>
+      <tr><td><span class="badge badge-put">PUT</span></td><td><code>/puntos-emision/:id</code></td><td>Actualizar punto de emisión</td></tr>
+      <tr><td><span class="badge badge-del">DELETE</span></td><td><code>/puntos-emision/:id</code></td><td>Eliminar punto de emisión</td></tr>
+    </tbody>
+  </table>
+</section>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- EMITIR FACTURA (detalle) -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="factura" class="reveal">
-      <h2>Emitir factura</h2>
-      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/factura</span></p>
-      <p>Endpoint principal para emisión de facturas electrónicas. Valida contra el esquema SRI, firma con XAdES-BES y envía al SRI en ambiente especificado.</p>
+<!-- SECUENCIALES -->
+<section id="secuenciales">
+  <h2>Secuenciales</h2>
+  <p>Gestión de la numeración correlativa por establecimiento, punto de emisión y tipo de documento.</p>
+  <table>
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/secuenciales</code></td><td>Crear secuencial</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/secuenciales</code></td><td>Listar secuenciales</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/secuenciales/:id</code></td><td>Obtener secuencial</td></tr>
+      <tr><td><span class="badge badge-put">PUT</span></td><td><code>/secuenciales/:id</code></td><td>Actualizar secuencial</td></tr>
+      <tr><td><span class="badge badge-del">DELETE</span></td><td><code>/secuenciales/:id</code></td><td>Eliminar secuencial</td></tr>
+    </tbody>
+  </table>
+</section>
+<!-- API KEYS -->
+<section id="api-keys">
+  <h2>API Keys</h2>
+  <p>Gestiona las API Keys asociadas a tu cuenta. Cada key tiene un tier (basic/pro/enterprise) que define el rate limit.</p>
+  <table>
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/api-keys</code></td><td>Crear nueva API Key</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/api-keys</code></td><td>Listar API Keys</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/api-keys/:id</code></td><td>Obtener API Key por ID</td></tr>
+      <tr><td><span class="badge badge-put">PUT</span></td><td><code>/api-keys/:id</code></td><td>Actualizar API Key (nombre, estado, tier)</td></tr>
+      <tr><td><span class="badge badge-del">DELETE</span></td><td><code>/api-keys/:id</code></td><td>Eliminar API Key</td></tr>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/api-keys/:id/rotate</code></td><td>Rotar (regenerar) el secret de una API Key</td></tr>
+    </tbody>
+  </table>
+</section>
 
-      <h3>Parámetros del emisor</h3>
-      <table>
-        <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
-        <tr><td><code>ruc</code></td><td>string</td><td>RUC del emisor (13 dígitos)</td></tr>
-        <tr><td><code>razonSocial</code></td><td>string</td><td>Razón social del emisor</td></tr>
-        <tr><td><code>codDoc</code></td><td>string</td><td>Código del comprobante: <code>01</code> factura</td></tr>
-        <tr><td><code>establecimiento</code></td><td>string</td><td>Código de establecimiento (3 dígitos)</td></tr>
-        <tr><td><code>ptoEmision</code></td><td>string</td><td>Código de punto de emisión (3 dígitos)</td></tr>
-        <tr><td><code>dirMatriz</code></td><td>string</td><td>Dirección de la matriz</td></tr>
-        <tr><td><code>obligadoContabilidad</code></td><td>string</td><td><code>SI</code> o <code>NO</code></td></tr>
-      </table>
+<!-- WEBHOOKS -->
+<section id="webhooks">
+  <h2>Webhooks</h2>
+  <p>Recibe notificaciones automáticas cuando el estado de tus comprobantes cambie. TechOST API envía un POST firmado con HMAC-SHA256 a la URL configurada.</p>
 
-      <h3>Parámetros del comprador</h3>
-      <table>
-        <tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
-        <tr><td><code>identificacion</code></td><td>string</td><td>RUC, cédula o pasaporte</td></tr>
-        <tr><td><code>tipoIdentificacion</code></td><td>string</td><td><code>04</code> RUC, <code>05</code> cédula, <code>06</code> pasaporte, <code>07</code> consumidor final</td></tr>
-        <tr><td><code>razonSocial</code></td><td>string</td><td>Razón social o nombre del comprador</td></tr>
-        <tr><td><code>direccion</code></td><td>string</td><td>Dirección (opcional)</td></tr>
-        <tr><td><code>email</code></td><td>string</td><td>Correo electrónico (opcional)</td></tr>
-      </table>
+  <div class="callout callout-warning"><strong>IMPORTANTE.</strong> La verificación HMAC aplica exclusivamente a webhooks <em>salientes</em>. No existe HMAC middleware para peticiones API entrantes.</div>
 
-      <h3>Ambientes</h3>
-      <table>
-        <tr><th>Ambiente</th><th>Valor</th><th>Descripción</th></tr>
-        <tr><td>Pruebas</td><td><code>1</code></td><td>Comprobantes de prueba sin validez fiscal</td></tr>
-        <tr><td>Producción</td><td><code>2</code></td><td>Comprobantes reales autorizados por el SRI</td></tr>
-      </table>
+  <p>Para verificar la firma de un webhook entrante (en tu servidor):</p>
+  <pre><code><span class="k">const</span> crypto <span class="k">=</span> require(<span class="s">'crypto'</span>);<span class="s">
+const payload</span> <span class="k">=</span> JSON.<span class="k">stringify</span>(req.body);<span class="s">
+const signature</span> <span class="k">=</span> crypto.<span class="k">createHmac</span>(<span class="s">'sha256'</span>, webhookSecret).<span class="k">update</span>(payload).<span class="k">digest</span>(<span class="s">'hex'</span>);<span class="s">
+const headerSignature</span> <span class="k">=</span> req.headers[<span class="s">'x-techost-signature'</span>];<span class="s">
+const isValid</span> <span class="k">=</span> signature <span class="k">===</span> headerSignature;</span></code></pre>
 
-      <div class="callout callout-success">
-        <strong>Tip:</strong> Use ambiente 1 para desarrollo y pruebas. Cuando esté listo, cambie <code>"ambiente": 2</code> para producción. No necesita cambiar nada más.
-      </div>
-    </section>
+  <h3>Gestión de webhooks</h3>
+  <table>
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/webhooks</code></td><td>Listar webhooks configurados</td></tr>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/webhooks</code></td><td>Crear webhook</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/webhooks/:id</code></td><td>Obtener webhook</td></tr>
+      <tr><td><span class="badge badge-put">PUT</span></td><td><code>/webhooks/:id</code></td><td>Actualizar webhook</td></tr>
+      <tr><td><span class="badge badge-del">DELETE</span></td><td><code>/webhooks/:id</code></td><td>Eliminar webhook</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/webhooks/:id/logs</code></td><td>Obtener historial de entregas del webhook</td></tr>
+    </tbody>
+  </table>
+</section>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- NOTA DE CRÉDITO -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="nota-credito" class="reveal">
-      <h2>Nota de crédito</h2>
-      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/nota-credito</span></p>
-      <p>Anule total o parcialmente una factura ya emitida. Debe incluir la <code>claveAcceso</code> de la factura original y el motivo de la nota de crédito.</p>
-      <pre><span class="kv">{</span>
-  <span class="k">"emisor"</span>: { <span class="c">/* ... */</span> },
-  <span class="k">"comprador"</span>: { <span class="c">/* ... */</span> },
-  <span class="k">"claveAccesoOriginal"</span>: <span class="s">"060720260117900123450012001001000012345678901"</span>,
-  <span class="k">"detalles"</span>: [<span class="c">/* ítems a anular */</span>],
-  <span class="k">"moneda"</span>: <span class="s">"DOLAR"</span>,
-  <span class="k">"total"</span>: <span class="m">50.00</span>
-<span class="kv">}</span></pre>
-    </section>
+<!-- EVENTOS -->
+<section id="webhook-eventos">
+  <h2>Eventos de webhook</h2>
+  <table>
+    <thead><tr><th>Evento</th><th>Disparo</th></tr></thead>
+    <tbody>
+      <tr><td><code>DOCUMENTO.AUTORIZADO</code></td><td>El SRI autorizó el comprobante</td></tr>
+      <tr><td><code>DOCUMENTO.RECHAZADO</code></td><td>El SRI rechazó el comprobante</td></tr>
+      <tr><td><code>DOCUMENTO.DEVUELTO</code></td><td>El SRI devolvió el comprobante (errores de formato)</td></tr>
+      <tr><td><code>DOCUMENTO.ANULADO</code></td><td>El comprobante fue anulado manualmente</td></tr>
+      <tr><td><code>DOCUMENTO.PENDIENTE</code></td><td>Comprobante creado y pendiente de autorización</td></tr>
+      <tr><td><code>DOCUMENTO.GENERADO</code></td><td>Comprobante generado localmente (antes del envío al SRI)</td></tr>
+      <tr><td><code>DOCUMENTO.REENVIADO</code></td><td>Comprobante re-enviado al SRI por reintento</td></tr>
+    </tbody>
+  </table>
+  <p>Payload del webhook:</p>
+  <pre><code>{<span class="s">
+  "event"</span>: <span class="s">"DOCUMENTO.AUTORIZADO"</span>,<span class="s">
+  "claveAcceso"</span>: <span class="s">"0107202501179001234400110010010000000011234567812"</span>,<span class="s">
+  "estado"</span>: <span class="s">"AUTORIZADO"</span>,<span class="s">
+  "numero"</span>: <span class="s">"001-001-000000001"</span>,<span class="s">
+  "tipoDocumento"</span>: <span class="s">"01"</span>,<span class="s">
+  "fechaAutorizacion"</span>: <span class="s">"2025-07-01T12:05:00.000Z"</span>,<span class="s">
+  "numeroAutorizacion"</span>: <span class="s">"0107202501179001234400110010010000000011234567812"</span>,<span class="s">
+  "ambiente"</span>: 1,<span class="s">
+  "timestamp"</span>: <span class="s">"2025-07-01T12:05:00.000Z"</span>
+}</span></code></pre>
+</section>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- RETENCIÓN -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="retencion" class="reveal">
-      <h2>Comprobante de retención</h2>
-      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/retencion</span></p>
-      <p>Emite un comprobante de retención electrónico. Incluye los impuestos retenidos con su código, porcentaje y valor correspondiente.</p>
-      <pre><span class="kv">{</span>
-  <span class="k">"emisor"</span>: { <span class="c">/* ... */</span> },
-  <span class="k">"comprador"</span>: { <span class="c">/* ... */</span> },
-  <span class="k">"impuestos"</span>: [
-    {
-      <span class="k">"codigo"</span>: <span class="s">"2"</span>,
-      <span class="k">"codigoPorcentaje"</span>: <span class="s">"4"</span>,
-      <span class="k">"baseImponible"</span>: <span class="m">200.00</span>,
-      <span class="k">"porcentajeRetener"</span>: <span class="m">2.00</span>,
-      <span class="k">"valorRetenido"</span>: <span class="m">4.00</span>
-    }
-  ],
-  <span class="k">"periodoFiscal"</span>: <span class="s">"07/2026"</span>
-<span class="kv">}</span></pre>
-    </section>
+<!-- PAYPHONE -->
+<section id="payphone">
+  <h2>Payphone</h2>
+  <p>Webhook para pagos integrados con Payphone. Recibe notificaciones de transacciones procesadas a través de la pasarela Payphone.</p>
+  <table>
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-post">POST</span></td><td><code>/payphone/webhook</code></td><td>Notificación de transacción Payphone</td></tr>
+      <tr><td><span class="badge badge-get">GET</span></td><td><code>/payphone/transactions</code></td><td>Listar transacciones Payphone</td></tr>
+    </tbody>
+  </table>
+</section>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- GUÍA DE REMISIÓN -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="guia" class="reveal">
-      <h2>Guía de remisión</h2>
-      <p><span class="badge badge-post">POST</span> <span class="endpoint-path">/sri/emitir/guia-remision</span></p>
-      <p>Documento electrónico que ampara el traslado de mercadería. Incluye origen, destino, transportista y los ítems transportados.</p>
-    </section>
+<!-- ESTADÍSTICAS -->
+<section id="estadisticas">
+  <h2>Estadísticas de uso</h2>
+  <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/estadisticas</span></p>
+  <p>Obtiene estadísticas de uso del usuario autenticado: total de comprobantes emitidos, desglose por tipo y por período.</p>
+  <pre><code><span class="k">curl</span> https://api.techost.ec/sri/estadisticas \
+  -H <span class="s">"Authorization: Bearer TU_JWT_AQUI"</span></code></pre>
+</section>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- CONSULTA -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="consulta" class="reveal">
-      <h2>Consulta de comprobantes</h2>
+<!-- ESTADO -->
+<section id="estado">
+  <h2>Estado del sistema</h2>
+  <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/status</span></p>
+  <p>Endpoint público de health check. Retorna el estado general de la API y sus dependencias.</p>
+  <pre><code>{<span class="s">
+  "status"</span>: <span class="s">"ok"</span>,<span class="s">
+  "timestamp"</span>: <span class="s">"2025-07-01T12:00:00.000Z"</span>,<span class="s">
+  "uptime"</span>: 1234567,<span class="s">
+  "dependencies"</span>: {<span class="s">
+    "database"</span>: <span class="s">"connected"</span>,<span class="s">
+    "sri"</span>: <span class="s">"reachable"</span>
+  }
+}</span></code></pre>
+</section>
 
-      <h3>Descargar PDF</h3>
-      <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/comprobantes/:claveAcceso/pdf</span></p>
-      <p>Descarga el PDF del comprobante con todos los datos fiscales, firmado electrónicamente.</p>
+<!-- LIMITACIONES -->
+<section id="limitaciones">
+  <h2>Límites y rate limiting</h2>
+  <p>La API implementa rate limiting en tres capas:</p>
+  <table>
+    <thead><tr><th>Capa</th><th>Límite</th><th>Alcance</th></tr></thead>
+    <tbody>
+      <tr><td>Global</td><td>100 requests/min</td><td>Todos los endpoints autenticados. ThrottlerModule de NestJS</td></tr>
+      <tr><td>Por endpoint (factura)</td><td>10 requests/min</td><td><code>POST /sri/factura</code></td></tr>
+      <tr><td>Por tier de API Key</td><td>Basic: 30/min · Pro: 120/min · Enterprise: 600/min</td><td>Definido en servicio (guardia API Key no activo aún)</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-info"><strong>Headers de rate limit.</strong> Incluidos en cada respuesta: <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code>.</div>
+</section>
 
-      <h3>Descargar XML</h3>
-      <p><span class="badge badge-get">GET</span> <span class="endpoint-path">/sri/comprobantes/:claveAcceso/xml</span></p>
-      <p>Descarga el XML autorizado por el SRI con la firma XAdES-BES incluida.</p>
-    </section>
+<!-- VERSIONES -->
+<section id="versiones">
+  <h2>Versiones y changelog</h2>
+  <table>
+    <thead><tr><th>Versión</th><th>Fecha</th><th>Cambios</th></tr></thead>
+    <tbody>
+      <tr><td><code>v1.0.0</code></td><td>Julio 2025</td><td>Lanzamiento oficial. Emisión de facturas, NC, guías, retenciones. Webhooks. Catálogos.</td></tr>
+    </tbody>
+  </table>
+  <p>La API usa <strong>versionado por header</strong> (<code>Accept: application/json; version=1</code>). La versión estable actual es <code>v1</code>.</p>
+</section>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- ERRORES -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="errores" class="reveal">
-      <h2>Códigos de error</h2>
-      <p>La API utiliza códigos HTTP estándar para indicar el resultado de cada petición. Los errores del SRI se devuelven en el campo <code>mensajes</code> del response.</p>
+</main>
+<script>
+(function(){
+  // Copy button
+  document.querySelectorAll('pre').forEach(function(pre) {
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    btn.setAttribute('aria-label', 'Copiar código');
+    pre.style.position = 'relative';
+    pre.appendChild(btn);
+    btn.addEventListener('click', function(e) {
+      var code = pre.querySelector('code');
+      var text = code ? code.textContent : pre.textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+        var toast = document.getElementById('toast');
+        if (toast) { toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); }, 2000); }
+        setTimeout(function() {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+        }, 2000);
+      }).catch(function(err) { console.error('Copy failed', err); });
+    });
+  });
 
-      <table>
-        <tr><th>Código</th><th>Significado</th><th>Solución</th></tr>
-        <tr><td><strong>400</strong></td><td>Datos inválidos</td><td>Revise el formato de los campos. Consulte el esquema en Swagger.</td></tr>
-        <tr><td><strong>401</strong></td><td>API Key inválida o faltante</td><td>Verifique el header <code>X-Api-Key</code>. Si usa HMAC, verifique la firma.</td></tr>
-        <tr><td><strong>402</strong></td><td>Saldo insuficiente</td><td>Compre un bundle vía <code>POST /payphone/buy-bundle</code>.</td></tr>
-        <tr><td><strong>429</strong></td><td>Rate limit excedido</td><td>Espere y reintente. Considere actualizar su tier de rate limiting.</td></tr>
-        <tr><td><strong>500</strong></td><td>Error interno del servidor</td><td>El comprobante pudo quedar encolado. Consulte el estado vía el log de webhooks.</td></tr>
-      </table>
-
-      <div class="callout callout-success">
-        <strong>Rate limits por tier:</strong> Basic 30 req/min, Professional 120 req/min, Enterprise 600 req/min, Unlimited sin límite.
-      </div>
-    </section>
-
-    <!-- ════════════════════════════════════════ -->
-    <!-- SDKs -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="sdks" class="reveal">
-      <h2>SDKs oficiales</h2>
-      <p>Integre TechOST API en su proyecto con nuestros SDKs open-source. Todos incluyen autenticación, manejo de errores y ejemplos completos.</p>
-
-      <table>
-        <tr><th>Lenguaje</th><th>Repositorio</th><th>Instalación</th></tr>
-        <tr><td><strong>JavaScript / TypeScript</strong></td><td><code>github.com/techost/sdk-js</code></td><td><code>npm install @techost/api</code></td></tr>
-        <tr><td><strong>Python</strong></td><td><code>github.com/techost/sdk-py</code></td><td><code>pip install techost-api</code></td></tr>
-        <tr><td><strong>PHP</strong></td><td><code>github.com/techost/sdk-php</code></td><td><code>composer require techost/api</code></td></tr>
-        <tr><td><strong>Java</strong></td><td><code>github.com/techost/sdk-java</code></td><td>Maven: <code>techost:api:1.0.0</code></td></tr>
-      </table>
-    </section>
-
-    <!-- ════════════════════════════════════════ -->
-    <!-- WEBHOOKS -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="webhooks" class="reveal">
-      <h2>Webhooks</h2>
-      <p>Reciba notificaciones en tiempo real cuando sus comprobantes cambien de estado. Configure URLs de callback que la API llamará automáticamente ante cada evento.</p>
-
-      <h3>Eventos disponibles</h3>
-      <table>
-        <tr><th>Evento</th><th>Descripción</th></tr>
-        <tr><td><code>comprobante.autorizado</code></td><td>El comprobante fue autorizado por el SRI</td></tr>
-        <tr><td><code>comprobante.rechazado</code></td><td>El SRI rechazó el comprobante</td></tr>
-        <tr><td><code>comprobante.pendiente</code></td><td>El comprobante está en proceso de autorización</td></tr>
-        <tr><td><code>certificado.por_vencer</code></td><td>El certificado digital está próximo a vencer</td></tr>
-      </table>
-
-      <h3>Configuración</h3>
-      <p>Administre sus webhooks vía <code>POST /api-keys/:id/webhooks</code>. Cada webhook incluye una firma HMAC en el header <code>X-Webhook-Signature</code> para verificar su autenticidad.</p>
-
-      <div class="callout callout-info">
-        <strong>Payload del webhook:</strong> La API envía un POST con el evento, el comprobante y sus datos actualizados. Incluye el campo <code>event</code> y <code>data</code> con el objeto completo del comprobante.
-      </div>
-    </section>
-
-    <!-- ════════════════════════════════════════ -->
-    <!-- POSTMAN -->
-    <!-- ════════════════════════════════════════ -->
-    <section id="postman" class="reveal">
-      <h2>Colección de Postman</h2>
-      <p>Descargue la colección de Postman para importar todos los endpoints preconfigurados con variables de entorno.</p>
-
-      <p><a href="/docs/postman.json" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:8px;background:linear-gradient(135deg,var(--green-500),var(--green-400));color:var(--white);font-weight:600;font-size:14px;transition:box-shadow 0.2s">Descargar Postman collection</a></p>
-
-      <p>La colección incluye:</p>
-      <ul>
-        <li>Todos los endpoints de emisión SRI preconfigurados</li>
-        <li>Variables de entorno para <code>apiKey</code> y <code>apiSecret</code></li>
-        <li>Ejemplos de body para cada tipo de comprobante</li>
-        <li>Scripts de prueba de respuesta</li>
-      </ul>
-    </section>
-
-  </main>
-
-  <script>
-    (function() {
-      'use strict';
-
-      /* ═══ COPY BUTTON ═══ */
-      document.querySelectorAll('pre').forEach(function(pre) {
-        var btn = document.createElement('button');
-        btn.className = 'copy-btn';
-        btn.setAttribute('aria-label', 'Copiar código');
-        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
-        pre.style.position = 'relative';
-        pre.appendChild(btn);
-
-        btn.addEventListener('click', function() {
-          var text = pre.textContent;
-          /* remove button text content if included */
-          text = text.replace(/<\/?button[^>]*>/g, '').trim();
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(text).then(function() {
-              btn.classList.add('copied');
-              showToast('Copiado al portapapeles');
-              setTimeout(function() { btn.classList.remove('copied'); }, 2000);
-            });
-          }
-        });
+  // Sidebar search
+  var searchInput = document.getElementById('sidebarSearch');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      var query = this.value.toLowerCase().trim();
+      var links = document.querySelectorAll('.sidebar a');
+      var groups = document.querySelectorAll('.sidebar-group');
+      links.forEach(function(link) { link.classList.toggle('sidebar-link-hidden', query && link.textContent.toLowerCase().indexOf(query) === -1); });
+      groups.forEach(function(g) {
+        var visible = Array.from(g.querySelectorAll('a')).some(function(a) { return !a.classList.contains('sidebar-link-hidden'); });
+        g.classList.toggle('sidebar-group-hidden', query && !visible);
       });
+    });
+  }
 
-      function showToast(msg) {
-        var el = document.getElementById('toast');
-        if (!el) {
-          el = document.createElement('div');
-          el.id = 'toast';
-          el.className = 'toast';
-          document.body.appendChild(el);
-        }
-        el.textContent = msg;
-        el.classList.add('show');
-        clearTimeout(el._hide);
-        el._hide = setTimeout(function() { el.classList.remove('show'); }, 2200);
-      }
+  // Floating TOC — active highlight on scroll
+  var tocLinks = document.querySelectorAll('.toc-floating a');
+  var sections = [];
+  tocLinks.forEach(function(a) {
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '#') { var el = document.getElementById(href.substring(1)); if (el) sections.push({ el: el, link: a }); }
+  });
+  function updateToc() {
+    var scrollY = window.scrollY + 120;
+    var active = null;
+    sections.forEach(function(s) { if (s.el.offsetTop <= scrollY) active = s; });
+    tocLinks.forEach(function(l) { l.classList.remove('active'); });
+    if (active) active.link.classList.add('active');
+  }
+  window.addEventListener('scroll', updateToc, { passive: true });
+  updateToc();
 
-      /* ═══ FLOATING TOC ═══ */
-      var tocNav = document.getElementById('toc-floating');
-      if (tocNav) {
-        var tocHTML = '<div class="toc-floating-title">En esta página</div>';
-        var found = false;
-        document.querySelectorAll('.content h2, .content h3').forEach(function(heading) {
-          if (!heading.id) {
-            heading.id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-          }
-          var tag = heading.tagName.toLowerCase();
-          tocHTML += '<a href="#' + heading.id + '" class="toc-' + tag + '">' + heading.textContent + '</a>';
-          found = true;
-        });
-        if (found) tocNav.innerHTML = tocHTML;
+  // Scroll reveal animations
+  function isInView(el) { var r = el.getBoundingClientRect(); return r.top < window.innerHeight - 60; }
+  var revealEls = document.querySelectorAll('.reveal, [class*="rv-"]');
+  function checkReveal() {
+    revealEls.forEach(function(el) { if (isInView(el) && !el.classList.contains('visible')) el.classList.add('visible'); });
+  }
+  if (revealEls.length) { checkReveal(); window.addEventListener('scroll', checkReveal, { passive: true }); }
 
-        var tocLinks = tocNav.querySelectorAll('a');
-        var contentSections = document.querySelectorAll('.content section[id], .content h2, .content h3');
-        function onTocScroll() {
-          var y = window.scrollY + 100;
-          var current = '';
-          contentSections.forEach(function(s) {
-            if (y >= s.offsetTop) current = '#' + (s.getAttribute('id') || '');
-          });
-          tocLinks.forEach(function(link) {
-            link.classList.toggle('active', link.getAttribute('href') === current);
-          });
-        }
-        window.addEventListener('scroll', onTocScroll, { passive: true });
-      }
+  // Mobile drawer
+  var sidebarToggle = document.getElementById('sidebarToggle');
+  var sidebarOverlay = document.getElementById('sidebarOverlay');
+  var sidebar = document.getElementById('sidebar');
+  function closeSidebar() { if (sidebar) sidebar.classList.remove('open'); if (sidebarOverlay) sidebarOverlay.classList.remove('open'); }
+  function openSidebar() { if (sidebar) sidebar.classList.add('open'); if (sidebarOverlay) sidebarOverlay.classList.add('open'); }
+  if (sidebarToggle) sidebarToggle.addEventListener('click', function() { if (sidebar && sidebar.classList.contains('open')) closeSidebar(); else openSidebar(); });
+  if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+  document.querySelectorAll('.sidebar a').forEach(function(a) { a.addEventListener('click', closeSidebar); });
 
-      /* ═══ SIDEBAR SEARCH ═══ */
-      var searchInput = document.getElementById('sidebar-search');
-      if (searchInput) {
-        searchInput.addEventListener('input', function() {
-          var q = this.value.toLowerCase().trim();
-          var groups = document.querySelectorAll('.sidebar-group');
-          groups.forEach(function(group) {
-            var links = group.querySelectorAll('a');
-            var visibleCount = 0;
-            links.forEach(function(link) {
-              var text = link.textContent.toLowerCase();
-              var match = !q || text.indexOf(q) !== -1;
-              link.classList.toggle('sidebar-link-hidden', !match);
-              if (match) visibleCount++;
-            });
-            group.classList.toggle('sidebar-group-hidden', visibleCount === 0 && q);
-          });
-        });
-      }
-
-      /* ═══ SCROLL REVEAL ANIMATIONS ═══ */
-      var revealEls = document.querySelectorAll('.reveal, [class*="rv-"]');
-      if ('IntersectionObserver' in window) {
-        var obs = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              obs.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-        revealEls.forEach(function(el) { obs.observe(el); });
-      } else {
-        revealEls.forEach(function(el) { el.classList.add('visible'); });
-      }
-
-      /* ═══ CODE TABS ═══ */
-      document.querySelectorAll('.code-header').forEach(function(header) {
-        var tabs = header.querySelectorAll('.code-tab');
-        tabs.forEach(function(tab) {
-          tab.addEventListener('click', function() {
-            var lang = this.getAttribute('data-lang');
-            var allBlocks = this.closest('section').querySelectorAll('.code-block');
-            header.querySelectorAll('.code-tab').forEach(function(t) { t.classList.remove('active'); });
-            this.classList.add('active');
-            var groupPrefix = lang.split('-')[0];
-            allBlocks.forEach(function(block) {
-              var bl = block.getAttribute('data-lang') || '';
-              block.style.display = (bl === lang || (bl && bl.indexOf(groupPrefix) === 0)) ? '' : 'none';
-            });
-          });
-        });
-      });
-
-      /* ═══ SIDEBAR ACTIVE LINK ═══ */
-      var sidebarLinks = document.querySelectorAll('.sidebar a');
-      var sections = document.querySelectorAll('section[id]');
-      function onSidebarScroll() {
-        var y = window.scrollY + 80;
-        var current = '';
-        sections.forEach(function(s) {
-          if (y >= s.offsetTop) current = s.getAttribute('id');
-        });
-        sidebarLinks.forEach(function(link) {
-          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
-        });
-      }
-      window.addEventListener('scroll', onSidebarScroll, { passive: true });
-      onSidebarScroll();
-
-      /* ═══ MOBILE SIDEBAR ═══ */
-      var toggleBtn = document.getElementById('sidebar-toggle');
-      var sidebar = document.getElementById('sidebar');
-      var overlay = document.getElementById('sidebar-overlay');
-
-      function openSidebar() {
-        sidebar.classList.add('open');
-        overlay.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeSidebar() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('open');
-        document.body.style.overflow = '';
-      }
-
-      if (toggleBtn && sidebar && overlay) {
-        toggleBtn.addEventListener('click', openSidebar);
-        overlay.addEventListener('click', closeSidebar);
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
-        });
-        sidebar.querySelectorAll('a').forEach(function(link) {
-          link.addEventListener('click', closeSidebar);
-        });
-      }
-    })();
-  </script>
+  // Sidebar active link highlight on scroll
+  var sidebarLinks = [];
+  document.querySelectorAll('.sidebar a[href^="#"]').forEach(function(a) {
+    var id = a.getAttribute('href').substring(1);
+    var el = document.getElementById(id);
+    if (el) sidebarLinks.push({ el: el, link: a });
+  });
+  function updateSidebar() {
+    var scrollY = window.scrollY + 100;
+    var active = null;
+    sidebarLinks.forEach(function(s) { if (s.el.offsetTop <= scrollY) active = s; });
+    document.querySelectorAll('.sidebar a').forEach(function(l) { l.classList.remove('active'); });
+    if (active) active.link.classList.add('active');
+  }
+  window.addEventListener('scroll', updateSidebar, { passive: true });
+  updateSidebar();
+})();
+</script>
 </body>
 </html>
