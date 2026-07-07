@@ -105,22 +105,56 @@
 
       <div class="hero-visual reveal reveal-2">
         <div class="mockup-window">
-          <div class="mockup-bar">
-            <span></span><span></span><span></span>
-            <span class="mockup-title">autorizacion.json</span>
+          <div class="mockup-tabs">
+            <span class="mockup-tab active">sri/emitir/factura</span>
+            <span class="mockup-tab">autorizacion.json</span>
           </div>
           <div class="mockup-body">
-            <pre><span class="kv">{</span>
-  <span class="k">"claveAcceso"</span>: <span class="s">"050720260119501..."</span>,
-  <span class="k">"estado"</span>: <span class="sc">"AUTORIZADO"</span>,
-  <span class="k">"ambiente"</span>: <span class="s">"2"</span>,
-  <span class="k">"comprobante"</span>: <span class="s">"factura"</span>,
-  <span class="k">"numero"</span>: <span class="s">"001-001-000012345"</span>,
-  <span class="k">"fechaAutorizacion"</span>: <span class="s">"06/07/2026 19:20:18"</span>,
-  <span class="k">"tiempoRespuesta"</span>: <span class="mi">847</span>,
-  <span class="k">"codigoNumerico"</span>: <span class="mi">12345678</span>
-<span class="kv">}</span></pre>
-            <div class="mockup-badge">HTTP 200 · 847ms</div>
+            <div class="mockup-line">
+              <span class="prompt">$</span>
+              <span class="cmd">curl -X POST https://api.techost.cloud/sri/emitir/factura \</span>
+            </div>
+            <div class="mockup-line ind-1">
+              <span class="hl">-H "X-Api-Key: sk_live_<wbr>a1b2c3d4e5f6"</span>
+            </div>
+            <div class="mockup-line ind-1">
+              <span class="hl">-H "Content-Type: application/json"</span>
+            </div>
+            <div class="mockup-line ind-1">
+              <span>-d '</span>
+            </div>
+            <div class="mockup-json">
+              <span class="kv">{</span>
+<span class="ind-2"><span class="k">"ruc"</span>: <span class="s">"1790012345001"</span>,</span>
+<span class="ind-2"><span class="k">"razonSocial"</span>: <span class="s">"COMERCIAL XYZ S.A."</span>,</span>
+<span class="ind-2"><span class="k">"ambiente"</span>: <span class="mi">2</span>,</span>
+<span class="ind-2"><span class="k">"tipoEmision"</span>: <span class="mi">1</span>,</span>
+<span class="ind-2"><span class="k">"codDoc"</span>: <span class="s">"01"</span>,</span>
+<span class="ind-2"><span class="k">"fechaEmision"</span>: <span class="s">"06/07/2026"</span>,</span>
+<span class="ind-2"><span class="k">"total"</span>: <span class="mi">584.50</span>,</span>
+<span class="ind-2"><span class="k">"detalles"</span>: [</span>
+<span class="ind-3"><span class="kv">{</span> <span class="k">"codigo"</span>: <span class="s">"P001"</span>, <span class="k">"cantidad"</span>: <span class="mi">2</span>, <span class="k">"precio"</span>: <span class="mi">250.00</span> <span class="kv">}</span>,</span>
+<span class="ind-3"><span class="kv">{</span> <span class="k">"codigo"</span>: <span class="s">"P002"</span>, <span class="k">"cantidad"</span>: <span class="mi">1</span>, <span class="k">"precio"</span>: <span class="mi">84.50</span> <span class="kv">}</span></span>
+<span class="ind-2">]</span>
+              <span class="kv">}'</span>
+            </div>
+            <div class="mockup-sep"></div>
+            <div class="mockup-line">
+              <span class="dim"># Response · 847ms</span>
+            </div>
+            <div class="mockup-json">
+              <span class="kv">{</span>
+<span class="ind-2"><span class="k">"estado"</span>: <span class="sc">"AUTORIZADO"</span>,</span>
+<span class="ind-2"><span class="k">"claveAcceso"</span>: <span class="s">"060720260117900123450012001001000012345678901"</span>,</span>
+<span class="ind-2"><span class="k">"numero"</span>: <span class="s">"001-001-000012345"</span>,</span>
+<span class="ind-2"><span class="k">"fechaAutorizacion"</span>: <span class="s">"06/07/2026 19:20:18"</span>,</span>
+<span class="ind-2"><span class="k">"ambiente"</span>: <span class="mi">2</span></span>
+              <span class="kv">}</span>
+            </div>
+          </div>
+          <div class="mockup-footer">
+            <span class="mockup-status success"></span>
+            HTTP 200 · Autorizado · 847ms
           </div>
         </div>
       </div>
