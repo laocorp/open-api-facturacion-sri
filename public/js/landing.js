@@ -2,7 +2,7 @@
   'use strict';
 
   /* ── Navbar scroll ── */
-  const navbar = document.querySelector('.navbar');
+  const navbar = document.querySelector('.nav');
   let lastScroll = 0;
 
   function onScroll() {
@@ -19,7 +19,7 @@
   onScroll();
 
   /* ── Mobile menu ── */
-  const toggle = document.getElementById('mobile-toggle');
+  const toggle = document.getElementById('nav-toggle');
   const overlay = document.getElementById('mobile-overlay');
   const closeBtn = document.getElementById('mobile-close');
 
@@ -49,7 +49,7 @@
     });
 
     /* Close on nav link click */
-    overlay.querySelectorAll('.mobile-menu-nav a').forEach(function(link) {
+    overlay.querySelectorAll('.mobile-nav a').forEach(function(link) {
       link.addEventListener('click', closeMenu);
     });
   }
