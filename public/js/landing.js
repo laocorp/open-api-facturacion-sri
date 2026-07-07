@@ -66,12 +66,12 @@
 
   function makeObserver(rootMargin, threshold) {
     if (!('IntersectionObserver' in window)) return null;
-    return new IntersectionObserver(function(entries) {
+    return new IntersectionObserver(function(entries, obs) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
           entry.target.dispatchEvent(new CustomEvent('revealed'));
-          this.unobserve(entry.target);
+          obs.unobserve(entry.target);
         }
       });
     }, { threshold: threshold || 0.08, rootMargin: rootMargin || '0px 0px -40px 0px' });
@@ -86,7 +86,9 @@
 
   /* Counter animation for metrics */
   function animateCounter(el) {
-    var target = parseInt(el.getAttribute('data-target'), 10);
+    var raw = el.getAttribute('data-target');
+    var target = parseFloat(raw);
+    var decimals = (raw.indexOf('.') !== -1) ? raw.split('.')[1].length : 0;
     var suffix = el.getAttribute('data-suffix') || '';
     var prefix = el.getAttribute('data-prefix') || '';
     var duration = 1500;
@@ -96,8 +98,9 @@
       var elapsed = now - start;
       var progress = Math.min(elapsed / duration, 1);
       var eased = 1 - Math.pow(1 - progress, 3);
-      var current = Math.round(eased * target);
-      el.textContent = prefix + current + suffix;
+      var current = eased * target;
+      var formatted = current.toFixed(decimals);
+      el.textContent = prefix + formatted + suffix;
       if (progress < 1) requestAnimationFrame(tick);
     }
 
