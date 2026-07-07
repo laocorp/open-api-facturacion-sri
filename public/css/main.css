@@ -104,14 +104,13 @@ ul { list-style: none; }
 }
 
 .btn-primary {
-  background: var(--navy-800);
+  background: linear-gradient(135deg, var(--green-500), var(--green-400));
   color: var(--white);
 }
 
 .btn-primary:hover {
-  background: var(--navy-700);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 20px rgba(5,150,105,0.25);
 }
 
 .btn-outline {
@@ -175,7 +174,7 @@ ul { list-style: none; }
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--navy-800), var(--blue-500));
+  background: linear-gradient(135deg, var(--green-500), var(--blue-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

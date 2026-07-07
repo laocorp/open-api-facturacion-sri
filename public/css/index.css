@@ -42,7 +42,7 @@ body {
   width: 30px;
   height: 30px;
   border-radius: var(--radius-sm);
-  background: var(--navy-800);
+  background: linear-gradient(135deg, var(--green-500), var(--green-400));
   color: var(--white);
   display: flex;
   align-items: center;
@@ -62,7 +62,7 @@ body {
   transition: color 0.2s;
 }
 
-.nav-links a:hover { color: var(--navy-800); }
+.nav-links a:hover { color: var(--green-500); }
 
 .nav-actions { display: flex; align-items: center; gap: 10px; }
 
@@ -221,7 +221,7 @@ body {
 }
 
 .hero h1 .gradient-text {
-  background: linear-gradient(135deg, var(--navy-800) 30%, var(--blue-500));
+  background: linear-gradient(135deg, var(--green-500) 20%, var(--blue-500) 80%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -238,13 +238,13 @@ body {
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
 .hero-actions .btn-primary {
-  background: var(--navy-800);
+  background: linear-gradient(135deg, var(--green-500), var(--green-400));
   color: var(--white);
-  box-shadow: 0 2px 8px rgba(6,13,26,0.12);
+  box-shadow: 0 2px 8px rgba(5,150,105,0.2);
 }
 
 .hero-actions .btn-primary:hover {
-  box-shadow: 0 8px 24px rgba(6,13,26,0.18);
+  box-shadow: 0 8px 24px rgba(5,150,105,0.25);
 }
 
 .hero-metrics {
@@ -321,7 +321,7 @@ body {
 
 .mockup-tab.active {
   color: var(--navy-800);
-  border-bottom-color: var(--navy-800);
+  border-bottom-color: var(--green-500);
 }
 
 .mockup-body {
@@ -401,7 +401,7 @@ body {
   letter-spacing: 0.01em;
 }
 
-.section-nav a:hover { color: var(--navy-800); }
+.section-nav a:hover { color: var(--green-500); }
 
 /* ─── TRUST BAR ─── */
 .trust {
@@ -751,7 +751,7 @@ body {
 }
 
 .pricing-card.featured {
-  border-color: var(--navy-800);
+  border-color: var(--green-500);
   position: relative;
 }
 
@@ -766,7 +766,7 @@ body {
   font-size: 11px;
   font-weight: 600;
   color: var(--white);
-  background: var(--navy-800);
+  background: var(--green-500);
   letter-spacing: 0.04em;
 }
 
@@ -947,7 +947,16 @@ body {
 .cta-input::placeholder { color: var(--gray-300); }
 .cta-input:focus { border-color: var(--navy-800); box-shadow: 0 0 0 3px rgba(6,13,26,0.06); }
 
-.cta-form .btn-primary { padding: 14px 28px; flex-shrink: 0; }
+.cta-form .btn-primary {
+  padding: 14px 28px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--green-500), var(--green-400));
+  box-shadow: 0 2px 8px rgba(5,150,105,0.2);
+}
+
+.cta-form .btn-primary:hover {
+  box-shadow: 0 8px 24px rgba(5,150,105,0.25);
+}
 
 .cta-note {
   font-size: 13px;

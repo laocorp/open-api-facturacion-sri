@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8">
+<style>
+  body { font-family: Arial; font-size: 12px; margin: 20px; }
+  h1 { text-align: center; font-size: 16px; }
+  .info-box { border: 1px solid #333; padding: 10px; margin-bottom: 15px; }
+  .info-box h3 { margin: 0 0 8px 0; background: #eee; padding: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+  th, td { border: 1px solid #333; padding: 6px; text-align: left; }
+  th { background: #ddd; }
+  .totals { width: 300px; margin-left: auto; }
+  .totals td { text-align: right; }
+  .totals .label { font-weight: bold; }
+</style></head>
+<body>
+  <h1>FACTURA ELECTRÓNICA</h1>
+  <p style="text-align:center">RUC: {d.emisor_ruc}<br>
+    Clave: {d.clave_acceso}<br>
+    Número: {d.establecimiento}-{d.punto_emision}-{d.secuencial}<br>
+    Fecha: {d.fecha_emision}</p>
+  <div class="info-box"><h3>EMISOR</h3>{d.emisor_razon_social}<br>{d.emisor_direccion}</div>
+  <div class="info-box"><h3>COMPRADOR</h3><b>{d.comprador_razon_social}</b><br>ID: {d.comprador_identificacion}</div>
+  <table><tr><th>Cod</th><th>Desc</th><th>Cant</th><th>P.U.</th><th>Desc</th><th>Subtotal</th></tr>
+  {#d.detalles}<tr><td>{d.codigo_principal}</td><td>{d.descripcion}</td><td style="text-align:right">{d.cantidad}</td><td style="text-align:right">{d.precio_unitario}</td><td style="text-align:right">{d.descuento}</td><td style="text-align:right">{d.subtotal}</td></tr>{/d.detalles}
+  </table>
+  <table class="totals"><tr><td class="label">Subtotal:</td><td>{d.subtotal_0}</td></tr><tr><td class="label">Descuento:</td><td>{d.descuento_total}</td></tr><tr><td class="label">IVA:</td><td>{d.iva_0}</td></tr><tr style="font-weight:bold;font-size:14px"><td class="label">TOTAL:</td><td>{d.total}</td></tr></table>
+  <table><tr><th>Pago</th><th>Total</th></tr>
+  {#d.pagos}<tr><td>{d.forma_pago}</td><td style="text-align:right">{d.total}</td></tr>{/d.pagos}</table>
+</body></html>
