@@ -1,24 +1,32 @@
 (function(){
   'use strict';
 
-  /* ── Navbar scroll ── */
   const navbar = document.querySelector('.nav');
-  let lastScroll = 0;
+  const sectionNav = document.querySelector('.section-nav');
 
   function onScroll() {
     const y = window.scrollY;
-    if (y > 60) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
+    navbar.classList.toggle('scrolled', y > 60);
+
+    if (sectionNav) {
+      const links = sectionNav.querySelectorAll('a');
+      let current = '';
+      document.querySelectorAll('section[id]').forEach(function(section) {
+        const top = section.offsetTop - 120;
+        if (y >= top) current = section.getAttribute('id');
+      });
+      links.forEach(function(link) {
+        link.style.color = link.getAttribute('href') === '#' + current
+          ? 'var(--navy-800)'
+          : '';
+      });
     }
-    lastScroll = y;
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ── Mobile menu ── */
+  /* Mobile menu */
   const toggle = document.getElementById('nav-toggle');
   const overlay = document.getElementById('mobile-overlay');
   const closeBtn = document.getElementById('mobile-close');
@@ -37,7 +45,6 @@
     }
 
     toggle.addEventListener('click', openMenu);
-
     if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 
     overlay.addEventListener('click', function(e) {
@@ -48,13 +55,12 @@
       if (e.key === 'Escape' && overlay.classList.contains('open')) closeMenu();
     });
 
-    /* Close on nav link click */
     overlay.querySelectorAll('.mobile-nav a').forEach(function(link) {
       link.addEventListener('click', closeMenu);
     });
   }
 
-  /* ── IntersectionObserver: reveal animations ── */
+  /* IntersectionObserver: reveal animations */
   const revealElements = document.querySelectorAll('.reveal');
 
   if ('IntersectionObserver' in window) {
@@ -74,25 +80,57 @@
       observer.observe(el);
     });
   } else {
-    /* Fallback */
-    revealElements.forEach(function(el) {
-      el.classList.add('visible');
-    });
+    revealElements.forEach(function(el) { el.classList.add('visible'); });
   }
 
-  /* ── Smooth scroll for anchor links ── */
+  /* Smooth scroll */
   document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
     anchor.addEventListener('click', function(e) {
-      const targetId = this.getAttribute('href');
+      var targetId = this.getAttribute('href');
       if (targetId === '#') return;
-      const target = document.querySelector(targetId);
+      var target = document.querySelector(targetId);
       if (target) {
         e.preventDefault();
-        const offset = 80;
-        const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        var offset = 80;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({ top: top, behavior: 'smooth' });
       }
     });
   });
+
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-q').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = this.parentElement;
+      var open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el) {
+        el.classList.remove('open');
+        el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+      if (!open) {
+        item.classList.add('open');
+        item.querySelector('.faq-q').setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  /* CTA form */
+  var ctaForm = document.getElementById('cta-form');
+  if (ctaForm) {
+    ctaForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var input = this.querySelector('.cta-input');
+      if (input && input.value.trim()) {
+        // Demo: would POST to /api/leads in production
+        input.value = '';
+        var note = this.parentElement.querySelector('.cta-note');
+        if (note) {
+          var orig = note.textContent;
+          note.textContent = 'Gracias. Le contactaremos en menos de 24 horas.';
+          setTimeout(function() { note.textContent = orig; }, 4000);
+        }
+      }
+    });
+  }
 
 })();

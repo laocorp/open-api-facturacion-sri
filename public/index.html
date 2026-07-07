@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TechOST API — Facturación Electrónica SRI Empresarial</title>
-  <meta name="description" content="API de facturación electrónica SRI para Ecuador. Plataforma enterprise para emisión de comprobantes electrónicos con cumplimiento SRI garantizado.">
+  <meta name="description" content="API de facturación electrónica SRI para Ecuador. Emita facturas, notas de crédito, guías de remisión y retenciones. Multi-tenancy, firma XAdES-BES, SLA 99.9%.">
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="TechOST API — Facturación Electrónica SRI Empresarial">
-  <meta property="og:description" content="API de facturación electrónica SRI para Ecuador. Plataforma enterprise para emisión de comprobantes electrónicos.">
+  <meta property="og:description" content="API REST de facturación electrónica SRI. Ambientes 1 y 2, firma digital, multi-tenancy, webhooks, SDKs.">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/index.css">
@@ -25,8 +25,8 @@
       </a>
       <nav class="nav-links">
         <a href="#features">Plataforma</a>
-        <a href="#benefits">Beneficios</a>
-        <a href="#testimonials">Clientes</a>
+        <a href="#solutions">Soluciones</a>
+        <a href="#pricing">Precios</a>
         <a href="/docs">Docs</a>
       </nav>
       <div class="nav-actions">
@@ -50,8 +50,9 @@
       </div>
       <nav class="mobile-nav">
         <a href="#features">Plataforma</a>
-        <a href="#benefits">Beneficios</a>
-        <a href="#testimonials">Clientes</a>
+        <a href="#solutions">Soluciones</a>
+        <a href="#pricing">Precios</a>
+        <a href="#faq">FAQ</a>
         <a href="/docs">Documentación</a>
       </nav>
       <div class="mobile-footer">
@@ -63,15 +64,15 @@
 
   <!-- ═══ HERO ═══ -->
   <section class="hero" id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-bg-glow"></div>
-    <div class="hero-bg-glow-2"></div>
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
 
     <div class="hero-inner">
       <div class="hero-text">
         <div class="pill reveal">
           <span class="pill-dot"></span>
-          Cumplimiento SRI garantizado — Ambientes 1 y 2
+          Cumplimiento SRI — Ambientes 1 y 2
         </div>
 
         <h1 class="reveal reveal-1">
@@ -79,10 +80,10 @@
           <span class="gradient-text">electrónica para Ecuador</span>
         </h1>
 
-        <p class="reveal reveal-2">
-          Emite comprobantes electrónicos autorizados por el SRI con una
-          integración REST simple. Multi-tenancy, firma digital incluida,
-          y disponibilidad 99.9%.
+        <p class="hero-lead reveal reveal-2">
+          Emita facturas, notas de crédito, guías de remisión y retenciones
+          autorizadas por el SRI con una integración REST simple.
+          Multi-tenancy, firma XAdES-BES incluida, SLA 99.9%.
         </p>
 
         <div class="hero-actions reveal reveal-3">
@@ -90,8 +91,8 @@
             Ir a documentación
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l5 5-5 5"/></svg>
           </a>
-          <a href="#features" class="btn btn-outline btn-lg">
-            Ver plataforma
+          <a href="#solutions" class="btn btn-outline btn-lg">
+            Ver soluciones
           </a>
         </div>
 
@@ -115,7 +116,7 @@
               <span class="cmd">curl -X POST https://api.techost.cloud/sri/emitir/factura \</span>
             </div>
             <div class="mockup-line ind-1">
-              <span class="hl">-H "X-Api-Key: sk_live_<wbr>a1b2c3d4e5f6"</span>
+              <span class="hl">-H "X-Api-Key: sk_live_a1b2c3d4e5f6"</span>
             </div>
             <div class="mockup-line ind-1">
               <span class="hl">-H "Content-Type: application/json"</span>
@@ -153,7 +154,7 @@
             </div>
           </div>
           <div class="mockup-footer">
-            <span class="mockup-status success"></span>
+            <span class="mockup-status"></span>
             HTTP 200 · Autorizado · 847ms
           </div>
         </div>
@@ -161,13 +162,22 @@
     </div>
   </section>
 
+  <!-- ═══ STICKY SECTION NAV ═══ -->
+  <nav class="section-nav" aria-label="Navegación de sección">
+    <a href="#features">Plataforma</a>
+    <a href="#solutions">Soluciones</a>
+    <a href="#pricing">Precios</a>
+    <a href="#testimonials">Clientes</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+
   <!-- ═══ TRUST BAR ═══ -->
   <section class="trust reveal" aria-label="Clientes y certificaciones">
     <div class="trust-inner">
       <p class="trust-label">Empresas que confían en TechOST API</p>
       <div class="trust-logos">
         <span>Grupo Andino</span>
-        <span>Fintech EC</span>
+        <span>Fintech Solutions EC</span>
         <span>Consorcio Pacífico</span>
         <span>SRI Certificado</span>
         <span>ISO 27001</span>
@@ -180,41 +190,116 @@
     <div class="container">
       <div class="sec-head reveal">
         <span class="sec-label">Plataforma</span>
-        <h2 class="sec-title">Arquitectura enterprise para<br>facturación electrónica</h2>
-        <p class="sec-sub">Construida para operaciones de alto volumen con cumplimiento normativo total.</p>
+        <h2 class="sec-title">API enterprise para<br>facturación electrónica SRI</h2>
+        <p class="sec-sub">Construida para operaciones de alto volumen. Cumplimiento normativo total con el SRI.</p>
       </div>
 
       <div class="features-grid">
-        <article class="card glass reveal reveal-1">
-          <div class="card-icon" style="background:linear-gradient(135deg,var(--blue-500),#2563eb)">
+        <article class="card reveal reveal-1">
+          <div class="card-icon" style="background:var(--navy-800)">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
           </div>
           <h3>API RESTful</h3>
           <p>Autenticación por API Key, documentación Swagger interactiva, webhooks en tiempo real y SDKs para JS, Python, PHP y Java.</p>
+          <div class="badge-list">
+            <span class="badge">Swagger</span>
+            <span class="badge">Webhooks</span>
+            <span class="badge">SDKs</span>
+          </div>
         </article>
 
-        <article class="card glass reveal reveal-2">
-          <div class="card-icon" style="background:linear-gradient(135deg,#059669,#10b981)">
+        <article class="card reveal reveal-2">
+          <div class="card-icon" style="background:var(--green-500)">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
           </div>
           <h3>Cumplimiento SRI Total</h3>
-          <p>Conexión directa con servicios web del SRI. Ambiente 1 (pruebas) y Ambiente 2 (producción). Validaciones fiscales automáticas.</p>
+          <p>Conexión directa con servicios web del SRI. Ambientes 1 (pruebas) y 2 (producción). Validaciones fiscales automáticas pre-envío.</p>
+          <div class="badge-list">
+            <span class="badge">Ambiente 1</span>
+            <span class="badge">Ambiente 2</span>
+            <span class="badge">XAdES-BES</span>
+          </div>
         </article>
 
-        <article class="card glass reveal reveal-3">
-          <div class="card-icon" style="background:linear-gradient(135deg,#7c3aed,#8b5cf6)">
+        <article class="card reveal reveal-3">
+          <div class="card-icon" style="background:var(--navy-800)">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
           </div>
           <h3>Multi-tenancy Real</h3>
-          <p>Aislamiento completo de datos por tenant. Ideal para software factories, integradores y grupos con múltiples RUC.</p>
+          <p>Aislamiento completo de datos por tenant. Ideal para software factories, integradores y grupos empresariales con múltiples RUC.</p>
+          <div class="badge-list">
+            <span class="badge">Aislamiento</span>
+            <span class="badge">Multi-RUC</span>
+            <span class="badge">Onboarding</span>
+          </div>
         </article>
 
-        <article class="card glass reveal reveal-4">
-          <div class="card-icon" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">
+        <article class="card reveal reveal-4">
+          <div class="card-icon" style="background:var(--navy-800)">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <h3>Seguridad Empresarial</h3>
-          <p>Firma electrónica XAdES-BES incluida. TLS 1.3, auditoría de accesos y cumplimiento de protección de datos.</p>
+          <p>Firma electrónica XAdES-BES incluida. TLS 1.3, auditoría de accesos, logs inmutable y cumplimiento LOPDP.</p>
+          <div class="badge-list">
+            <span class="badge">TLS 1.3</span>
+            <span class="badge">Auditoría</span>
+            <span class="badge">LOPDP</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SOLUTIONS BY INDUSTRY ═══ -->
+  <section class="section" id="solutions">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="sec-label">Soluciones por industria</span>
+        <h2 class="sec-title">Diseñado para su<br>industria</h2>
+        <p class="sec-sub">Casos de uso específicos que resuelven problemas reales de facturación electrónica en cada sector.</p>
+      </div>
+
+      <div class="solutions-grid">
+        <article class="solution-card reveal reveal-1">
+          <div class="solution-icon" style="background:linear-gradient(135deg,#0F172A,#1E293B)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <h3>Fintech & Pagos</h3>
+          <span class="sol-sub">Pasarelas de pago y billeteras digitales</span>
+          <p>Emita comprobantes electrónicos por cada transacción. Webhooks para notificar estado de autorización en tiempo real.</p>
+          <ul>
+            <li>Alta concurrencia (5,000+ facturas/hora)</li>
+            <li>Webhooks de estado en tiempo real</li>
+            <li>Concilie pagos vs facturas emitidas</li>
+          </ul>
+        </article>
+
+        <article class="solution-card reveal reveal-2">
+          <div class="solution-icon" style="background:linear-gradient(135deg,#059669,#10b981)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3>ERP & Logística</h3>
+          <span class="sol-sub">Sistemas contables y de gestión empresarial</span>
+          <p>Integración nativa con su ERP mediante SDKs. Emisión de guías de remisión y facturas desde su flujo existente.</p>
+          <ul>
+            <li>SDKs para JS, Python, PHP, Java</li>
+            <li>Guías de remisión electrónicas</li>
+            <li>Multi-tenancy para integradores</li>
+          </ul>
+        </article>
+
+        <article class="solution-card reveal reveal-3">
+          <div class="solution-icon" style="background:linear-gradient(135deg,#0F172A,#1E293B)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>Retail & E-commerce</h3>
+          <span class="sol-sub">Tiendas online y cadenas comerciales</span>
+          <p>Automatice la emisión de facturas y notas de crédito en su checkout. Firma XAdES-BES incluida sin gestión adicional.</p>
+          <ul>
+            <li>Facturas y notas de crédito automáticas</li>
+            <li>Firma digital transparente</li>
+            <li>Contingencia ante caídas del SRI</li>
+          </ul>
         </article>
       </div>
     </div>
@@ -250,29 +335,29 @@
       <div class="sec-head reveal">
         <span class="sec-label">Beneficios</span>
         <h2 class="sec-title">Resultados medibles para<br>su operación financiera</h2>
-        <p class="sec-sub">Métricas concretas que impactan directamente en la eficiencia de su departamento.</p>
+        <p class="sec-sub">Métricas concretas que impactan directamente en la eficiencia de su departamento fiscal.</p>
       </div>
 
       <div class="benefits-grid">
-        <div class="card glass reveal reveal-1">
+        <div class="card reveal reveal-1">
           <span class="benefit-stat gradient-text">-60%</span>
           <h3>Reducción de costos</h3>
           <p>Elimine procesos manuales y errores de digitación. Automatice la emisión de comprobantes sin intervención humana.</p>
         </div>
-        <div class="card glass reveal reveal-2">
+        <div class="card reveal reveal-2">
           <span class="benefit-stat gradient-text">&lt;2s</span>
           <h3>Procesamiento en tiempo real</h3>
           <p>Autorización SRI ultrarrápida con colas de trabajo distribuidas para alto volumen sin degradación.</p>
         </div>
-        <div class="card glass reveal reveal-3">
+        <div class="card reveal reveal-3">
           <span class="benefit-stat gradient-text">48h</span>
           <h3>Integración sin fricción</h3>
           <p>Conecte su ERP o sistema contable en días. SDKs y documentación exhaustiva para equipos técnicos.</p>
         </div>
-        <div class="card glass reveal reveal-4">
+        <div class="card reveal reveal-4">
           <span class="benefit-stat gradient-text">100%</span>
           <h3>Cumplimiento normativo</h3>
-          <p>Actualizaciones automáticas ante cambios del SRI. Firma electrónica y contingencia ante caídas del servicio.</p>
+          <p>Actualizaciones automáticas ante cambios del SRI. Firma electrónica XAdES-BES y contingencia ante caídas del servicio.</p>
         </div>
       </div>
     </div>
@@ -284,32 +369,86 @@
       <div class="sec-head reveal">
         <span class="sec-label">Implementación</span>
         <h2 class="sec-title">Tres pasos para integrar<br>la plataforma</h2>
-        <p class="sec-sub">De la configuración a producción en cuestión de horas.</p>
+        <p class="sec-sub">De la configuración a producción en cuestión de horas, no de semanas.</p>
       </div>
 
       <div class="steps">
         <div class="step reveal reveal-1">
           <div class="step-num gradient-text">01</div>
-          <div class="step-card glass">
+          <div class="step-card">
             <h3>Configure su cuenta</h3>
-            <p>Registro empresarial con validación de RUC y credenciales API. Acceso inmediato a Ambiente 1 de pruebas.</p>
+            <p>Registro empresarial con validación de RUC y generación de credenciales API. Acceso inmediato a Ambiente 1 de pruebas sin costo.</p>
           </div>
         </div>
 
         <div class="step reveal reveal-2">
           <div class="step-num gradient-text">02</div>
-          <div class="step-card glass">
+          <div class="step-card">
             <h3>Integre vía API REST</h3>
-            <p>Conecte su sistema con nuestra API. Pruebe el flujo completo de autorización en Ambiente 1 sin costo.</p>
+            <p>Conecte su sistema con nuestra API usando los SDKs. Pruebe el flujo completo de autorización en Ambiente 1 con datos de prueba.</p>
           </div>
         </div>
 
         <div class="step reveal reveal-3">
           <div class="step-num gradient-text">03</div>
-          <div class="step-card glass">
+          <div class="step-card">
             <h3>Opere en producción</h3>
-            <p>Active Ambiente 2 con un parámetro. Emita comprobantes reales autorizados por el SRI con firma y PDF.</p>
+            <p>Active Ambiente 2 cambiando un parámetro. Emita facturas, retenciones, notas de crédito y guías de remisión reales autorizadas por el SRI.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ═══ -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="sec-label">Precios</span>
+        <h2 class="sec-title">Planes flexibles para<br>cada necesidad</h2>
+        <p class="sec-sub">Desde startups hasta grandes corporaciones. Sin mensualidad mínima ni contratos forzosos.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="card pricing-card reveal reveal-1">
+          <div class="pricing-name">Starter</div>
+          <div class="pricing-price">$49<span>/mes</span></div>
+          <p class="pricing-desc">Para negocios en crecimiento que inician su facturación electrónica.</p>
+          <ul class="pricing-features">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 500 comprobantes/mes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Facturas y notas de crédito</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>API REST + Documentación</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte por correo</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center">Comenzar prueba</a>
+        </div>
+
+        <div class="card pricing-card featured reveal reveal-2">
+          <div class="pricing-name">Business</div>
+          <div class="pricing-price">$149<span>/mes</span></div>
+          <p class="pricing-desc">Para empresas con operación continua y múltiples puntos de emisión.</p>
+          <ul class="pricing-features">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Hasta 5,000 comprobantes/mes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>5 tipos de comprobantes</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Webhooks + SDKs completos</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-tenancy (hasta 5 RUC)</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario 24/7</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary" style="width:100%;justify-content:center">Comenzar prueba</a>
+        </div>
+
+        <div class="card pricing-card reveal reveal-3">
+          <div class="pricing-name">Enterprise</div>
+          <div class="pricing-price">$499<span>/mes</span></div>
+          <p class="pricing-desc">Para grandes volúmenes, integradores y grupos empresariales.</p>
+          <ul class="pricing-features">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Comprobantes ilimitados</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-tenancy ilimitado</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>SLA 99.99% garantizado</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>On-premise disponible</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Gerente de cuenta dedicado</li>
+          </ul>
+          <a href="#contact" class="btn btn-outline" style="width:100%;justify-content:center">Contactar ventas</a>
         </div>
       </div>
     </div>
@@ -325,7 +464,7 @@
       </div>
 
       <div class="testimonials-grid">
-        <blockquote class="card glass reveal reveal-1">
+        <blockquote class="card reveal reveal-1">
           <div class="t-stars">
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
@@ -335,15 +474,15 @@
           </div>
           <p>"Integramos TechOST API en nuestro ERP en menos de dos días. Procesamos más de 5,000 facturas diarias sin incidentes."</p>
           <footer class="t-author">
-            <span class="t-avatar" style="background:linear-gradient(135deg,var(--blue-500),var(--blue-400))">CG</span>
+            <span class="t-avatar" style="background:var(--navy-800)">CG</span>
             <div>
               <strong>Carlos Gutiérrez</strong>
-              <span>Director de TI, Grupo Empresarial Andino</span>
+              <span>Director de TI, Grupo Andino</span>
             </div>
           </footer>
         </blockquote>
 
-        <blockquote class="card glass reveal reveal-2">
+        <blockquote class="card reveal reveal-2">
           <div class="t-stars">
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
@@ -351,9 +490,9 @@
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
           </div>
-          <p>"La migración fue transparente. La documentación técnica es la mejor que hemos visto en el ecosistema SRI ecuatoriano."</p>
+          <p>"La documentación técnica es la mejor que hemos visto en el ecosistema SRI ecuatoriano. La migración fue completamente transparente."</p>
           <footer class="t-author">
-            <span class="t-avatar" style="background:linear-gradient(135deg,#059669,#10b981)">MP</span>
+            <span class="t-avatar" style="background:var(--green-500)">MP</span>
             <div>
               <strong>María Paredes</strong>
               <span>CFO, Fintech Solutions EC</span>
@@ -361,7 +500,7 @@
           </footer>
         </blockquote>
 
-        <blockquote class="card glass reveal reveal-3">
+        <blockquote class="card reveal reveal-3">
           <div class="t-stars">
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
@@ -369,9 +508,9 @@
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
             <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z"/></svg>
           </div>
-          <p>"Multi-tenancy real. Gestionamos 12 empresas del grupo desde una integración. El aislamiento de datos es exactamente lo que necesitábamos."</p>
+          <p>"Multi-tenancy real. Gestionamos 12 empresas del grupo desde una sola integración. El aislamiento de datos es exactamente lo que necesitábamos."</p>
           <footer class="t-author">
-            <span class="t-avatar" style="background:linear-gradient(135deg,#7c3aed,#8b5cf6)">AJ</span>
+            <span class="t-avatar" style="background:var(--navy-800)">AJ</span>
             <div>
               <strong>Andrés Jiménez</strong>
               <span>CTO, Consorcio Comercial del Pacífico</span>
@@ -382,13 +521,72 @@
     </div>
   </section>
 
+  <!-- ═══ FAQ ═══ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="sec-head reveal">
+        <span class="sec-label">FAQ</span>
+        <h2 class="sec-title">Preguntas frecuentes</h2>
+        <p class="sec-sub">Respuestas rápidas a las dudas más comunes sobre la plataforma.</p>
+      </div>
+
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            ¿Qué comprobantes electrónicos soportan?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">
+            Factura, nota de crédito, nota de débito, guía de remisión y comprobante de retención. Todos en formato electrónico autorizado por el SRI, incluyendo firma XAdES-BES.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            ¿Cómo funciona el multi-tenancy?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">
+            Cada tenant tiene datos, configuraciones y certificados digitales completamente aislados. Ideal para integradores que gestionan múltiples clientes, software factories o grupos empresariales con varios RUC.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            ¿Ofrecen ambiente de pruebas?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">
+            Sí. Ambiente 1 (pruebas) con datos de test y Ambiente 2 (producción) con comprobantes reales. La migración entre ambientes es tan simple como cambiar un parámetro en la petición.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            ¿Qué SDKs están disponibles?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">
+            SDKs oficiales para JavaScript/TypeScript, Python, PHP y Java. Todos open-source con ejemplos de integración, pruebas unitarias y documentación exhaustiva.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            ¿Cómo manejan la contingencia del SRI?
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-a">
+            Sistema de colas inteligente con reintentos automáticos. Si el SRI no responde, los comprobantes se encolan y reenvían con backoff exponencial. Sin pérdida de datos ni intervención manual.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══ CTA ═══ -->
   <section class="cta" id="contact">
     <div class="cta-bg"></div>
     <div class="container">
       <div class="cta-inner reveal">
         <h2>Comience su integración hoy</h2>
-        <p>Solicite acceso y un especialista técnico lo contactará en menos de 24 horas para guiarlo en el proceso.</p>
+        <p>Solicite acceso y un especialista técnico lo contactará en menos de 24 horas para guiarlo en el proceso de integración.</p>
         <form class="cta-form" id="cta-form">
           <input type="email" class="cta-input" placeholder="su@correo.com" required aria-label="Correo electrónico">
           <button type="submit" class="btn btn-primary btn-lg">
@@ -396,7 +594,7 @@
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l5 5-5 5"/></svg>
           </button>
         </form>
-        <p class="cta-note">Sin compromiso · Sin costo de prueba · Respuesta en 24h</p>
+        <p class="cta-note">Sin compromiso · Prueba gratuita · Respuesta en 24h</p>
         <div class="cta-trust">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Sin mensualidad</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Sin contratos</span>
@@ -423,9 +621,9 @@
         <div class="footer-col">
           <h4>Producto</h4>
           <a href="#features">Plataforma</a>
-          <a href="#benefits">Beneficios</a>
+          <a href="#solutions">Soluciones</a>
+          <a href="#pricing">Precios</a>
           <a href="#how">Implementación</a>
-          <a href="/docs">Documentación</a>
         </div>
         <div class="footer-col">
           <h4>Recursos</h4>
@@ -439,7 +637,7 @@
           <a href="#">Términos</a>
           <a href="#">Privacidad</a>
           <a href="#">SLA</a>
-          <a href="#">Contacto</a>
+          <a href="#contact">Contacto</a>
         </div>
       </div>
       <div class="footer-bottom">
