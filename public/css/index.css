@@ -361,33 +361,6 @@ body {
   background: var(--green-400);
 }
 
-/* ─── STICKY NAV INDICATOR ─── */
-.section-nav {
-  position: sticky;
-  top: 64px;
-  z-index: 50;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--gray-100);
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  padding: 0 24px;
-  height: 48px;
-  align-items: center;
-}
-
-.section-nav a {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--gray-300);
-  transition: color 0.2s;
-  letter-spacing: 0.01em;
-}
-
-.section-nav a:hover { color: var(--green-500); }
-
 /* ─── TRUST BAR ─── */
 .trust {
   padding: 40px 0;
@@ -1205,7 +1178,6 @@ body {
   .solutions-grid { grid-template-columns: repeat(2, 1fr); }
   .testimonials-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: repeat(4, 1fr); }
-  .section-nav { display: none; }
 }
 
 @media (max-width: 768px) {

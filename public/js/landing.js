@@ -2,25 +2,10 @@
   'use strict';
 
   const navbar = document.querySelector('.nav');
-  const sectionNav = document.querySelector('.section-nav');
 
   function onScroll() {
     const y = window.scrollY;
     navbar.classList.toggle('scrolled', y > 60);
-
-    if (sectionNav) {
-      const links = sectionNav.querySelectorAll('a');
-      let current = '';
-      document.querySelectorAll('section[id]').forEach(function(section) {
-        const top = section.offsetTop - 120;
-        if (y >= top) current = section.getAttribute('id');
-      });
-      links.forEach(function(link) {
-        link.style.color = link.getAttribute('href') === '#' + current
-          ? 'var(--navy-800)'
-          : '';
-      });
-    }
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
