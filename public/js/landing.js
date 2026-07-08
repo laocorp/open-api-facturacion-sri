@@ -117,8 +117,16 @@
     var stepsObserver = makeObserver('0px 0px -80px 0px', 0.15);
     if (stepsObserver) {
       stepsObserver.observe(stepLineFill);
+      stepLineFill.addEventListener('revealed', function() {
+        document.querySelectorAll('.step-line-dot').forEach(function(dot, i) {
+          setTimeout(function() { dot.classList.add('filled'); }, i * 250);
+        });
+      }, { once: true });
     } else {
       stepLineFill.classList.add('visible');
+      document.querySelectorAll('.step-line-dot').forEach(function(dot) {
+        dot.classList.add('filled');
+      });
     }
   }
 

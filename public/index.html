@@ -375,28 +375,50 @@
         <div class="step-line">
           <div class="step-line-fill" id="step-line-fill"></div>
         </div>
+        <div class="step-line-dots">
+          <span class="step-line-dot" id="dot-1"></span>
+          <span class="step-line-dot" id="dot-2"></span>
+          <span class="step-line-dot" id="dot-3"></span>
+        </div>
         <div class="steps">
           <div class="step reveal-up reveal-1">
+            <div class="step-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
             <div class="step-num gradient-text">01</div>
+            <span class="step-badge">5 min</span>
             <div class="step-card">
               <h3>Configure su cuenta</h3>
-              <p>Registro empresarial con validación de RUC y generación de credenciales API. Acceso inmediato a Ambiente 1 de pruebas sin costo.</p>
+              <p>Registro empresarial con validación de RUC y generación de credenciales. Ambiente 1 de pruebas activado al instante.</p>
             </div>
           </div>
 
           <div class="step reveal-up reveal-3">
+            <div class="step-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
             <div class="step-num gradient-text">02</div>
+            <span class="step-badge">2 horas</span>
             <div class="step-card">
               <h3>Integre vía API REST</h3>
-              <p>Conecte su sistema con nuestra API usando los SDKs. Pruebe el flujo completo de autorización en Ambiente 1 con datos de prueba.</p>
+              <p>Conecte su sistema con nuestra API usando los SDKs. Pruebe el flujo completo de autorización en Ambiente 1.</p>
+              <div class="step-code">
+                <span class="sc">POST</span> /sri/factura <span class="hl">HTTP/1.1</span><br>
+                Authorization: Bearer <span class="hl">eyJhbGciOiJIUzI1NiIs...</span><br>
+                Content-Type: <span class="hl">application/json</span>
+              </div>
             </div>
           </div>
 
           <div class="step reveal-up reveal-5">
+            <div class="step-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
             <div class="step-num gradient-text">03</div>
+            <span class="step-badge">inmediato</span>
             <div class="step-card">
               <h3>Opere en producción</h3>
-              <p>Active Ambiente 2 cambiando un parámetro. Emita facturas, retenciones, notas de crédito y guías de remisión reales autorizadas por el SRI.</p>
+              <p>Active Ambiente 2 cambiando un parámetro. Emita comprobantes reales autorizados por el SRI con SLA 99.9%.</p>
             </div>
           </div>
         </div>
@@ -418,25 +440,25 @@
           <div class="pricing-name">Básico</div>
           <div class="pricing-price">$10</div>
           <p class="pricing-desc">Para empezar con la facturación electrónica sin inversión inicial.</p>
-          <div style="text-align:center;margin-bottom:20px">
-            <div style="font-size:2.8rem;font-weight:700;color:var(--navy-800);line-height:1">200</div>
-            <div style="font-size:13px;color:var(--gray-400);font-weight:500">comprobantes</div>
+          <div class="pricing-qty-wrap">
+            <div class="pricing-qty">200</div>
+            <div class="pricing-qty-label">comprobantes</div>
           </div>
           <ul class="pricing-features">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sin bonus adicional</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Todos los comprobantes SRI</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>API REST + SDKs</li>
           </ul>
-          <a href="/docs" class="btn btn-outline" style="width:100%;justify-content:center">Comenzar ahora</a>
+          <a href="/docs" class="btn btn-secondary" style="width:100%;justify-content:center">Comenzar ahora</a>
         </div>
 
         <div class="card pricing-card featured reveal-up reveal-2">
           <div class="pricing-name">Popular</div>
           <div class="pricing-price">$25</div>
           <p class="pricing-desc">Incluye <strong>$2.50</strong> de bonus. La opción más elegida por nuestros clientes.</p>
-          <div style="text-align:center;margin-bottom:20px">
-            <div style="font-size:2.8rem;font-weight:700;color:var(--navy-800);line-height:1">550</div>
-            <div style="font-size:13px;color:var(--gray-400);font-weight:500">comprobantes</div>
+          <div class="pricing-qty-wrap">
+            <div class="pricing-qty">550</div>
+            <div class="pricing-qty-label">comprobantes</div>
           </div>
           <ul class="pricing-features">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Bonus incluido: +$2.50</li>
@@ -450,32 +472,32 @@
           <div class="pricing-name">Pro</div>
           <div class="pricing-price">$50</div>
           <p class="pricing-desc">Incluye <strong>$7.50</strong> de bonus. Ideal para volúmenes medios.</p>
-          <div style="text-align:center;margin-bottom:20px">
-            <div style="font-size:2.8rem;font-weight:700;color:var(--navy-800);line-height:1">1,150</div>
-            <div style="font-size:13px;color:var(--gray-400);font-weight:500">comprobantes</div>
+          <div class="pricing-qty-wrap">
+            <div class="pricing-qty">1,150</div>
+            <div class="pricing-qty-label">comprobantes</div>
           </div>
           <ul class="pricing-features">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Bonus incluido: +$7.50</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Todos los comprobantes SRI</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>API REST + SDKs + Webhooks</li>
           </ul>
-          <a href="/docs" class="btn btn-outline" style="width:100%;justify-content:center">Comenzar ahora</a>
+          <a href="/docs" class="btn btn-secondary" style="width:100%;justify-content:center">Comenzar ahora</a>
         </div>
 
         <div class="card pricing-card reveal-right reveal-4">
           <div class="pricing-name">Business</div>
           <div class="pricing-price">$100</div>
           <p class="pricing-desc">Incluye <strong>$20</strong> de bonus. Mayor volumen al mejor precio.</p>
-          <div style="text-align:center;margin-bottom:20px">
-            <div style="font-size:2.8rem;font-weight:700;color:var(--navy-800);line-height:1">2,400</div>
-            <div style="font-size:13px;color:var(--gray-400);font-weight:500">comprobantes</div>
+          <div class="pricing-qty-wrap">
+            <div class="pricing-qty">2,400</div>
+            <div class="pricing-qty-label">comprobantes</div>
           </div>
           <ul class="pricing-features">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Bonus incluido: +$20</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Todos los comprobantes SRI</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>API REST + SDKs + Webhooks</li>
           </ul>
-          <a href="/docs" class="btn btn-outline" style="width:100%;justify-content:center">Comenzar ahora</a>
+          <a href="/docs" class="btn btn-secondary" style="width:100%;justify-content:center">Comenzar ahora</a>
         </div>
       </div>
     </div>

@@ -650,29 +650,58 @@ body {
 
 .step-line {
   position: absolute;
-  top: 32px;
+  top: 44px;
   left: 16.67%;
   right: 16.67%;
-  height: 2px;
+  height: 3px;
   background: var(--gray-100);
   z-index: 0;
   overflow: hidden;
+  border-radius: 2px;
 }
 
 .step-line-fill {
   height: 100%;
   width: 0;
   background: linear-gradient(90deg, var(--green-500), var(--green-400));
-  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .step-line-fill.visible { width: 100%; }
+
+.step-line-dots {
+  position: absolute;
+  top: 44px;
+  left: 16.67%;
+  right: 16.67%;
+  height: 3px;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.step-line-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2.5px solid var(--gray-200);
+  margin-top: -4.5px;
+  transition: all 0.5s ease;
+}
+
+.step-line-dot.filled {
+  border-color: var(--green-500);
+  background: var(--green-500);
+  box-shadow: 0 0 0 4px rgba(5,150,105,0.15);
+}
 
 /* ─── HOW IT WORKS ─── */
 .steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 28px;
   align-items: start;
   position: relative;
   z-index: 1;
@@ -685,7 +714,37 @@ body {
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+.step-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--green-500), var(--green-400));
+  box-shadow: 0 4px 14px rgba(5,150,105,0.2);
+  transition: transform 0.3s ease;
+}
+
+.step:hover .step-icon {
+  transform: scale(1.06);
+}
+
+.step-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--green-600);
+  background: var(--green-100);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
 }
 
 .step-card {
@@ -695,6 +754,13 @@ body {
   border: 1px solid var(--gray-100);
   border-radius: var(--radius-lg);
   box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.02);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  border-color: var(--gray-200);
 }
 
 .step-card h3 {
@@ -708,6 +774,29 @@ body {
   font-size: 14px;
   color: var(--gray-400);
   line-height: 1.7;
+}
+
+.step-code {
+  margin-top: 14px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--gray-600);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.step-code .sc {
+  color: var(--green-500);
+  font-weight: 500;
+}
+
+.step-code .hl {
+  color: var(--blue-500);
 }
 
 /* ─── TESTIMONIALS ─── */
@@ -782,6 +871,12 @@ body {
   padding: 40px 28px 36px;
 }
 
+.pricing-qty-wrap {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 12px 0;
+}
+
 .pricing-card.featured {
   border-color: var(--green-500);
   position: relative;
@@ -812,11 +907,12 @@ body {
 }
 
 .pricing-price {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 3.2rem;
+  font-weight: 800;
   color: var(--navy-800);
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  letter-spacing: -0.03em;
 }
 
 .pricing-price span {
@@ -825,9 +921,23 @@ body {
   color: var(--gray-400);
 }
 
-.pricing-desc {
+.pricing-qty {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--navy-800);
+  line-height: 1;
+}
+
+.pricing-qty-label {
   font-size: 13px;
-  color: var(--gray-400);
+  font-weight: 500;
+  color: var(--gray-500);
+  margin-top: 4px;
+}
+
+.pricing-desc {
+  font-size: 14px;
+  color: var(--gray-500);
   margin-bottom: 24px;
   line-height: 1.6;
 }
