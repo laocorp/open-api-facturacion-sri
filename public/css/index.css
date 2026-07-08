@@ -38,21 +38,6 @@ body {
   color: var(--navy-800);
 }
 
-.nav-logo-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--green-500), var(--green-400));
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.nav-logo-accent { color: var(--green-500); }
-
 .nav-links { display: flex; align-items: center; gap: 28px; }
 
 .nav-links a {
